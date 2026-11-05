@@ -1,0 +1,23 @@
+ENTRE DEUX TOITS – site prêt à déposer (version du 05/11/2026)
+
+CONTENU
+- index.html : la page de présentation (ce que voit un visiteur sur entredeuxtoits.fr), avec le QR code et les tutos d'installation iPhone et Android.
+- presentation/ : les captures d'écran et le QR code de la page de présentation.
+- app/ : l'appli elle-même (adresse entredeuxtoits.fr/app/).
+  - app/index.html : toute l'appli (accueil, messages, démarches, outils, coffre-fort, sauvegarde, annuaire, lecture à voix haute, mentions légales).
+  - app/data/ : l'annuaire national (8 830 contacts) et les 34 969 communes, extraits de Service Public le 05/11/2026.
+  - app/manifest.webmanifest et app/sw.js : installation sur l'écran d'accueil et fonctionnement hors connexion.
+  - app/icone/ : les icônes.
+
+METTRE EN LIGNE SUR GITHUB PAGES
+1. Créer un dépôt dédié, séparé de Galère Academy (par exemple « entre-deux-toits »).
+2. « Add file » > « Upload files » : déposer tout le contenu de ce dossier (index.html, LISEZMOI.txt, et les dossiers presentation et app). Puis « Commit changes ».
+3. Settings > Pages : Source « Deploy from a branch », branche « main », dossier « / (root) ».
+4. Pour le nom de domaine entredeuxtoits.fr : Settings > Pages > Custom domain, puis chez Wix ajouter les enregistrements DNS indiqués par GitHub. Cocher « Enforce HTTPS ».
+
+IMPORTANT
+- Le QR code de l'affiche et de la page pointe vers https://entredeuxtoits.fr : il ne fonctionnera qu'une fois le domaine acheté et branché.
+- Ne plus changer d'adresse une fois l'appli diffusée : les données des parents sont liées à l'adresse du site. En cas de changement, ils devront passer par Outils > Coffre-fort > Ma sauvegarde.
+- À chaque mise à jour de l'appli, changer « edt-v1 » en « edt-v2 » (puis v3…) dans app/sw.js, pour que les téléphones récupèrent la nouvelle version.
+- Annuaire : mise à jour conseillée chaque trimestre. Ouvrir outil-extraction-annuaire.html (dossier du projet) dans Edge ou Chrome, télécharger le fichier, l'envoyer à Claude, qui prépare les nouveaux fichiers app/data/.
+- Mentions légales : éditeur 2A FORMATION (EI d'Alexandre BIGOT), complétées le 05/11/2026.
