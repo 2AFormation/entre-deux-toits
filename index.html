@@ -4,1029 +4,157 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Entre Deux Toits</title>
-<meta name="description" content="Appli gratuite pour les parents séparés : messages apaisés, démarches vers le juge aux affaires familiales, calendrier de garde et outils de coparentalité.">
-<link rel="manifest" href="manifest.webmanifest">
-<link rel="apple-touch-icon" href="icone/apple-touch-icon.png">
-<link rel="icon" href="icone/icone.svg" type="image/svg+xml">
+<meta name="description" content="L'appli gratuite pour les parents séparés : des messages qui apaisent, les démarches vers le juge aux affaires familiales pas à pas, le calendrier de garde et les bons contacts près de chez vous.">
+<link rel="icon" href="icone.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
 <meta name="theme-color" content="#FFF6EC">
+<meta property="og:title" content="Entre Deux Toits">
+<meta property="og:description" content="Séparés, toujours parents. L'appli gratuite pour s'organiser entre deux maisons.">
+<meta property="og:image" content="icon-512.png">
 <style>
-:root{
-  --bg:#eef1f5; --phone:#ffffff; --ink:#1d2433; --soft:#5d6779; --line:#e2e6ee;
-  --brand:#3b5bdb; --brand-soft:#e8edff; --ok:#2b8a3e; --ok-soft:#e6f4ea;
-  --warn:#b35c00; --warn-soft:#fff3e0; --mark:#ffe08a;
-  --sante:#e03131; --ecole:#1971c2; --activ:#2f9e44; --vac:#f08c00; --plan:#7048e8; --frais:#0c8599; --autre:#868e96;
-}
-@media (prefers-color-scheme: dark){
-  :root:not([data-theme="light"]){
-    --bg:#11141b; --phone:#1a1f2b; --ink:#e9ecf2; --soft:#a3abba; --line:#2c3344;
-    --brand:#7b93ff; --brand-soft:#252e4d; --ok:#69db7c; --ok-soft:#1f3326;
-    --warn:#ffa94d; --warn-soft:#3a2a17; --mark:#6b5a1e;
-  }
-}
+:root{--bg:#FFF6EC;--card:#ffffff;--ink:#1d2433;--soft:#5d6779;--line:#eadfd2;--blue:#3B5BDB;--orange:#E8590C;--yellow:#F2B705;--blue-soft:#e8edff;--orange-soft:#ffe8dc;--ok:#2b8a3e}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#14171f;--card:#1c2130;--ink:#eef0f5;--soft:#a7afbe;--line:#2c3344;--blue-soft:#252e4d;--orange-soft:#3a2418}}
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
-.phone{max-width:420px;margin:16px auto;background:var(--phone);border-radius:28px;box-shadow:0 10px 40px rgba(0,0,0,.12);min-height:calc(100vh - 32px);display:flex;flex-direction:column;overflow:hidden}
-@media (max-width:460px){.phone{margin:0;border-radius:0;min-height:100vh}}
-.proto{background:var(--warn-soft);color:var(--warn);font-size:12px;text-align:center;padding:6px 12px}
-header{display:flex;align-items:center;justify-content:space-between;padding:14px 16px 8px}
-header h1{font-size:19px;margin:0}
-header small{display:block;color:var(--soft);font-weight:400;font-size:12px}
-.exit{border:0;background:#c92a2a;color:#fff;border-radius:999px;padding:7px 12px;font-weight:600;font-size:13px;cursor:pointer}
-main{flex:1;padding:4px 16px 90px;overflow:auto}
-nav.bottom{position:sticky;bottom:0;display:flex;border-top:1px solid var(--line);background:var(--phone)}
-nav.bottom button{flex:1;border:0;background:none;padding:10px 0 12px;color:var(--soft);font-size:12px;cursor:pointer}
-nav.bottom button span{display:block;font-size:20px}
-nav.bottom button.on{color:var(--brand);font-weight:600}
-.seg{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;margin:6px 0 12px}
-.seg button{white-space:nowrap;border:1px solid var(--line);background:none;color:var(--ink);border-radius:999px;padding:6px 12px;font-size:13px;cursor:pointer}
-.seg button.on{background:var(--brand);border-color:var(--brand);color:#fff}
-.card{border:1px solid var(--line);border-radius:16px;padding:14px;margin-bottom:12px}
-.card h2{font-size:16px;margin:0 0 6px}
-.card p{margin:0 0 8px;color:var(--soft)}
-.themes{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px}
-.th{border:2px solid transparent;border-radius:14px;padding:8px 2px;text-align:center;font-size:12px;cursor:pointer;background:var(--brand-soft);color:var(--ink)}
-.th span{display:block;font-size:22px}
-.th.on{border-color:var(--c)}
-.chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
-.chip{border:1px dashed var(--c,var(--brand));color:var(--ink);background:none;border-radius:999px;padding:5px 10px;font-size:12.5px;cursor:pointer}
-label{display:block;font-weight:600;font-size:13px;margin:10px 0 4px}
-label em{font-weight:400;color:var(--soft);font-style:normal}
-input,textarea,select{width:100%;border:1px solid var(--line);border-radius:10px;padding:9px 10px;font:inherit;color:var(--ink);background:var(--phone)}
-textarea{min-height:70px;resize:vertical}
-.row{display:flex;gap:8px;align-items:center}
-.tog{display:inline-flex;border:1px solid var(--line);border-radius:999px;overflow:hidden}
-.tog button{border:0;background:none;padding:5px 12px;color:var(--ink);cursor:pointer;font-size:13px}
-.tog button.on{background:var(--brand);color:#fff}
-.btn{border:0;border-radius:12px;padding:11px 14px;font-weight:600;cursor:pointer;font-size:14px}
-.btn.main{background:var(--brand);color:#fff}
-.btn.ghost{background:var(--brand-soft);color:var(--brand)}
-.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
-.actions .btn{flex:1}
-.preview{white-space:pre-wrap;border-radius:12px;background:var(--brand-soft);padding:12px;min-height:60px}
-mark{background:var(--mark);color:inherit;border-radius:3px;padding:0 2px}
-.verdict{display:flex;gap:8px;align-items:center;font-weight:600;margin:10px 0 6px}
-.verdict.ok{color:var(--ok)} .verdict.warn{color:var(--warn)}
-.tip{border-left:4px solid var(--warn);background:var(--warn-soft);border-radius:8px;padding:8px 10px;margin:6px 0;font-size:13.5px}
-.tip b{display:block}
-.tip .alt{margin-top:4px}
-.tip button{border:0;background:none;color:var(--soft);font-size:12px;cursor:pointer;padding:4px 0 0;text-decoration:underline}
-.okbox{border-left:4px solid var(--ok);background:var(--ok-soft);border-radius:8px;padding:8px 10px;font-size:13.5px}
-.list .it{border-bottom:1px solid var(--line);padding:10px 0}
-.list .it:last-child{border:0}
-.meta{font-size:12px;color:var(--soft)}
-.bref{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
-.bref div{background:var(--brand-soft);border-radius:12px;padding:10px;font-size:13px}
-.bref b{font-size:20px;color:var(--brand);display:block}
-.toast{position:fixed;left:50%;bottom:90px;transform:translateX(-50%);background:var(--ink);color:var(--phone);padding:9px 14px;border-radius:10px;font-size:13px;opacity:0;transition:.25s;pointer-events:none}
-.toast.show{opacity:1}
-.hide{display:none}
-.soon li{margin:4px 0;color:var(--soft)}
-.paths{display:grid;gap:8px;margin-bottom:14px}
-.path{display:flex;gap:12px;align-items:center;border:1px solid var(--line);border-left:6px solid var(--c);border-radius:14px;padding:12px;cursor:pointer;background:var(--phone);text-align:left;color:var(--ink);font:inherit}
-.path span.i{font-size:26px}
-.path b{display:block}
-.path small{color:var(--soft)}
-.sub{font-size:15px;margin:6px 0 8px}
-.back{border:0;background:none;color:var(--brand);font-weight:600;padding:4px 0 10px;cursor:pointer;font-size:14px}
-.hero{border-radius:16px;padding:14px;margin-bottom:12px;background:var(--brand-soft)}
-.hero h2{margin:0 0 4px;font-size:18px}
-.hero p{margin:0;color:var(--soft)}
-.prog{height:8px;background:var(--line);border-radius:99px;overflow:hidden;margin:10px 0 4px}
-.prog i{display:block;height:100%;background:var(--ok);width:0;transition:.3s}
-.step{border:1px solid var(--line);border-radius:14px;margin-bottom:8px;overflow:hidden}
-.step summary{display:flex;gap:10px;align-items:center;padding:12px;cursor:pointer;list-style:none;font-weight:600}
-.step summary::-webkit-details-marker{display:none}
-.step .n{flex:none;width:26px;height:26px;border-radius:50%;background:var(--brand-soft);color:var(--brand);display:grid;place-items:center;font-size:13px}
-.step.done .n{background:var(--ok);color:#fff}
-.step .body{padding:0 12px 12px 48px;color:var(--ink)}
-.step .body p{margin:0 0 8px}
-.step .body ul{margin:0 0 8px;padding-left:18px}
-.lnk{display:inline-block;margin:2px 6px 6px 0;padding:6px 10px;border-radius:999px;background:var(--brand-soft);color:var(--brand);text-decoration:none;font-size:13px;font-weight:600}
-.donebtn{border:1px solid var(--ok);color:var(--ok);background:none;border-radius:999px;padding:5px 12px;font-size:13px;cursor:pointer}
-.step.done .donebtn{background:var(--ok);color:#fff}
-.alert{border-left:4px solid #c92a2a;background:#fff0f0;color:#5c1010;border-radius:8px;padding:10px;margin-bottom:12px;font-size:13.5px}
-@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .alert{background:#3a1717;color:#ffd6d6}}
-.verif{font-size:12px;color:var(--warn);margin-top:10px}
-.conv label{margin-top:12px}
-.lock{position:fixed;inset:0;z-index:50;background:var(--bg);display:flex;align-items:center;justify-content:center;padding:16px}
-.lockbox{background:var(--phone);border-radius:20px;padding:22px;width:100%;max-width:380px;text-align:center;box-shadow:0 10px 40px rgba(0,0,0,.15)}
-.lockbox h2{margin:10px 0 4px}.lockbox p{color:var(--soft)}
-.tts{border:1px solid var(--line);background:none;color:var(--brand);border-radius:999px;padding:5px 12px;font-size:13px;cursor:pointer;margin:0 6px 8px 0}
-.two{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;margin-top:8px}
-.cal .h{font-size:11px;color:var(--soft);text-align:center}
-.cal .d{aspect-ratio:1;border-radius:8px;display:grid;place-items:center;font-size:13px;position:relative;color:#fff;font-weight:600}
-.cal .d.p1{background:#3b5bdb}.cal .d.p2{background:#e8590c}
-.cal .d.vac::after{content:"";position:absolute;bottom:3px;width:5px;height:5px;border-radius:50%;background:#fff}
-.cal .d.today{outline:3px solid var(--ink);outline-offset:-1px}
-.calnav{display:flex;justify-content:space-between;align-items:center;margin-top:12px}
-.calnav button{border:1px solid var(--line);background:none;color:var(--ink);border-radius:10px;padding:5px 12px;cursor:pointer}
-.leg{display:flex;gap:12px;flex-wrap:wrap;font-size:12.5px;margin-top:8px;color:var(--soft)}
-.leg i{display:inline-block;width:12px;height:12px;border-radius:3px;vertical-align:-2px;margin-right:4px}
-.bal{font-size:17px;font-weight:700;margin:6px 0}
-.exp{display:flex;justify-content:space-between;gap:8px;border-bottom:1px solid var(--line);padding:8px 0;font-size:14px}
-.exp:last-child{border:0}
-.qz .opt{display:block;width:100%;text-align:left;border:1px solid var(--line);background:none;color:var(--ink);border-radius:12px;padding:10px;margin:6px 0;cursor:pointer;font:inherit}
-.qz .opt.good{border-color:var(--ok);background:var(--ok-soft)}
-.qz .opt.bad{border-color:var(--warn);background:var(--warn-soft)}
-.age h3{font-size:15px;margin:12px 0 4px}
-.age ul{margin:0;padding-left:18px}
-.big{display:flex;gap:12px;align-items:center}
-.big .i{font-size:34px}
-.big b{font-size:17px;display:block}
-.tiles{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
-.tile{border:0;border-radius:14px;padding:12px;text-align:left;cursor:pointer;color:var(--ink);font:inherit;background:var(--brand-soft)}
-.tile span{font-size:22px;display:block;margin-bottom:4px}
-.tile small{display:block;color:var(--soft);font-size:12px}
-.sos{display:flex;justify-content:space-between;align-items:center;gap:10px;border:1px solid var(--line);border-radius:14px;padding:12px;margin-bottom:12px}
-.sos button{border:0;background:#c92a2a;color:#fff;border-radius:999px;padding:7px 12px;font-weight:600;cursor:pointer;white-space:nowrap}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
+a{color:var(--blue)}
+.wrap{max-width:1080px;margin:auto;padding:0 16px}
+header.top{display:flex;align-items:center;gap:10px;padding:16px 0}
+header.top b{font-size:19px}
+header.top .sp{flex:1}
+.btn{display:inline-block;text-decoration:none;font-weight:700;border-radius:14px;padding:14px 20px;font-size:16px}
+.btn.main{background:var(--blue);color:#fff}
+.btn.ghost{background:var(--card);color:var(--blue);border:2px solid var(--blue)}
+.btn.small{padding:9px 14px;font-size:14px}
+.hero{display:grid;grid-template-columns:1.1fr .9fr;gap:40px;align-items:center;padding:24px 0 56px}
+.hero h1{font-size:clamp(34px,6vw,56px);line-height:1.08;margin:0 0 16px;letter-spacing:-.02em}
+.hero h1 span{color:var(--orange)}
+.hero p.lead{font-size:clamp(18px,2.4vw,21px);color:var(--soft);margin:0 0 24px;max-width:34em}
+.cta{display:flex;gap:12px;flex-wrap:wrap}
+.badges{display:flex;gap:8px;flex-wrap:wrap;margin-top:22px}
+.badges span{background:var(--card);border:1px solid var(--line);border-radius:999px;padding:6px 12px;font-size:14px}
+.phone{justify-self:center;width:min(300px,78vw);border-radius:38px;padding:10px;background:#1d2433;box-shadow:0 30px 60px rgba(29,36,51,.25)}
+.phone img{display:block;width:100%;border-radius:30px}
+.qr{display:flex;gap:16px;align-items:center;margin-top:24px;background:var(--card);border-radius:18px;padding:14px;max-width:420px;border:1px solid var(--line)}
+.qr img{width:104px;height:104px;border-radius:8px;background:#fff;padding:4px}
+.qr p{margin:0;font-size:15px;color:var(--soft)}
+section{padding:48px 0}
+h2{font-size:clamp(26px,4vw,36px);margin:0 0 8px;letter-spacing:-.01em}
+.sub{color:var(--soft);margin:0 0 28px;max-width:40em}
+.feat{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+.f{background:var(--card);border-radius:22px;padding:16px;border:1px solid var(--line);display:flex;flex-direction:column}
+.f .ic{width:46px;height:46px;border-radius:14px;display:grid;place-items:center;font-size:24px;margin-bottom:10px}
+.f h3{margin:0 0 6px;font-size:18px}
+.f p{margin:0 0 14px;color:var(--soft);font-size:15px;flex:1}
+.f img{width:100%;border-radius:14px;border:1px solid var(--line);aspect-ratio:390/560;object-fit:cover;object-position:top}
+.promise{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
+.p{background:var(--card);border-radius:18px;padding:16px;text-align:center;border:1px solid var(--line)}
+.p b{display:block;font-size:28px;margin-bottom:6px}
+.p span{font-size:15px}
+.install{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.os{background:var(--card);border-radius:22px;padding:20px;border:1px solid var(--line)}
+.os h3{margin:0 0 12px;font-size:20px}
+.os ol{margin:0;padding:0;list-style:none;counter-reset:s}
+.os li{counter-increment:s;display:flex;gap:12px;align-items:flex-start;padding:10px 0;border-top:1px solid var(--line)}
+.os li:first-child{border-top:0}
+.os li::before{content:counter(s);flex:none;width:30px;height:30px;border-radius:50%;background:var(--blue-soft);color:var(--blue);display:grid;place-items:center;font-weight:700;font-size:15px}
+.os .k{display:inline-flex;align-items:center;gap:4px;background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:1px 8px;font-weight:600;white-space:nowrap}
+.os svg{width:16px;height:16px;vertical-align:-3px}
+.sos{background:#fff0f0;color:#5c1010;border-radius:22px;padding:22px;display:flex;gap:18px;align-items:center;flex-wrap:wrap}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .sos{background:#3a1717;color:#ffd6d6}}
+.sos b{font-size:20px}
+.num{display:flex;gap:10px;flex-wrap:wrap}
+.num span{background:#c92a2a;color:#fff;border-radius:12px;padding:8px 14px;font-weight:700}
+footer{padding:36px 0 48px;color:var(--soft);font-size:14px;border-top:1px solid var(--line);margin-top:24px}
+footer p{margin:6px 0}
+@media (max-width:900px){.hero{grid-template-columns:1fr}.feat{grid-template-columns:1fr 1fr}.promise{grid-template-columns:1fr 1fr}.install{grid-template-columns:1fr}.qr{display:none}}
+@media (max-width:520px){.feat{grid-template-columns:1fr}.f img{aspect-ratio:390/440}.promise{grid-template-columns:1fr 1fr}.cta .btn{flex:1;text-align:center}}
 </style>
 </head>
 <body>
-<div class="phone">
-  <header>
-    <div style="display:flex;gap:10px;align-items:center"><svg width="34" height="34" aria-hidden="true" style="flex:none;border-radius:9px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-  <rect width="512" height="512" rx="112" fill="#FFF6EC"/>
-  <path d="M70 300 L190 180 L310 300" fill="none" stroke="#3B5BDB" stroke-width="44" stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="M202 300 L322 180 L442 300" fill="none" stroke="#E8590C" stroke-width="44" stroke-linecap="round" stroke-linejoin="round" opacity=".95"/>
-  <circle cx="256" cy="360" r="34" fill="#F2B705"/>
-</svg><h1>Entre Deux Toits<small id="hello">Bonjour 👋</small></h1></div>
-    <button class="exit" onclick="sortie()" title="Quitte l'appli immédiatement">✕ Sortie rapide</button>
+<div class="wrap">
+  <header class="top">
+    <img src="icone.svg" width="40" height="40" alt="">
+    <b>Entre Deux Toits</b><span class="sp"></span>
+    <a class="btn main small" href="app.html">Ouvrir l'appli</a>
   </header>
 
-  <main id="main">
-    <!-- ===== MESSAGES ===== -->
-    <section id="v-messages" class="hide">
-      <div class="seg" id="seg">
-        <button data-s="ecrire" class="on">✍️ Écrire</button>
-        <button data-s="relire">🔍 Relire mon texte</button>
-        <button data-s="repondre">🛡️ Répondre à un message tendu</button>
-        <button data-s="defouloir">💭 Défouloir</button>
-        <button data-s="journal">📒 Journal</button>
+  <div class="hero">
+    <div>
+      <h1>Séparés,<br><span>toujours parents.</span></h1>
+      <p class="lead">L'appli gratuite qui aide les parents séparés à s'organiser, à se parler sans conflit et à faire leurs démarches, pour que les enfants vivent bien entre deux maisons.</p>
+      <div class="cta">
+        <a class="btn main" href="app.html">Ouvrir l'appli</a>
+        <a class="btn ghost" href="#installer">L'installer sur mon téléphone</a>
       </div>
-
-      <!-- Écrire -->
-      <div id="s-ecrire">
-        <div class="themes" id="themes"></div>
-        <div class="chips" id="modeles"></div>
-        <div class="card">
-          <div class="row" style="justify-content:space-between">
-            <span class="meta">Avec l'autre parent, vous vous dites :</span>
-            <div class="tog" id="tv"><button data-v="tu" class="on">tu</button><button data-v="vous">vous</button></div>
-          </div>
-          <label>1. Ce qui se passe <em>— le fait, avec la date</em></label>
-          <textarea id="f1" placeholder="Ex. : Léa a rendez-vous chez le dentiste le 12/11 à 17 h."></textarea>
-          <label>2. Ce que je demande</label>
-          <input id="f2" placeholder="Ex. : Peux-tu l'emmener ?">
-          <label>3. Ce que je propose <em>— facultatif</em></label>
-          <input id="f3" placeholder="Ex. : Sinon, je m'en occupe.">
-          <label>4. Réponse souhaitée</label>
-          <select id="f4">
-            <option value="">Pas de délai</option>
-            <option value="aujourd'hui">aujourd'hui</option>
-            <option value="demain">demain</option>
-            <option value="d'ici 48 heures">d'ici 48 heures</option>
-            <option value="d'ici la fin de la semaine">d'ici la fin de la semaine</option>
-          </select>
-        </div>
-        <div class="card">
-          <h2>Votre message</h2>
-          <p>Vous pouvez le modifier librement : la relecture se fait au fur et à mesure.</p>
-          <textarea id="out" style="min-height:110px"></textarea>
-          <div id="rel1"></div>
-          <div class="actions">
-            <button class="btn main" onclick="envoyer('out')">📤 Copier / Partager</button>
-            <button class="btn ghost" onclick="plusTard('out')">⏳ Je l'envoie plus tard</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- Relire -->
-      <div id="s-relire" class="hide">
-        <div class="card">
-          <h2>Relire avant d'envoyer</h2>
-          <p>Collez ou écrivez votre message. L'appli signale ce qui risque de bloquer la réponse. Vous gardez le dernier mot.</p>
-          <textarea id="libre" style="min-height:120px" placeholder="Écrivez ici…"></textarea>
-          <button class="chip" style="margin-top:8px" onclick="exemple()">Voir un exemple</button>
-          <div id="rel2"></div>
-          <div class="actions">
-            <button class="btn main" onclick="envoyer('libre')">📤 Copier / Partager</button>
-            <button class="btn ghost" onclick="plusTard('libre')">⏳ Plus tard</button>
-          </div>
-        </div>
-        <div class="card">
-          <h2>Repère : la méthode BREF</h2>
-          <div class="bref">
-            <div><b>B</b>Bref : un sujet, quelques lignes.</div>
-            <div><b>R</b>Renseigné : des faits, des dates, des heures.</div>
-            <div><b>E</b>Engageant : un ton correct, même si c'est difficile.</div>
-            <div><b>F</b>Ferme : une demande claire, et on s'arrête là.</div>
-          </div>
-          <p class="meta" style="margin-top:8px">D'après la méthode BIFF de Bill Eddy.</p>
-        </div>
-      </div>
-
-      <!-- Répondre -->
-      <div id="s-repondre" class="hide">
-        <div class="card">
-          <h2>Vous avez reçu un message blessant ?</h2>
-          <p>Vous n'êtes pas obligé·e de répondre à tout. Répondez seulement à la partie pratique, s'il y en a une.</p>
-          <label>Le message reçu <em>— reste sur votre téléphone</em></label>
-          <textarea id="recu" placeholder="Collez le message reçu…"></textarea>
-          <label>La seule question pratique qu'il contient</label>
-          <input id="q" placeholder="Ex. : l'heure de récupération samedi">
-          <label>Votre réponse sur ce point</label>
-          <input id="r" placeholder="Ex. : Je passerai à 10 h comme prévu.">
-          <div class="chips" style="margin-top:10px">
-            <button class="chip" onclick="phrase('J’ai bien reçu ton message.')">J'ai bien reçu ton message.</button>
-            <button class="chip" onclick="phrase('Je réponds sur l’organisation :')">Je réponds sur l'organisation :</button>
-            <button class="chip" onclick="phrase('Pour le reste, je préfère qu’on en parle en médiation.')">Le reste, en médiation.</button>
-          </div>
-          <label>Réponse proposée</label>
-          <textarea id="rep" style="min-height:90px"></textarea>
-          <div id="rel3"></div>
-          <div class="actions">
-            <button class="btn main" onclick="envoyer('rep')">📤 Copier / Partager</button>
-            <button class="btn ghost" onclick="plusTard('rep')">⏳ Plus tard</button>
-          </div>
-        </div>
-        <div class="okbox">Si un message contient des menaces ou vous fait peur, il ne s'agit plus d'un conflit à apaiser. Gardez-le et parlez-en : <b>3919</b> (gratuit, 24 h/24) ou <b>17</b> en cas d'urgence.</div>
-      </div>
-
-      <!-- Défouloir -->
-      <div id="s-defouloir" class="hide">
-        <div class="card">
-          <h2>Ici, vous pouvez tout écrire</h2>
-          <p>Ce texte n'est jamais envoyé. La colère est normale : la poser quelque part aide souvent à écrire ensuite le message utile.</p>
-          <textarea id="def" style="min-height:160px" placeholder="Écrivez ce que vous avez sur le cœur…"></textarea>
-          <div class="actions">
-            <button class="btn ghost" onclick="effacer()">🧹 Effacer et passer au message utile</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- Journal -->
-      <div id="s-journal" class="hide">
-        <div class="card">
-          <h2>⏳ À relire plus tard</h2>
-          <div class="list" id="brouillons"><p>Aucun brouillon.</p></div>
-        </div>
-        <div class="card">
-          <h2>📒 Messages envoyés</h2>
-          <p>Une trace datée de ce que vous avez envoyé. Elle peut vous servir si la situation se tend.</p>
-          <div class="list" id="journal"><p>Rien pour l'instant.</p></div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ===== AUTRES ONGLETS (à venir) ===== -->
-    <section id="v-accueil"><div id="a-content"></div></section>
-    <section id="v-demarches" class="hide">
-      <div id="d-home">
-        <h2 style="font-size:18px;margin:6px 0 4px">Où en êtes-vous ?</h2>
-        <p class="meta" style="margin:0 0 12px">Choisissez la situation la plus proche. Vous pourrez changer à tout moment.</p>
-        <div class="paths" id="paths"></div>
-        <h3 class="sub">Fiches utiles</h3>
-        <div class="paths" id="fiches"></div>
-      </div>
-      <div id="d-path" class="hide">
-        <button class="back" onclick="dHome()">‹ Retour</button>
-        <div id="d-content"></div>
-      </div>
-    </section>
-    <section id="v-outils" class="hide">
-      <div id="o-home">
-        <h2 style="font-size:18px;margin:6px 0 12px">Vos outils</h2>
-        <div class="paths" id="otools"></div>
-      </div>
-      <div id="o-tool" class="hide">
-        <button class="back" onclick="oHome()">‹ Retour</button>
-        <div id="o-content"></div>
-      </div>
-    </section>
-  </main>
-
-  <nav class="bottom" id="nav">
-    <button data-v="accueil" class="on"><span>🏠</span>Accueil</button>
-    <button data-v="messages"><span>💬</span>Messages</button>
-    <button data-v="demarches"><span>⚖️</span>Démarches</button>
-    <button data-v="outils"><span>🧰</span>Outils</button>
-  </nav>
-</div>
-<div class="toast" id="toast"></div>
-
-<script>
-/* ---------- Données ---------- */
-const THEMES = {
-  sante:{n:"Santé",i:"🩺",c:"var(--sante)",m:[
-    ["Rendez-vous médical","{E} a rendez-vous chez ………… le ………… à …………","{Peux} l'emmener ?","Sinon, je m'en occupe."],
-    ["Enfant malade","{E} est malade depuis ………… (…………). Le médecin a prescrit …………","Je te transmets l'ordonnance.","Je peux te rappeler ce soir pour en parler."],
-    ["Traitement","{E} doit prendre ………… jusqu'au …………, matin et soir.","{Peux} continuer le traitement pendant ton temps de garde ?","Je mets le médicament dans son sac."],
-    ["Vaccin","Le vaccin ………… de {E} est à faire avant le …………","{Prefs} t'en occuper ou je prends le rendez-vous ?",""]
-  ]},
-  ecole:{n:"École",i:"🎒",c:"var(--ecole)",m:[
-    ["Réunion","La réunion parents-professeurs de {E} a lieu le ………… à …………","{Peux} me dire si tu viens ?","Je peux te transmettre le compte rendu si tu ne peux pas."],
-    ["Bulletin","J'ai reçu le bulletin de {E} du …………","Je te l'envoie en pièce jointe.",""],
-    ["Sortie / autorisation","L'école organise une sortie le ………… (coût : ………… €).","{Es} d'accord pour signer l'autorisation ?","Je propose qu'on partage le coût."],
-    ["Absence","{E} sera absent·e le ………… pour …………","Je préviens l'école.",""]
-  ]},
-  activ:{n:"Activités",i:"⚽",c:"var(--activ)",m:[
-    ["Inscription","{E} voudrait s'inscrire à ………… (le ………… à …………, ………… € par an).","{Es} d'accord ?","On pourrait partager les frais à moitié."],
-    ["Match / spectacle","{E} a un match / spectacle le ………… à …………","Je voulais te prévenir.",""]
-  ]},
-  vac:{n:"Vacances",i:"🏖️",c:"var(--vac)",m:[
-    ["Dates de vacances","Pour les vacances de …………, je propose d'avoir {E} du ………… au …………","{Es} d'accord avec ces dates ?","Si cela ne te convient pas, propose-moi d'autres dates."],
-    ["Voyage","Je souhaite partir avec {E} à ………… du ………… au …………","Je te transmets l'adresse et un numéro où nous joindre.",""]
-  ]},
-  plan:{n:"Planning",i:"📅",c:"var(--plan)",m:[
-    ["Échanger un week-end","Je ne pourrai pas accueillir {E} le week-end du ………… (…………).","{Peux} le garder ?","Je te propose en échange le week-end du …………"],
-    ["Retard / horaire","Je serai en retard le ………… : j'arriverai vers …………","Je voulais te prévenir.",""]
-  ]},
-  frais:{n:"Frais",i:"💶",c:"var(--frais)",m:[
-    ["Dépense à partager","J'ai payé ………… pour {E} (………… €, facture jointe).","{Peux} me rembourser ta part, soit ………… € ?","Avant le ………… si possible."],
-    ["Demande d'accord","Il faut acheter ………… pour {E} (environ ………… €).","{Es} d'accord pour partager ?",""]
-  ]},
-  autre:{n:"Autre",i:"✉️",c:"var(--autre)",m:[]}
-};
-
-/* Règles de relecture : [regex, titre, explication, proposition] */
-const RULES = [
-  [/\b(connard|connasse|conne?|salope|salaud|débile|abruti(?:e)?|idiot(?:e)?|crétin(?:e)?|enfoiré(?:e)?|minable|pathétique|bouffon|menteu(?:r|se)|égoïste|irresponsable|incapable|nul(?:le)?|pute|ta gueule|ferme[- ]la)\b/gi,
-   "Un mot blessant","Ce mot risque de bloquer la réponse, et il peut être relu par un juge.","Décrivez plutôt le fait : ce qui s'est passé, quand."],
-  [/\b(jamais|toujours|comme d'habitude|comme d’habitude|encore une fois|à chaque fois|tout le temps|comme toujours)\b/gi,
-   "Une généralisation","L'autre risque de répondre au mot « jamais » ou « toujours » plutôt qu'à votre demande.","Citez le fait précis : « Samedi 8, tu es arrivé à 11 h au lieu de 10 h. »"],
-  [/\b(tu es|t'es|t’es|vous êtes)\b/gi,
-   "Un jugement sur la personne","Parler de ce que la personne « est » la met sur la défensive.","Parlez de ce qui s'est passé et de ce dont vous avez besoin."],
-  [/\b(tu vas voir|tu vas le regretter|tu le regretteras|je vais te|tu vas payer|tu ne verras plus)\b/gi,
-   "Une menace","Même sous le coup de la colère, une menace écrite peut se retourner contre vous.","Si le désaccord est sérieux, proposez la médiation ou dites que vous saisirez le juge, sans menacer."],
-  [/\b(bravo|quelle surprise|évidemment|merci pour rien|c'est ça oui|c’est ça oui|super, encore)\b/gi,
-   "De l'ironie","À l'écrit, l'ironie est presque toujours mal lue.","Dites les choses directement, en une phrase."],
-  [/\b(m'a dit que tu|m’a dit que tu|m'a raconté que tu|m’a raconté que tu|les enfants savent que)\b/gi,
-   "L'enfant au milieu","Rapporter les propos de l'enfant peut le placer entre vous deux.","Parlez de ce que vous avez constaté vous-même, ou proposez d'en discuter."],
-  [/\b[A-ZÀÂÉÈÊÎÔÛÇ]{4,}\b/g,
-   "Des majuscules","Les majuscules se lisent comme des cris.","Écrivez normalement : le mot important suffit."],
-  [/[!?]{2,}/g,
-   "Plusieurs points d'exclamation","Ils donnent un ton agacé, même si ce n'est pas voulu.","Un seul signe suffit."]
-];
-
-/* Limites de mots compatibles avec les accents (é, è…) */
-RULES.forEach(r=>{ const s=r[0].source; if(s.startsWith("\\b")) r[0]=new RegExp(s.replace(/^\\b/,"(?<![\\p{L}])").replace(/\\b$/,"(?![\\p{L}])"), r[0].flags+"u"); });
-
-/* ---------- État (en mémoire, aperçu) ---------- */
-let theme = "sante", tv = "tu", journal = [], brouillons = [], hidden = new Set();
-
-/* ---------- Navigation ---------- */
-document.getElementById("nav").onclick = e => {
-  const b = e.target.closest("button"); if(!b) return;
-  document.querySelectorAll("#nav button").forEach(x=>x.classList.toggle("on",x===b));
-  ["accueil","messages","demarches","outils"].forEach(v=>document.getElementById("v-"+v).classList.toggle("hide",v!==b.dataset.v));
-};
-document.getElementById("seg").onclick = e => {
-  const b = e.target.closest("button"); if(!b) return; show(b.dataset.s);
-};
-function show(s){
-  document.querySelectorAll("#seg button").forEach(x=>x.classList.toggle("on",x.dataset.s===s));
-  ["ecrire","relire","repondre","defouloir","journal"].forEach(v=>document.getElementById("s-"+v).classList.toggle("hide",v!==s));
-  if(s==="journal") renderJournal();
-}
-
-/* ---------- Thèmes et modèles ---------- */
-function renderThemes(){
-  document.getElementById("themes").innerHTML = Object.entries(THEMES).map(([k,t])=>
-    `<div class="th ${k===theme?"on":""}" style="--c:${t.c}" onclick="setTheme('${k}')"><span>${t.i}</span>${t.n}</div>`).join("");
-  const m = THEMES[theme].m;
-  document.getElementById("modeles").innerHTML = m.length
-    ? m.map((x,i)=>`<button class="chip" style="--c:${THEMES[theme].c}" onclick="modele(${i})">${x[0]}</button>`).join("")
-    : `<span class="meta">Écrivez librement dans les cases ci-dessous.</span>`;
-}
-function setTheme(k){ theme=k; renderThemes(); }
-function conj(s){
-  const tu = tv==="tu";
-  return s.replace(/\{E\}/g,(typeof ME!=="undefined"&&ME.enf)?ME.enf:"…………")
-    .replace(/\{Peux\}/g, tu?"Peux-tu":"Pouvez-vous")
-    .replace(/\{Es\}/g, tu?"Es-tu":"Êtes-vous")
-    .replace(/\{Prefs\}/g, tu?"Préfères-tu":"Préférez-vous")
-    .replace(/\bton temps\b/g, tu?"ton temps":"votre temps")
-    .replace(/\bte (rappeler|transmets|propose)/g, (a,b)=> tu?a:"vous "+b)
-    .replace(/\bt'en\b/g, tu?"t'en":"vous en")
-    .replace(/\bta part\b/g, tu?"ta part":"votre part")
-    .replace(/\bsi tu ne peux\b/g, tu?"si tu ne peux":"si vous ne pouvez")
-    .replace(/\bsi tu viens\b/g, tu?"si tu viens":"si vous venez")
-    .replace(/\bpropose-moi\b/g, tu?"propose-moi":"proposez-moi")
-    .replace(/\bte convient\b/g, tu?"te convient":"vous convient");
-}
-function modele(i){
-  const m = THEMES[theme].m[i];
-  f1.value=conj(m[1]); f2.value=conj(m[2]); f3.value=conj(m[3]); compose();
-}
-document.getElementById("tv").onclick = e=>{
-  const b=e.target.closest("button"); if(!b) return; tv=b.dataset.v;
-  document.querySelectorAll("#tv button").forEach(x=>x.classList.toggle("on",x===b)); compose();
-};
-["f1","f2","f3","f4"].forEach(id=>document.getElementById(id).addEventListener("input",compose));
-function compose(){
-  const p=[f1.value.trim(),f2.value.trim(),f3.value.trim()].filter(Boolean).map(s=>/[.?!:…]$/.test(s)?s:s+".");
-  let txt = p.length ? "Bonjour,\n"+p.join(" ") : "";
-  if(f4.value) txt += `\n${tv==="tu"?"Merci de me répondre":"Merci de me répondre"} ${f4.value}.`;
-  if(txt) txt += "\nMerci.";
-  out.value = txt; relire("out","rel1");
-}
-
-/* ---------- Relecture ---------- */
-function esc(s){return s.replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]))}
-function relire(srcId, boxId){
-  const txt = document.getElementById(srcId).value, box = document.getElementById(boxId);
-  if(!txt.trim()){ box.innerHTML=""; return; }
-  const ranges=[], tips=[];
-  RULES.forEach((r,ri)=>{
-    r[0].lastIndex=0; let m, found=false;
-    while((m=r[0].exec(txt))){ ranges.push([m.index,m.index+m[0].length]); found=true; }
-    if(found && !hidden.has(ri)) tips.push([ri,r]);
-  });
-  if(txt.length>600 && !hidden.has(99)) tips.push([99,[null,"Un message long","Un seul sujet par message a plus de chances d'obtenir une réponse rapide.","Gardez l'essentiel ici, et le reste pour un autre message."]]);
-  ranges.sort((a,b)=>a[0]-b[0]);
-  let html="",pos=0;
-  ranges.forEach(([a,b])=>{ if(a<pos) return; html+=esc(txt.slice(pos,a))+"<mark>"+esc(txt.slice(a,b))+"</mark>"; pos=b; });
-  html+=esc(txt.slice(pos));
-  if(!tips.length){
-    box.innerHTML = `<div class="verdict ok">✓ Message clair et factuel</div><div class="okbox">Rien ne risque de bloquer la réponse. Vous pouvez l'envoyer.</div>`;
-    return;
-  }
-  box.innerHTML = `<div class="verdict warn">À relire : ${tips.length} point${tips.length>1?"s":""}</div>
-    <div class="preview">${html}</div>
-    ${tips.map(([ri,r])=>`<div class="tip"><b>${r[1]}</b>${r[2]}<div class="alt">👉 ${r[3]}</div><button onclick="masquer(${ri},'${srcId}','${boxId}')">Je garde comme ça</button></div>`).join("")}`;
-}
-function masquer(ri,s,b){ hidden.add(ri); relire(s,b); }
-libre.addEventListener("input",()=>relire("libre","rel2"));
-out.addEventListener("input",()=>relire("out","rel1"));
-rep.addEventListener("input",()=>relire("rep","rel3"));
-function exemple(){
-  libre.value="Tu es vraiment irresponsable !!! Tu ne ramènes JAMAIS Léa à l'heure, comme d'habitude. Bravo.";
-  hidden.clear(); relire("libre","rel2");
-}
-
-/* ---------- Répondre à un message tendu ---------- */
-function buildRep(){
-  const parts=[]; if(q.value.trim()) parts.push(`Pour ${q.value.trim()} :`); if(r.value.trim()) parts.push(r.value.trim());
-  if(parts.length){ rep.value = "J'ai bien reçu ton message.\n"+parts.join(" "); relire("rep","rel3"); }
-}
-q.addEventListener("input",buildRep); r.addEventListener("input",buildRep);
-function phrase(t){ rep.value = (rep.value? rep.value.trim()+"\n":"")+t; relire("rep","rel3"); }
-
-/* ---------- Actions ---------- */
-function toast(t){ const el=document.getElementById("toast"); el.textContent=t; el.classList.add("show"); setTimeout(()=>el.classList.remove("show"),2200); }
-function now(){ return new Date().toLocaleString("fr-FR",{dateStyle:"short",timeStyle:"short"}); }
-async function envoyer(id){
-  const t=document.getElementById(id).value.trim(); if(!t){toast("Le message est vide.");return;}
-  try{ if(navigator.share) await navigator.share({text:t}); else await navigator.clipboard.writeText(t); }catch(e){}
-  journal.unshift({d:now(),th:THEMES[theme].i+" "+THEMES[theme].n,t});
-  toast("Copié. Collez-le dans SMS, WhatsApp ou mail. Une copie est dans le Journal.");
-}
-function plusTard(id){
-  const t=document.getElementById(id).value.trim(); if(!t){toast("Le message est vide.");return;}
-  const h=new Date(Date.now()+3600e3).toLocaleTimeString("fr-FR",{hour:"2-digit",minute:"2-digit"});
-  brouillons.unshift({h,t}); toast(`Mis de côté. Rappel à ${h} pour le relire à tête reposée.`);
-}
-function renderJournal(){
-  document.getElementById("brouillons").innerHTML = brouillons.length ? brouillons.map(b=>`<div class="it"><div class="meta">À relire à ${b.h}</div>${esc(b.t).replace(/\n/g,"<br>")}</div>`).join("") : "<p>Aucun brouillon.</p>";
-  document.getElementById("journal").innerHTML = journal.length ? journal.map(j=>`<div class="it"><div class="meta">${j.d} · ${j.th}</div>${esc(j.t).replace(/\n/g,"<br>")}</div>`).join("") : "<p>Rien pour l'instant.</p>";
-}
-function effacer(){ def.value=""; toast("C'est effacé. Quand vous êtes prêt·e, écrivez le message utile."); show("ecrire"); }
-function sortie(){ try{ speechSynthesis.cancel(); }catch(e){} document.body.innerHTML=""; location.replace("https://meteofrance.com/"); }
-
-/* ================= DÉMARCHES ================= */
-const L = {
-  c16139:["Formulaire 16139 (homologation)","https://www.formulaires.service-public.gouv.fr/gf/cerfa_16139.do"],
-  c11530:["Formulaire 11530 (requête au JAF)","https://www.formulaires.service-public.gouv.fr/gf/cerfa_11530.do"],
-  aj:["Demande d'aide juridictionnelle en ligne","https://www.aidejuridictionnelle.justice.fr"],
-  justice:["justice.fr","https://www.justice.fr"],
-  aripa:["Pension alimentaire – CAF","https://www.pension-alimentaire.caf.fr"],
-  viol:["arretonslesviolences.gouv.fr","https://arretonslesviolences.gouv.fr"]
-};
-const lk = k => `<a class="lnk" href="${L[k][1]}" target="_blank" rel="noopener">↗ ${L[k][0]}</a>`;
-const PIECES = `<ul><li>une copie de votre pièce d'identité ;</li><li>les actes de naissance intégraux de moins de 3 mois (parents et enfants) ;</li><li>les décisions de justice déjà rendues, s'il y en a ;</li><li>si une pension est demandée : avis d'imposition, 3 derniers bulletins de salaire, justificatifs de prestations et de charges fixes, justificatif de domicile.</li></ul>`;
-
-const PATHS = {
-  accord:{i:"🤝",c:"var(--ok)",t:"Nous sommes d'accord",s:"Écrire une convention parentale et la faire valider par le juge",steps:[
-    ["Se mettre d'accord sur les points clés",`<p>Résidence des enfants, temps chez chacun, vacances, trajets, pension, partage des frais, façon de communiquer.</p><button class="lnk" style="border:0;cursor:pointer" onclick="dOpen('convention')">✍️ Préparer notre convention</button>`],
-    ["Rédiger et signer la convention",`<p>Les deux parents la datent et la signent. Chacun garde un exemplaire.</p><p>Tant qu'elle n'est pas validée par le juge, elle n'a pas de force obligatoire : en cas de désaccord, ni la CAF ni un huissier ne peuvent s'appuyer dessus.</p>`],
-    ["Remplir la demande conjointe d'homologation",`<p>Il s'agit du formulaire Cerfa n° 16139. Il est signé par les deux parents et accompagné de la convention.</p>${lk("c16139")}`],
-    ["Rassembler les pièces",PIECES],
-    ["Envoyer le dossier au tribunal",`<p>Au greffe du juge aux affaires familiales (JAF) du tribunal judiciaire du lieu où vit l'un ou l'autre parent, au choix.</p><p>Pas besoin d'avocat. La démarche est gratuite.</p>`],
-    ["Après la décision",`<p>Le juge peut valider la convention sans vous recevoir, ou vous convoquer. Une fois homologuée, elle a la même force qu'un jugement.</p><p>Si une pension est prévue, le versement passe en principe par la CAF ou la MSA (intermédiation financière).</p>${lk("aripa")}`]
-  ]},
-  desaccord:{i:"🧭",c:"var(--vac)",t:"Nous ne sommes pas d'accord",s:"Médiation, puis demande au juge si besoin",steps:[
-    ["Essayer la médiation familiale",`<p>Un médiateur familial diplômé, neutre, vous aide à trouver un accord. Ce qui s'y dit reste confidentiel. Le premier entretien d'information est gratuit ; ensuite, le prix dépend de vos revenus.</p><p>La médiation n'est pas obligatoire avant de saisir le juge, mais le formulaire vous demande ce que vous avez tenté, et le juge peut vous demander de rencontrer un médiateur.</p><button class="lnk" style="border:0;cursor:pointer" onclick="goTab('outils');oOpen('contacts')">📍 Contacts près de chez moi</button>`],
-    ["Si un accord est trouvé",`<p>Passez au parcours « Nous sommes d'accord » pour écrire la convention et la faire homologuer.</p><button class="lnk" style="border:0;cursor:pointer" onclick="dOpen('accord')">🤝 Aller au parcours accord</button>`],
-    ["Remplir la requête au JAF",`<p>Formulaire Cerfa n° 11530, avec sa notice n° 50720. Il sert à fixer ou modifier : l'autorité parentale, la résidence des enfants, le droit de visite et d'hébergement, la pension.</p><ul><li><b>Vous et l'autre parent</b> : état civil, adresses.</li><li><b>Les enfants</b> : un bloc par enfant.</li><li><b>Ce que vous demandez</b> : soyez précis (jours, horaires, montant).</li><li><b>Tentative amiable</b> : courrier, médiation, ou raison pour laquelle ce n'était pas possible.</li><li><b>Intermédiation financière</b> : versement de la pension par la CAF ou la MSA.</li></ul>${lk("c11530")}`],
-    ["Rassembler les pièces",PIECES+`<p>Ajoutez ce qui appuie votre demande : planning de travail, attestation d'école, échanges écrits factuels (votre Journal peut aider).</p>`],
-    ["Déposer ou envoyer la requête",`<p>Au greffe du JAF du tribunal judiciaire du lieu où vivent les enfants. Pas d'avocat obligatoire, pas de frais. Vous pouvez vous faire aider : voir la fiche « Avocat et aide juridictionnelle ».</p>`],
-    ["Préparer l'audience",`<p>Vous recevez une convocation ; l'autre parent aussi. Venez avec vos pièces. Exposez les faits simplement, en pensant d'abord à l'organisation des enfants.</p><p>Un enfant capable de discernement peut demander à être entendu par le juge.</p>`],
-    ["Après la décision",`<p>La décision s'applique aux deux parents. Elle indique le délai pour faire appel. Si la situation change (déménagement, emploi, besoins de l'enfant), une nouvelle demande est possible.</p>`]
-  ]},
-  divorce:{i:"💍",c:"var(--plan)",t:"Nous sommes mariés",s:"Les deux façons de divorcer, et la place des enfants",steps:[
-    ["Divorce par consentement mutuel",`<p>Sans juge : chaque époux a son propre avocat. La convention de divorce règle aussi la situation des enfants. Après un délai de réflexion de 15 jours, elle est signée puis déposée chez un notaire.</p><p>Si un enfant mineur demande à être entendu par le juge, le divorce passe devant le juge.</p>`],
-    ["Divorce devant le juge",`<p>En cas de désaccord, ou si l'un des époux le choisit. L'avocat est obligatoire. Le juge fixe les mesures pour les enfants.</p>`],
-    ["Financer l'avocat",`<p>L'aide juridictionnelle peut prendre en charge tout ou partie des frais.</p><button class="lnk" style="border:0;cursor:pointer" onclick="dOpen('avocat')">⚖️ Fiche avocat et aide</button>`]
-  ]},
-  violences:{i:"🛟",c:"#c92a2a",t:"Il y a des violences, ou j'ai peur",s:"Un parcours protégé, sans médiation",alert:`<div class="alert"><b>En danger maintenant ?</b> Appelez le <b>17</b> ou le <b>112</b>. Si vous ne pouvez pas parler : SMS au <b>114</b>.<br>Écoute anonyme et gratuite, 24 h/24 : <b>3919</b>.</div>`,steps:[
-    ["La médiation n'est pas adaptée",`<p>Quand il y a des violences d'un parent sur l'autre ou sur l'enfant, le juge ne peut pas imposer de médiation. Vous n'avez pas à négocier un accord avec l'autre parent.</p>`],
-    ["Demander une ordonnance de protection",`<p>Le JAF peut, en urgence et même sans plainte : interdire le contact, attribuer le logement, fixer la résidence des enfants, permettre de cacher votre adresse.</p>${lk("viol")}`],
-    ["Garder les traces",`<p>Messages, mails, certificats médicaux, attestations. Vous pouvez les ranger dans le coffre-fort de l'appli, protégé par un code.</p><button class="lnk" style="border:0;cursor:pointer" onclick="goTab('outils');oOpen('coffre')">🔒 Mon coffre-fort</button>`],
-    ["Se faire accompagner",`<p>France Victimes : <b>116 006</b> (gratuit). Associations et CIDFF : voir les contacts près de chez vous.</p><button class="lnk" style="border:0;cursor:pointer" onclick="goTab('outils');oOpen('contacts')">📍 Contacts près de chez moi</button><p> Un avocat peut être pris en charge par l'aide juridictionnelle.</p>`]
-  ]}
-};
-const FICHES = {
-  avocat:{i:"⚖️",c:"var(--ecole)",t:"Avocat et aide juridictionnelle",s:"Quand en prendre un, comment le financer",steps:[
-    ["Faut-il un avocat ?",`<p>Pas obligatoire pour une demande au JAF hors divorce, ni pour l'homologation d'une convention. Obligatoire pour un divorce. Utile si le désaccord est fort ou si l'autre parent a un avocat.</p>`],
-    ["Un conseil gratuit d'abord",`<p>Les Points-justice donnent des consultations gratuites avec des juristes et des avocats. Numéro unique : <b>30 39</b>.</p>${lk("justice")}`],
-    ["L'aide juridictionnelle",`<p>Plafonds 2026 pour une personne seule (revenu fiscal de référence) : prise en charge totale jusqu'à 12 957 €, partielle jusqu'à 19 433 €. Les plafonds augmentent avec les personnes à charge.</p><p>Demande en ligne ou par formulaire Cerfa n° 16146.</p>${lk("aj")}`]
-  ]},
-  pension:{i:"💶",c:"var(--frais)",t:"Pension alimentaire",s:"Combien, comment elle est versée, en cas d'impayé",steps:[
-    ["Estimer un montant",`<p>Le ministère de la Justice propose un barème indicatif selon les revenus, le nombre d'enfants et le temps de résidence. Le juge n'est pas tenu de le suivre.</p>${lk("justice")}`],
-    ["Le versement par la CAF ou la MSA",`<p>Depuis 2023, l'intermédiation financière est automatique pour les séparations : l'organisme collecte la pension chaque mois et la reverse. C'est gratuit.</p>${lk("aripa")}`],
-    ["En cas d'impayé",`<p>Signalez-le à la CAF ou à la MSA. Selon votre situation, l'allocation de soutien familial (ASF) peut être versée en attendant.</p>`]
-  ]},
-  convention:{i:"✍️",c:"var(--ok)",t:"Préparer notre convention",s:"Un modèle guidé à compléter ensemble",builder:true}
-};
-
-let dDone = {};
-function pathCard(k,p){ return `<button class="path" style="--c:${p.c}" onclick="dOpen('${k}')"><span class="i">${p.i}</span><span><b>${p.t}</b><small>${p.s}</small></span></button>`; }
-function dHome(){
-  document.getElementById("paths").innerHTML = Object.entries(PATHS).map(([k,p])=>pathCard(k,p)).join("");
-  document.getElementById("fiches").innerHTML = Object.entries(FICHES).map(([k,p])=>pathCard(k,p)).join("");
-  document.getElementById("d-home").classList.remove("hide"); document.getElementById("d-path").classList.add("hide");
-}
-function dOpen(k){
-  const p = PATHS[k]||FICHES[k], box=document.getElementById("d-content");
-  document.getElementById("d-home").classList.add("hide"); document.getElementById("d-path").classList.remove("hide");
-  document.getElementById("main").scrollTop=0;
-  if(p.builder){ box.innerHTML = builderHTML(); convGen(); return; }
-  dDone[k] = dDone[k]||[];
-  const n=p.steps.length, d=dDone[k].length;
-  box.innerHTML = `<div class="hero" style="border-left:6px solid ${p.c}"><h2>${p.i} ${p.t}</h2><p>${p.s}</p>
-    ${PATHS[k]?`<div class="prog"><i style="width:${Math.round(d/n*100)}%"></i></div><span class="meta">${d} étape${d>1?"s":""} sur ${n}</span>`:""}</div>
-    ${p.alert||""}
-    ${p.steps.map((s,i)=>`<details class="step ${dDone[k].includes(i)?"done":""}" ${i===firstTodo(k,n)?"open":""}>
-      <summary><span class="n">${dDone[k].includes(i)?"✓":i+1}</span>${s[0]}</summary>
-      <div class="body" data-tts>${TTS}${s[1]}${PATHS[k]?`<button class="donebtn" onclick="dToggle('${k}',${i})">${dDone[k].includes(i)?"✓ Fait":"C'est fait"}</button>`:""}</div></details>`).join("")}
-    <p class="verif">Aperçu : informations vérifiées le 05/11/2026, à relire avant mise en ligne.</p>`;
-}
-function firstTodo(k,n){ for(let i=0;i<n;i++) if(!dDone[k].includes(i)) return i; return -1; }
-function dToggle(k,i){ const a=dDone[k]; const j=a.indexOf(i); j<0?a.push(i):a.splice(j,1); dOpen(k); }
-
-/* --- Convention guidée --- */
-function builderHTML(){
-  return `<div class="hero" style="border-left:6px solid var(--ok)"><h2>✍️ Préparer notre convention</h2><p>Remplissez ensemble ce qui est décidé. Les cases vides restent en « ………… » : vous les compléterez plus tard. Ce texte est une base, à relire avant de signer.</p></div>
-  <div class="card conv">
-    <label>Les enfants <em>— prénom, nom, date de naissance</em></label><textarea id="c_enf" placeholder="Léa MARTIN, née le 03/04/2016"></textarea>
-    <label>Résidence habituelle</label><select id="c_res"><option value="">…</option><option>en alternance au domicile de chacun des parents</option><option>au domicile du parent 1</option><option>au domicile du parent 2</option></select>
-    <label>Rythme <em>— alternance, week-ends, milieu de semaine</em></label><input id="c_ryt" placeholder="une semaine sur deux, du vendredi sortie d'école au vendredi suivant">
-    <label>Vacances scolaires</label><select id="c_vac"><option value="">…</option><option>par moitié, première moitié au parent 1 les années paires, au parent 2 les années impaires</option><option>par moitié, en alternant les moitiés chaque année</option></select>
-    <label>Trajets</label><input id="c_tra" placeholder="le parent qui accueille va chercher l'enfant">
-    <label>Pension <em>— montant par mois et par enfant</em></label><input id="c_pen" placeholder="150 €">
-    <label>Frais exceptionnels <em>— santé non remboursée, voyages scolaires…</em></label><input id="c_fra" placeholder="partagés par moitié, sur justificatif">
-    <label>Comment nous communiquons</label><input id="c_com" placeholder="par écrit pour l'organisation, réponse sous 48 h">
-  </div>
-  <div class="card"><h2>Votre projet de convention</h2><textarea id="c_out" style="min-height:260px"></textarea>
-    <div class="actions"><button class="btn main" onclick="copier('c_out')">📋 Copier le texte</button><button class="btn ghost" onclick="dOpen('accord')">Étape suivante ›</button></div></div>`;
-}
-const V = id => (document.getElementById(id).value.trim() || "…………");
-function convGen(){
-  document.querySelectorAll(".conv input,.conv select,.conv textarea").forEach(el=>el.oninput=convGen);
-  const pen = document.getElementById("c_pen").value.trim();
-  document.getElementById("c_out").value =
-`CONVENTION PARENTALE
-
-Entre :
-………… (parent 1), né(e) le ………… , demeurant …………
-et ………… (parent 2), né(e) le ………… , demeurant …………
-
-Concernant le(s) enfant(s) :
-${V("c_enf")}
-
-1. Autorité parentale
-Les parents exercent en commun l'autorité parentale. Ils prennent ensemble les décisions importantes (santé, scolarité, orientation, religion, sorties du territoire) et s'informent mutuellement de la vie de l'enfant.
-
-2. Résidence
-La résidence habituelle de l'enfant est fixée ${V("c_res")}.
-Rythme : ${V("c_ryt")}.
-
-3. Vacances scolaires
-${V("c_vac")}.
-
-4. Trajets
-${V("c_tra")}.
-
-5. Contribution à l'entretien et à l'éducation
-${pen ? `Une pension de ${pen} par mois et par enfant est versée par ………… à ………… , avec indexation annuelle. Elle est versée par l'intermédiaire de la CAF ou de la MSA, sauf refus des deux parents.` : "…………"}
-
-6. Frais exceptionnels
-${V("c_fra")}.
-
-7. Communication entre les parents
-${V("c_com")}.
-
-Fait à ………… , le …………
-Signature du parent 1                    Signature du parent 2`.replace(/…\./g,"…");
-}
-async function copier(id){ try{ await navigator.clipboard.writeText(document.getElementById(id).value); }catch(e){} toast("Texte copié."); }
-
-/* ================= OUTILS ================= */
-const TOOLS = {
-  garde:{i:"📅",c:"var(--plan)",t:"Calendrier de garde",s:"Votre rythme et les vacances scolaires, à ajouter à l'agenda"},
-  frais:{i:"💶",c:"var(--frais)",t:"Frais partagés",s:"Qui a payé quoi, et qui doit combien"},
-  fiche:{i:"🧒",c:"var(--sante)",t:"Fiche enfant",s:"Santé, école, contacts, tailles : tout au même endroit"},
-  parler:{i:"🗣️",c:"var(--ecole)",t:"Parler de la séparation à son enfant",s:"Les mots selon son âge"},
-  quiz:{i:"🎯",c:"var(--vac)",t:"Mises en situation",s:"Que feriez-vous ? 4 situations du quotidien"}
-};
-function oHome(){
-  document.getElementById("otools").innerHTML = Object.entries(TOOLS).map(([k,p])=>`<button class="path" style="--c:${p.c}" onclick="oOpen('${k}')"><span class="i">${p.i}</span><span><b>${p.t}</b><small>${p.s}</small></span></button>`).join("");
-  document.getElementById("o-home").classList.remove("hide"); document.getElementById("o-tool").classList.add("hide");
-}
-function oOpen(k){
-  document.getElementById("o-home").classList.add("hide"); document.getElementById("o-tool").classList.remove("hide");
-  document.getElementById("main").scrollTop=0;
-  const p=TOOLS[k];
-  document.getElementById("o-content").innerHTML = `<div class="hero" style="border-left:6px solid ${p.c}"><h2>${p.i} ${p.t}</h2><p>${p.s}</p></div>` + ({garde:gardeHTML,frais:fraisHTML,fiche:ficheHTML,parler:parlerHTML,quiz:quizHTML,coffre:coffreHTML,contacts:contactsHTML}[k])();
-  if(k==="garde") gInit(); if(k==="frais") fRender(); if(k==="quiz") qRender(); if(k==="coffre") docList();
-}
-
-/* --- Calendrier de garde --- */
-const VAC = { /* arrêté du 22/10/2025 – [début (samedi), reprise (lundi)] */
-  A:[["2026-10-17","2026-11-02","Toussaint"],["2026-12-19","2027-01-04","Noël"],["2027-02-13","2027-03-01","Hiver"],["2027-04-10","2027-04-26","Printemps"],["2027-07-03","2027-09-01","Été"]],
-  B:[["2026-10-17","2026-11-02","Toussaint"],["2026-12-19","2027-01-04","Noël"],["2027-02-20","2027-03-08","Hiver"],["2027-04-17","2027-05-03","Printemps"],["2027-07-03","2027-09-01","Été"]],
-  C:[["2026-10-17","2026-11-02","Toussaint"],["2026-12-19","2027-01-04","Noël"],["2027-02-06","2027-02-22","Hiver"],["2027-04-03","2027-04-19","Printemps"],["2027-07-03","2027-09-01","Été"]]
-};
-const D = s => { const [y,m,d]=s.split("-").map(Number); return new Date(y,m-1,d,12); };
-const DAY = 864e5, iso = d => d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
-const G={p1:"Moi",p2:"l'autre parent",r:"alt",j:"5",z:"C",d:"2026-11-06",w:"1",v:"1"};
-let gMonth = new Date(); gMonth = new Date(gMonth.getFullYear(), gMonth.getMonth(), 1, 12);
-function gardeHTML(){ return `
-  <div class="card">
-    <div class="two"><div><label>Vous</label><input id="g_p1" value="Moi"></div><div><label>L'autre parent</label><input id="g_p2" value="Papa"></div></div>
-    <label>Rythme habituel</label>
-    <select id="g_r"><option value="alt">Une semaine sur deux (garde alternée)</option><option value="we">Résidence chez vous, un week-end sur deux chez l'autre parent</option></select>
-    <div class="two"><div><label>Jour du changement</label><select id="g_j"><option value="5">vendredi</option><option value="1">lundi</option><option value="0">dimanche</option></select></div>
-    <div><label>Zone scolaire</label><select id="g_z"><option>A</option><option>B</option><option selected>C</option></select></div></div>
-    <label>Point de départ <em>— une date où vous savez qui a l'enfant</em></label>
-    <div class="two"><input type="date" id="g_d" value="2026-11-06"><select id="g_w"><option value="1">chez vous</option><option value="2">chez l'autre parent</option></select></div>
-    <label>Vacances : première moitié</label>
-    <select id="g_v"><option value="1">chez vous les années paires</option><option value="2">chez l'autre parent les années paires</option></select>
-  </div>
-  <div class="card">
-    <div class="calnav"><button onclick="gMove(-1)">‹</button><b id="g_m"></b><button onclick="gMove(1)">›</button></div>
-    <div class="cal" id="g_cal"></div>
-    <div class="leg"><span><i style="background:#3b5bdb"></i><span id="l1"></span></span><span><i style="background:#e8590c"></i><span id="l2"></span></span><span>• vacances scolaires</span></div>
-    <div id="g_info" class="meta" style="margin-top:8px"></div>
-    <div class="actions"><button class="btn main" onclick="gIcs()">📲 Ajouter à mon agenda</button></div>
-    <p class="meta" style="margin-top:8px">Dates des vacances : arrêté du 22 octobre 2025. La fin des vacances d'été (rentrée 2027) n'est pas encore publiée : fixée provisoirement au 1er septembre 2027.</p>
-  </div>`; }
-function who(d){
-  const r=G.r, ref=+G.w, j=+G.j, start=D(G.d||"2026-11-06");
-  for(const [a,b] of VAC[G.z]){
-    const s=D(a), e=D(b);
-    if(d>=s && d<e){ const n=Math.round((e-s)/DAY), half=Math.floor(n/2), i=Math.round((d-s)/DAY);
-      const even = s.getFullYear()%2===0, first = (+G.v===1)===even ? 1 : 2;
-      return {p: i<half?first:3-first, vac:true}; }
-  }
-  if(r==="alt"){
-    const anchor=new Date(start); while(anchor.getDay()!==j) anchor.setDate(anchor.getDate()-1);
-    const idx=Math.floor(Math.round((d-anchor)/DAY)/7);
-    const refAtStart = ref; return {p: idx%2===0?refAtStart:3-refAtStart, vac:false};
-  }
-  const wd=d.getDay(); if(wd!==6 && wd!==0) return {p:1,vac:false};
-  const sat=new Date(d); if(wd===0) sat.setDate(sat.getDate()-1);
-  const s0=new Date(start); while(s0.getDay()!==6) s0.setDate(s0.getDate()+1);
-  const idx=Math.round((sat-s0)/(7*DAY));
-  const firstWE = ref===2 ? 2 : 1; /* week-end de départ */
-  return {p: ((idx%2+2)%2===0) ? (firstWE===2?2:1) : (firstWE===2?1:2), vac:false};
-}
-function gInit(){ ["p1","p2","r","j","z","d","w","v"].forEach(k=>document.getElementById("g_"+k).value=G[k]); document.querySelectorAll("#o-content input,#o-content select").forEach(el=>el.oninput=gRender); gRender(); }
-function gMove(n){ gMonth=new Date(gMonth.getFullYear(),gMonth.getMonth()+n,1,12); gRender(); }
-function gRender(){
-  ["p1","p2","r","j","z","d","w","v"].forEach(k=>G[k]=document.getElementById("g_"+k).value);
-  const p1=G.p1||"Vous", p2=G.p2||"L'autre parent";
-  l1.textContent=p1; l2.textContent=p2;
-  g_m.textContent=gMonth.toLocaleDateString("fr-FR",{month:"long",year:"numeric"});
-  const y=gMonth.getFullYear(), m=gMonth.getMonth(), first=(new Date(y,m,1).getDay()+6)%7, n=new Date(y,m+1,0).getDate();
-  let h=["L","M","M","J","V","S","D"].map(x=>`<div class="h">${x}</div>`).join("")+"<div></div>".repeat(first);
-  const t=iso(new Date()); let c1=0,c2=0;
-  for(let i=1;i<=n;i++){ const d=new Date(y,m,i,12), w=who(d); w.p===1?c1++:c2++;
-    h+=`<div class="d p${w.p} ${w.vac?"vac":""} ${iso(d)===t?"today":""}" title="${w.p===1?p1:p2}">${i}</div>`; }
-  g_cal.innerHTML=h;
-  const vs=VAC[G.z].filter(([a,b])=>D(a)<=new Date(y,m+1,0,12)&&D(b)>new Date(y,m,1,12)).map(v=>`${v[2]} : du ${D(v[0]).toLocaleDateString("fr-FR")} au ${new Date(D(v[1])-DAY).toLocaleDateString("fr-FR")}`);
-  g_info.innerHTML=`Ce mois-ci : ${c1} jours avec ${esc(p1)}, ${c2} avec ${esc(p2)}.`+(vs.length?"<br>"+vs.join("<br>"):"");
-}
-function gIcs(){
-  const p1=G.p1||"Vous", p2=G.p2||"L'autre parent";
-  let d=new Date(); d=new Date(d.getFullYear(),d.getMonth(),d.getDate(),12);
-  const end=new Date(d.getTime()+300*DAY), ev=[]; let cur=null;
-  for(;d<=end;d=new Date(d.getTime()+DAY)){ const w=who(d).p;
-    if(!cur||cur.p!==w){ if(cur) ev.push(cur); cur={p:w,s:new Date(d),e:new Date(d)}; } else cur.e=new Date(d); }
-  ev.push(cur);
-  const f=x=>iso(x).replace(/-/g,""), stamp=f(new Date())+"T000000Z";
-  const ics=["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//Entre Deux Toits//FR"].concat(...ev.map((e,i)=>["BEGIN:VEVENT",`UID:dm-${i}-${f(e.s)}@entre-deux-toits`,`DTSTAMP:${stamp}`,`DTSTART;VALUE=DATE:${f(e.s)}`,`DTEND;VALUE=DATE:${f(new Date(e.e.getTime()+DAY))}`,`SUMMARY:Enfants chez ${e.p===1?p1:p2}`,"END:VEVENT"]),["END:VCALENDAR"]).join("\r\n");
-  const a=document.createElement("a"); a.href=URL.createObjectURL(new Blob([ics],{type:"text/calendar"})); a.download="calendrier-garde.ics"; a.click();
-  toast(`${ev.length} périodes exportées. Ouvrez le fichier pour les ajouter à votre agenda.`);
-}
-
-/* --- Frais partagés --- */
-let frais=[];
-function fraisHTML(){ return `
-  <div class="card">
-    <label>Dépense</label><input id="x_l" placeholder="Lunettes de Léa">
-    <div class="two"><div><label>Montant (€)</label><input id="x_m" type="number" min="0" step="0.01" placeholder="120"></div>
-    <div><label>Payé par</label><select id="x_p"><option value="1">moi</option><option value="2">l'autre parent</option></select></div></div>
-    <label>Partage</label><select id="x_s"><option value="50">moitié / moitié</option><option value="60">60 % moi / 40 % l'autre</option><option value="40">40 % moi / 60 % l'autre</option><option value="100">à ma charge</option><option value="0">à la charge de l'autre parent</option></select>
-    <div class="actions"><button class="btn main" onclick="fAdd()">＋ Ajouter</button></div>
-  </div>
-  <div class="card"><h2>Bilan</h2><div class="bal" id="x_bal"></div><div id="x_list"></div>
-    <div class="actions"><button class="btn ghost" onclick="fShare()">📤 Partager le récapitulatif</button></div>
-    <p class="meta" style="margin-top:8px">Gardez les justificatifs : vous pouvez les photographier dans le coffre-fort.</p></div>`; }
-function fAdd(){ const m=parseFloat(x_m.value); if(!x_l.value.trim()||!(m>0)){toast("Indiquez la dépense et le montant.");return;}
-  frais.unshift({d:new Date().toLocaleDateString("fr-FR"),l:x_l.value.trim(),m,p:+x_p.value,s:+x_s.value}); x_l.value="";x_m.value=""; fRender(); }
-function fBal(){ let b=0; frais.forEach(f=>{ const mine=f.m*f.s/100; b += f.p===1 ? f.m-mine : -mine; }); return b; } /* >0 : l'autre me doit */
-function fRender(){ const b=fBal(), e=v=>v.toLocaleString("fr-FR",{style:"currency",currency:"EUR"});
-  x_bal.textContent = Math.abs(b)<0.01 ? "Les comptes sont équilibrés." : b>0 ? `L'autre parent vous doit ${e(b)}` : `Vous devez ${e(-b)} à l'autre parent`;
-  x_list.innerHTML = frais.length ? frais.map(f=>`<div class="exp"><span>${esc(f.l)}<br><span class="meta">${f.d} · payé par ${f.p===1?"moi":"l'autre parent"} · ${f.s}/${100-f.s}</span></span><b>${e(f.m)}</b></div>`).join("") : `<p class="meta">Aucune dépense pour l'instant.</p>`; }
-async function fShare(){ if(!frais.length){toast("Aucune dépense.");return;} const e=v=>v.toFixed(2).replace(".",",")+" €";
-  const t="Récapitulatif des frais partagés\n"+frais.map(f=>`- ${f.d} : ${f.l}, ${e(f.m)}, payé par ${f.p===1?"moi":"toi"} (partage ${f.s}/${100-f.s})`).join("\n")+"\n"+x_bal.textContent.replace("L'autre parent vous doit","Solde : tu me dois").replace("Vous devez","Solde : je te dois").replace(" à l'autre parent","");
-  try{ navigator.share?await navigator.share({text:t}):await navigator.clipboard.writeText(t);}catch(err){} toast("Récapitulatif copié."); }
-
-/* --- Fiche enfant --- */
-const FICHE=[["Prénom et NOM",""],["Date de naissance",""],["Médecin traitant",""],["Allergies",""],["Traitement en cours",""],["École et classe",""],["Enseignant·e",""],["Activités (jour, heure, lieu)",""],["Taille vêtements / pointure",""],["Personnes à contacter",""],["Ce qui le ou la rassure (doudou, rituels…)",""]];
-function ficheHTML(){ return `<div class="card">${FICHE.map((f,i)=>`<label>${f[0]}</label><input id="fe${i}" value="${esc(FV[i]||"").replace(/"/g,"&quot;")}" oninput="FV[${i}]=this.value">`).join("")}
-  <div class="actions"><button class="btn main" onclick="feShare()">📤 Partager la fiche à jour</button></div>
-  <p class="meta" style="margin-top:8px">La fiche reste sur votre téléphone, dans le coffre-fort. Vous choisissez quand l'envoyer à l'autre parent.</p></div>`; }
-async function feShare(){ const t="Fiche de l'enfant – mise à jour du "+new Date().toLocaleDateString("fr-FR")+"\n"+FICHE.map((f,i)=>`${f[0]} : ${document.getElementById("fe"+i).value.trim()||"…"}`).join("\n");
-  try{ navigator.share?await navigator.share({text:t}):await navigator.clipboard.writeText(t);}catch(err){} toast("Fiche copiée."); }
-
-/* --- Parler à l'enfant --- */
-function parlerHTML(){ return `<div class="card age" data-tts>${TTS}
-  <h3>Pour tous les âges</h3><ul>
-  <li>Si possible, l'annoncer ensemble, avec les mêmes mots.</li>
-  <li>Dire que c'est une décision d'adultes, et que ce n'est pas sa faute.</li>
-  <li>Dire qu'il ou elle garde ses deux parents.</li>
-  <li>Expliquer ce qui change concrètement : où il dort, l'école, les affaires.</li>
-  <li>Ne pas critiquer l'autre parent devant lui, ni lui demander de choisir.</li>
-  <li>Ne pas en faire un messager ni un confident.</li></ul>
-  <h3>👶 0 – 3 ans</h3><ul><li>Garder les mêmes rituels (repas, coucher) dans les deux maisons.</li><li>Un objet familier qui fait le trajet avec lui.</li><li>Des passages de relais courts et calmes.</li></ul>
-  <h3>🧸 3 – 6 ans</h3><ul><li>Des phrases simples, répétées : « Papa et maman ne vont plus vivre ensemble. On t'aime toujours tous les deux. »</li><li>À cet âge, l'enfant peut se croire responsable : le rassurer souvent.</li><li>Les livres et les dessins aident à en parler.</li></ul>
-  <h3>🎒 6 – 11 ans</h3><ul><li>Répondre aux questions concrètes, sans entrer dans les raisons du conflit.</li><li>Un calendrier visible chez chacun.</li><li>Il ou elle peut espérer que vous vous remettiez ensemble, ou se sentir déloyal en aimant l'autre parent : le laisser aimer les deux.</li></ul>
-  <h3>🎧 Adolescents</h3><ul><li>Plus d'explications, sans détails sur la vie du couple.</li><li>Son avis compte, mais la décision reste celle des adultes.</li><li>Respecter sa vie sociale dans l'organisation.</li><li>Il ou elle peut demander à être entendu par le juge.</li></ul>
-  <h3>Si cela reste difficile</h3><ul><li>Changements durables du sommeil, de l'appétit, des résultats : en parler au médecin ou à un psychologue.</li><li>La médiation familiale et les groupes de parole d'enfants de parents séparés existent dans de nombreux départements.</li></ul>
-  </div>`; }
-
-/* --- Quiz --- */
-const QUIZ=[
-  ["L'autre parent annule le week-end la veille, par SMS.",[["« Comme d'habitude. Tu ne penses qu'à toi. »",0,"Compréhensible sur le coup, mais cela ouvre un conflit et ne règle pas le week-end."],["« D'accord. Peux-tu me dire quand tu proposes de le rattraper ? »",1,"Vous restez sur l'organisation, et vous laissez une trace calme de l'annulation."],["Ne pas répondre et dire à l'enfant que son père ou sa mère ne vient pas.",0,"L'enfant n'a pas à porter la déception des adultes. Dites-le-lui simplement, sans reproche."]]],
-  ["Votre fille vous dit : « Chez papa, on a le droit de se coucher à 22 h. »",[["« Eh bien, chez moi, ce n'est pas pareil. »",1,"C'est vrai, et c'est acceptable : chaque maison a ses règles. Restez calme et cohérent·e."],["Appeler tout de suite l'autre parent pour le lui reprocher.",0,"Si l'heure du coucher vous inquiète, proposez d'en parler plus tard, par écrit, sur un ton neutre."],["« Ton père ne sait pas s'occuper de toi. »",0,"Critiquer l'autre parent devant l'enfant le met dans un conflit de loyauté."]]],
-  ["Vous devez choisir un nouveau collège.",[["Inscrire l'enfant sans prévenir : c'est vous qui avez la résidence.",0,"Le choix de l'école est une décision importante : avec l'autorité parentale conjointe, elle se prend à deux."],["Envoyer un message avec les deux options, les dates, et proposer d'en parler.",1,"C'est la bonne démarche. En cas de désaccord persistant, le juge peut trancher."],["Demander à l'enfant de convaincre l'autre parent.",0,"L'enfant n'a pas à servir d'intermédiaire."]]],
-  ["L'autre parent vous envoie un long message insultant.",[["Répondre point par point pour vous défendre.",0,"Cela entretient l'échange. Vous n'êtes pas obligé·e de répondre aux insultes."],["Garder le message, puis répondre seulement à la question pratique, s'il y en a une.",1,"Utilisez « Répondre à un message tendu » dans l'onglet Messages. S'il y a des menaces, voyez le parcours protégé."],["Bloquer le numéro définitivement.",0,"Parfois nécessaire pour votre sécurité, mais vous devez pouvoir échanger sur les enfants : en cas de violences, demandez conseil (3919)."]]]
-];
-let qi=0, qs=0;
-function quizHTML(){ return `<div class="card qz" id="qz"></div>`; }
-function qRender(){ const z=document.getElementById("qz");
-  if(qi>=QUIZ.length){ z.innerHTML=`<h2>Terminé : ${qs} / ${QUIZ.length}</h2><p>Il n'y a pas de parent parfait. Ce qui compte, c'est de revenir à l'organisation des enfants.</p><button class="btn main" onclick="qi=0;qs=0;qRender()">Recommencer</button>`; return; }
-  const q=QUIZ[qi]; z.innerHTML=`<p class="meta">Situation ${qi+1} sur ${QUIZ.length}</p><h2>${q[0]}</h2>`+q[1].map((o,i)=>`<button class="opt" onclick="qPick(${i})">${o[0]}</button>`).join("")+`<div id="qf"></div>`; }
-function qPick(i){ const q=QUIZ[qi], o=q[1][i]; if(o[1]) qs++;
-  document.querySelectorAll(".qz .opt").forEach((b,j)=>{ b.disabled=true; const cl=q[1][j][1]?"good":(j===i?"bad":""); if(cl) b.classList.add(cl); });
-  qf.innerHTML=`<div class="${o[1]?"okbox":"tip"}" style="margin-top:8px">${o[2]}</div><div class="actions"><button class="btn main" onclick="qi++;qRender()">Suivant ›</button></div>`; }
-
-/* ================= ACCUEIL ================= */
-const ME={prenom:"",cp:"",enf:""};
-const ZC="75 77 78 91 92 93 94 95 09 12 31 32 46 65 81 82 11 30 34 48 66".split(" ");
-const ZA="25 39 70 90 24 33 40 47 64 03 15 43 63 21 58 71 89 07 26 38 73 74 19 23 87 01 42 69 16 17 79 86 20".split(" ");
-const zoneOf=cp=>{ const d=cp.slice(0,2); return ZC.includes(d)?"C":ZA.includes(d)?"A":"B"; };
-const TIPS=["Un message, un sujet : c'est la façon la plus sûre d'obtenir une réponse.","Avant d'envoyer un message difficile, laissez-le reposer une heure.","Vous n'êtes pas obligé·e de répondre aux reproches. Répondez à la question pratique.","Les règles peuvent être différentes dans chaque maison. Ce qui compte, c'est que chacun s'y tienne.","Évitez de parler du conflit pendant le passage de relais : l'enfant est là.","Notez les dépenses au fil de l'eau : les comptes restent simples."];
-function goTab(v){ document.querySelector(`#nav button[data-v="${v}"]`).click(); }
-function enfants(){ return ME.enf.trim() || "Les enfants"; }
-function fd(d){ return d.toLocaleDateString("fr-FR",{weekday:"long",day:"numeric",month:"long"}); }
-function aRender(){
-  hello.textContent = ME.prenom ? `Bonjour ${ME.prenom} 👋` : "Bonjour 👋";
-  const box=document.getElementById("a-content");
-  if(!ME.prenom){ box.innerHTML=`<div class="hero"><h2>Bienvenue 👋</h2><p>Trois informations pour adapter l'appli. Elles restent sur votre téléphone.</p></div>
-    <div class="card"><label>Votre prénom</label><input id="m_p" placeholder="Camille" value="${esc(ME.prenomOld||"")}">
-    <label>Votre code postal <em>— pour la zone de vacances et les contacts proches</em></label><input id="m_c" inputmode="numeric" maxlength="5" placeholder="31290" value="${esc(ME.cp||"")}" oninput="cpLook(this.value)">
-    <select id="m_v" style="margin-top:6px;display:none"></select>
-    <label>Prénom(s) de vos enfants <em>— facultatif</em></label><input id="m_e" placeholder="Léa et Tom" value="${esc(ME.enf||"")}">
-    <label>Comment nommer l'autre parent dans l'appli ? <em>— facultatif</em></label><input id="m_o" placeholder="Papa, Maman, son prénom…">
-    <div class="actions"><button class="btn main" onclick="aSave()">C'est parti</button></div></div>`; return; }
-  const t=new Date(), today=new Date(t.getFullYear(),t.getMonth(),t.getDate(),12);
-  const nm=p=>p===1?"vous":(G.p2||"l'autre parent");
-  const w0=who(today).p; let next=null;
-  for(let i=1;i<120;i++){ const d=new Date(today.getTime()+i*DAY); if(who(d).p!==w0){ next={d,i,p:who(d).p}; break; } }
-  const v=VAC[G.z].find(x=>D(x[1])>today);
-  let vtxt="";
-  if(v){ const s0=D(v[0]), e0=D(v[1]), n=Math.round((e0-s0)/DAY), mid=new Date(s0.getTime()+Math.floor(n/2)*DAY), f1=who(s0).p;
-    vtxt=`<div class="card"><div class="big"><span class="i">🏖️</span><span><b>${s0<=today?"Vacances en cours":"Prochaines vacances"} : ${v[2]}</b><span class="meta">Zone ${G.z} · du ${s0.toLocaleDateString("fr-FR")} au ${new Date(e0-DAY).toLocaleDateString("fr-FR")}</span></span></div>
-    <p style="margin:8px 0 0">1re moitié chez ${nm(f1)}, 2de moitié à partir du ${mid.toLocaleDateString("fr-FR")} chez ${nm(3-f1)}.</p></div>`; }
-  const started=Object.entries(dDone).find(([k,a])=>PATHS[k]&&a.length);
-  let route;
-  if(started){ const [k,a]=started, P=PATHS[k], n=P.steps.length, nx=firstTodo(k,n);
-    route=`<div class="card"><h2>🗺️ Ma feuille de route</h2><p>${P.i} ${P.t}</p><div class="prog"><i style="width:${Math.round(a.length/n*100)}%"></i></div><span class="meta">${a.length} étape${a.length>1?"s":""} sur ${n}</span>
-    ${nx>=0?`<p style="margin:8px 0 0;color:var(--ink)">Prochaine étape : <b>${P.steps[nx][0]}</b></p>`:`<p class="okbox" style="margin-top:8px">Parcours terminé.</p>`}
-    <div class="actions"><button class="btn ghost" onclick="goTab('demarches');dOpen('${k}')">Continuer ›</button></div></div>`; }
-  else route=`<div class="card"><h2>🗺️ Ma feuille de route</h2><p>Pas encore de parcours choisi. En deux questions, l'appli vous montre les étapes dans l'ordre.</p><div class="actions"><button class="btn ghost" onclick="goTab('demarches')">Choisir mon parcours ›</button></div></div>`;
-  const b=fBal(), eur=x=>x.toLocaleString("fr-FR",{style:"currency",currency:"EUR"});
-  box.innerHTML=`
-    <p class="meta" style="margin:0 0 10px">${fd(today).replace(/^./,c=>c.toUpperCase())}</p>
-    <div class="card" style="border-left:6px solid ${w0===1?"#3b5bdb":"#e8590c"}"><div class="big"><span class="i">🏠</span><span><b>Aujourd'hui, ${esc(enfants())} ${/ et |,/.test(enfants())||enfants()==="Les enfants"?"sont":"est"} chez ${esc(nm(w0))}</b>
-      ${next?`<span class="meta">Changement ${fd(next.d)} (dans ${next.i} jour${next.i>1?"s":""}), chez ${esc(nm(next.p))}</span>`:""}</span></div>
-      <div class="actions"><button class="btn ghost" onclick="goTab('outils');oOpen('garde')">Voir le calendrier</button></div></div>
-    ${vtxt}
-    ${route}
-    <div class="tiles">
-      <button class="tile" onclick="goTab('messages');show('ecrire')"><span>✍️</span>Écrire un message<small>Modèles par thème</small></button>
-      <button class="tile" onclick="goTab('messages');show('relire')"><span>🔍</span>Relire avant d'envoyer<small>Ton et mots qui bloquent</small></button>
-      <button class="tile" onclick="goTab('outils');oOpen('frais')"><span>💶</span>Frais partagés<small>${frais.length?(Math.abs(b)<.01?"Comptes équilibrés":b>0?"On vous doit "+eur(b):"Vous devez "+eur(-b)):"Aucune dépense"}</small></button>
-      <button class="tile" onclick="goTab('messages');show('journal')"><span>⏳</span>À relire<small>${brouillons.length?brouillons.length+" brouillon"+(brouillons.length>1?"s":""):"Aucun brouillon"}</small></button>
+      <div class="badges"><span>✓ Gratuite</span><span>✓ Sans compte</span><span>✓ Sans publicité</span><span>✓ Vos données restent sur votre téléphone</span></div>
+      <div class="qr"><img src="qr-entredeuxtoits.png" alt="QR code vers entredeuxtoits.fr"><p><b style="color:var(--ink)">Sur ordinateur ?</b><br>Scannez ce code avec l'appareil photo de votre téléphone pour ouvrir l'appli.</p></div>
     </div>
-    <div class="card" style="background:var(--ok-soft);border-color:transparent"><b>💡 Le conseil du jour</b><p style="margin:4px 0 0;color:var(--ink)">${TIPS[today.getDate()%TIPS.length]}</p></div>
-    ${META.prot?"":`<div class="card" style="border-left:6px solid var(--ink)"><b>🔒 Protégez vos données par un code</b><p style="margin:4px 0 0">Messages, frais, documents : avec un code, personne d'autre ne peut les lire.</p><div class="actions"><button class="btn ghost" onclick="goTab('outils');oOpen('coffre')">Choisir un code</button></div></div>`}
-    <button class="path" style="--c:var(--brand);width:100%;margin-bottom:12px" onclick="goTab('outils');oOpen('contacts')"><span class="i">📍</span><span><b>Contacts près de chez vous</b><small>${ME.ville?esc(ME.ville)+" · ":""}Points-justice, tribunal, CAF, aide aux victimes</small></span></button>
-    <div class="sos"><span><b>Vous avez peur ?</b><br><span class="meta">3919 · gratuit, 24 h/24</span></span><button onclick="goTab('demarches');dOpen('violences')">Parcours protégé</button></div>
-    ${installHTML()}
-    <p style="text-align:center"><button class="back" onclick="ME.prenomOld=ME.prenom;ME.prenom='';aRender();if(ME.cp)cpLook(ME.cp)">Modifier mes informations</button> · <button class="back" onclick="legal()">Mentions légales et confidentialité</button></p>`;
-}
-let CPL=[];
-async function cpLook(v){ const sel=document.getElementById("m_v"); if(!/^\d{5}$/.test(v)){ sel.style.display="none"; CPL=[]; return; }
-  try{ const C=await comData(); CPL=C.data.filter(c=>c[1].split(" ").includes(v)).sort((a,b)=>a[0].localeCompare(b[0],"fr")); }catch(e){ CPL=[]; }
-  sel.innerHTML=CPL.map((c,i)=>`<option value="${i}" ${c[0]===ME.ville?"selected":""}>${esc(c[0])}</option>`).join(""); sel.style.display=CPL.length>1?"block":"none"; }
-function aSave(){ ME.prenom=m_p.value.trim(); ME.cp=m_c.value.trim(); ME.enf=m_e.value.trim(); if(m_o.value.trim()) G.p2=m_o.value.trim();
-  if(!ME.prenom){toast("Indiquez votre prénom.");return;}
-  if(/^\d{5}$/.test(ME.cp)){ G.z=zoneOf(ME.cp);
-    const c=CPL[+(document.getElementById("m_v").value||0)];
-    if(c){ ME.ville=c[0]; ME.lat=c[2]; ME.lon=c[3]; } else { ME.ville=""; ME.lat=null; ME.lon=null; } }
-  G.p1="Moi"; aRender(); modele(0); }
-document.getElementById("nav").addEventListener("click",e=>{ const b=e.target.closest("button"); if(b&&b.dataset.v==="accueil") aRender(); });
+    <div class="phone"><img src="ecran-accueil.png" alt="Écran d'accueil de l'appli : chez qui sont les enfants aujourd'hui, prochaines vacances, feuille de route"></div>
+  </div>
+</div>
 
-/* ================= STOCKAGE, COFFRE-FORT, SAUVEGARDE ================= */
-let FV = FICHE.map(()=>""), DOCS = [], KEY = null, META = {prot:false, salt:null};
-const enc=new TextEncoder(), dec=new TextDecoder();
-const b64=u=>{let s="";for(let i=0;i<u.length;i+=8192)s+=String.fromCharCode(...u.subarray(i,i+8192));return btoa(s);};
-const ub64=s=>Uint8Array.from(atob(s),c=>c.charCodeAt(0));
-let DB=null;
-function idb(){ if(DB) return Promise.resolve(DB); return new Promise((res,rej)=>{ const r=indexedDB.open("entre-deux-toits",1); r.onupgradeneeded=()=>r.result.createObjectStore("kv"); r.onsuccess=()=>res(DB=r.result); r.onerror=()=>rej(r.error); }); }
-async function kvGet(k){ try{ const db=await idb(); return await new Promise(r=>{ const q=db.transaction("kv").objectStore("kv").get(k); q.onsuccess=()=>r(q.result); q.onerror=()=>r(undefined); }); }catch(e){ return undefined; } }
-async function kvSet(k,v){ try{ const db=await idb(); await new Promise(r=>{ const t=db.transaction("kv","readwrite"); t.objectStore("kv").put(v,k); t.oncomplete=r; t.onerror=r; }); }catch(e){} }
-async function kvDel(k){ try{ const db=await idb(); await new Promise(r=>{ const t=db.transaction("kv","readwrite"); t.objectStore("kv").delete(k); t.oncomplete=r; t.onerror=r; }); }catch(e){} }
-async function kvClear(){ try{ const db=await idb(); await new Promise(r=>{ const t=db.transaction("kv","readwrite"); t.objectStore("kv").clear(); t.oncomplete=r; t.onerror=r; }); }catch(e){} }
-async function deriveKey(code,salt){ const k=await crypto.subtle.importKey("raw",enc.encode(code),"PBKDF2",false,["deriveKey"]); return crypto.subtle.deriveKey({name:"PBKDF2",salt,iterations:250000,hash:"SHA-256"},k,{name:"AES-GCM",length:256},false,["encrypt","decrypt"]); }
-async function seal(obj,key){ const iv=crypto.getRandomValues(new Uint8Array(12)); const ct=await crypto.subtle.encrypt({name:"AES-GCM",iv},key,enc.encode(JSON.stringify(obj))); return {iv:b64(iv),ct:b64(new Uint8Array(ct))}; }
-async function unseal(box,key){ const pt=await crypto.subtle.decrypt({name:"AES-GCM",iv:ub64(box.iv)},key,ub64(box.ct)); return JSON.parse(dec.decode(pt)); }
-const wrap = async o => META.prot ? await seal(o,KEY) : o;
-const unwrap = async o => (o && o.ct && o.iv) ? await unseal(o,KEY) : o;
+<section style="background:var(--card)">
+  <div class="wrap">
+    <h2>Tout ce qu'il faut, au même endroit</h2>
+    <p class="sub">Pour les parents qui se séparent ou qui sont déjà séparés, et pour les professionnels qui les accompagnent.</p>
+    <div class="feat">
+      <div class="f"><div class="ic" style="background:var(--blue-soft)">💬</div><h3>Des messages qui apaisent</h3><p>Des modèles prêts à remplir (santé, école, vacances, frais), et une relecture qui signale les mots qui bloquent la réponse, avant d'envoyer.</p><img src="ecran-relecture.png" alt="Relecture d'un message avec les passages à revoir surlignés" loading="lazy"></div>
+      <div class="f"><div class="ic" style="background:var(--orange-soft)">⚖️</div><h3>Les démarches pas à pas</h3><p>Médiation, convention parentale, demande au juge aux affaires familiales, avocat et aide juridictionnelle, pension : les étapes dans l'ordre, avec les formulaires officiels.</p><img src="ecran-demarches.png" alt="Parcours de démarches en étapes" loading="lazy"></div>
+      <div class="f"><div class="ic" style="background:var(--blue-soft)">📅</div><h3>Le calendrier de garde</h3><p>Garde alternée ou week-ends, vacances scolaires de votre zone partagées automatiquement, et ajout à l'agenda du téléphone.</p><img src="ecran-calendrier.png" alt="Calendrier de garde coloré par parent" loading="lazy"></div>
+      <div class="f"><div class="ic" style="background:var(--orange-soft)">📍</div><h3>Les bons contacts</h3><p>Points-justice gratuits, tribunal, CAF, aide aux victimes, France services : les plus proches de chez vous, partout en France, même sans connexion.</p><img src="ecran-contacts.png" alt="Liste des contacts les plus proches" loading="lazy"></div>
+    </div>
+  </div>
+</section>
 
-function snapshot(){ return {ME,G,frais,journal,brouillons,dDone,FV,tv,DOCS:DOCS.map(d=>({id:d.id,n:d.n,t:d.t,s:d.s,d:d.d}))}; }
-function restore(s){ if(!s) return; Object.assign(ME,s.ME||{}); Object.assign(G,s.G||{});
-  frais=s.frais||[]; journal=s.journal||[]; brouillons=s.brouillons||[]; dDone=s.dDone||{}; FV=s.FV||FV; tv=s.tv||"tu"; DOCS=s.DOCS||[]; }
-let saveT=null;
-function scheduleSave(){ clearTimeout(saveT); saveT=setTimeout(saveNow,400); }
-async function saveNow(){ if(META.prot && !KEY) return; await kvSet("state", await wrap(snapshot())); }
-document.addEventListener("input",scheduleSave); document.addEventListener("click",scheduleSave);
+<section>
+  <div class="wrap">
+    <h2>Vos données restent chez vous</h2>
+    <p class="sub">Pas de compte à créer, pas de serveur, pas de cookie. Personne d'autre que vous ne voit ce que vous écrivez.</p>
+    <div class="promise">
+      <div class="p"><b>📱</b><span>Tout est enregistré sur votre téléphone</span></div>
+      <div class="p"><b>🔒</b><span>Un coffre-fort chiffré par votre code</span></div>
+      <div class="p"><b>📶</b><span>Fonctionne sans connexion</span></div>
+      <div class="p"><b>💾</b><span>Une sauvegarde dans un fichier, si vous changez de téléphone</span></div>
+      <div class="p"><b>🔊</b><span>Lecture à voix haute des démarches</span></div>
+    </div>
+  </div>
+</section>
 
-/* --- écran de verrouillage --- */
-function lockScreen(){
-  const d=document.createElement("div"); d.id="lock"; d.className="lock";
-  d.innerHTML=`<div class="lockbox">${document.querySelector("header svg").outerHTML.replace('width="34" height="34"','width="72" height="72"')}
-    <h2>Entre Deux Toits</h2><p>Entrez votre code pour ouvrir l'appli.</p>
-    <input id="lk_c" type="password" inputmode="numeric" autocomplete="off" placeholder="Code" style="text-align:center;font-size:22px;letter-spacing:6px">
-    <div class="actions"><button class="btn main" onclick="unlock()">Ouvrir</button></div>
-    <p id="lk_m" class="meta"></p>
-    <button class="back" onclick="forgot()">Code oublié ?</button></div>`;
-  document.body.appendChild(d); setTimeout(()=>lk_c.focus(),50);
-  lk_c.addEventListener("keydown",e=>{ if(e.key==="Enter") unlock(); });
-}
-async function unlock(){
-  try{ KEY=await deriveKey(lk_c.value, ub64(META.salt)); const s=await unwrap(await kvGet("state")); restore(s); document.getElementById("lock").remove(); startApp(); }
-  catch(e){ KEY=null; lk_m.textContent="Code incorrect."; lk_c.value=""; }
-}
-function forgot(){ askBox("Sans le code, les données ne peuvent pas être lues : c'est ce qui les protège. Vous pouvez seulement tout effacer et repartir de zéro, ou restaurer une sauvegarde après.","Tout effacer",async()=>{ await kvClear(); location.reload(); }); }
-function askBox(msg,ok,cb){ const d=document.createElement("div"); d.className="lock"; d.style.background="rgba(0,0,0,.45)";
-  d.innerHTML=`<div class="lockbox"><p style="color:var(--ink)">${msg}</p><div class="actions"><button class="btn ghost">Annuler</button><button class="btn main" style="background:#c92a2a">${ok}</button></div></div>`;
-  const [a,b]=d.querySelectorAll("button"); a.onclick=()=>d.remove(); b.onclick=()=>{ d.remove(); cb(); }; document.body.appendChild(d); }
-let hiddenAt=0;
-document.addEventListener("visibilitychange",()=>{ if(document.hidden) hiddenAt=Date.now(); else if(META.prot && hiddenAt && Date.now()-hiddenAt>5*60e3) location.reload(); });
+<section id="installer" style="background:var(--card)">
+  <div class="wrap">
+    <h2>L'installer en 1 minute</h2>
+    <p class="sub">Pas besoin de l'App Store ni du Play Store : l'appli s'ajoute directement à l'écran d'accueil, comme une application classique.</p>
+    <div class="install">
+      <div class="os"><h3>📱 iPhone (Safari)</h3><ol>
+        <li><span>Ouvrez <b>entredeuxtoits.fr</b> dans <b>Safari</b>, puis touchez <b>Ouvrir l'appli</b>.</span></li>
+        <li><span>Touchez le bouton <span class="k"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="M8 7l4-4 4 4"/><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/></svg> Partager</span> en bas de l'écran. Sur les iPhone récents, touchez d'abord <span class="k">•••</span>, puis Partager.</span></li>
+        <li><span>Faites défiler et choisissez <span class="k">Sur l'écran d'accueil</span>.</span></li>
+        <li><span>Touchez <span class="k">Ajouter</span>. L'icône Entre Deux Toits apparaît sur votre écran d'accueil.</span></li>
+      </ol></div>
+      <div class="os"><h3>🤖 Android (Chrome)</h3><ol>
+        <li><span>Ouvrez <b>entredeuxtoits.fr</b> dans <b>Chrome</b>, puis touchez <b>Ouvrir l'appli</b>.</span></li>
+        <li><span>Touchez le menu <span class="k">⋮</span> en haut à droite.</span></li>
+        <li><span>Choisissez <span class="k">Installer l'application</span> ou <span class="k">Ajouter à l'écran d'accueil</span>.</span></li>
+        <li><span>Confirmez avec <span class="k">Installer</span>. L'icône apparaît avec vos autres applications.</span></li>
+      </ol></div>
+    </div>
+    <p class="sub" style="margin-top:18px">Conseil : au premier lancement, choisissez un code dans <b>Outils › Coffre-fort</b>. Vos messages, frais et documents seront chiffrés.</p>
+  </div>
+</section>
 
-/* --- outil coffre-fort --- */
-TOOLS.coffre={i:"🔒",c:"var(--ink)",t:"Coffre-fort et sauvegarde",s:"Code, documents à garder, sauvegarde dans un fichier"};
-TOOLS.contacts={i:"📍",c:"var(--brand)",t:"Contacts près de chez vous",s:"Points-justice, tribunal, CAF, aide aux victimes…"};
-function coffreHTML(){ return `
-  <div class="card"><h2>${META.prot?"🔒 Vos données sont protégées":"🔓 Vos données ne sont pas protégées"}</h2>
-    <p>${META.prot?"L'appli demande votre code à l'ouverture et se verrouille après 5 minutes d'absence. Tout est chiffré sur votre téléphone.":"Toutes vos données restent sur votre téléphone. Avec un code, elles sont chiffrées : personne ne peut les lire sans lui, même en ayant votre téléphone en main."}</p>
-    <label>${META.prot?"Nouveau code":"Choisissez un code"} <em>— 6 chiffres ou plus</em></label><input id="cf_1" type="password" inputmode="numeric" autocomplete="new-password">
-    <label>Confirmez le code</label><input id="cf_2" type="password" inputmode="numeric" autocomplete="new-password">
-    <div class="actions"><button class="btn main" onclick="setCode()">${META.prot?"Changer le code":"Protéger par un code"}</button>${META.prot?`<button class="btn ghost" onclick="removeCode()">Retirer le code</button>`:""}</div>
-    <p class="meta" style="margin-top:8px">Gardez ce code pour vous. S'il est perdu, les données ne peuvent pas être récupérées, sauf avec une sauvegarde.</p></div>
-  <div class="card"><h2>📎 Mes documents</h2><p>Messages importants, certificats, justificatifs de frais, décisions de justice. Ils sont gardés dans le coffre-fort.</p>
-    <input type="file" id="cf_f" accept="image/*,application/pdf" style="display:none" onchange="addDoc(this)">
-    <div class="actions"><button class="btn ghost" onclick="cf_f.click()">＋ Ajouter une photo ou un PDF</button></div>
-    <div id="cf_l" style="margin-top:8px"></div></div>
-  <div class="card"><h2>💾 Ma sauvegarde</h2><p>Un fichier chiffré qui contient toutes vos données et vos documents. Gardez-le en lieu sûr (sur un autre appareil, ou envoyé à vous-même) pour changer de téléphone ou en cas de perte.</p>
-    <label>Code de la sauvegarde</label><input id="sv_c" type="password" inputmode="numeric" autocomplete="off" placeholder="Il vous sera demandé pour la restaurer">
-    <div class="actions"><button class="btn main" onclick="backup()">⬇️ Créer la sauvegarde</button></div>
-    <input type="file" id="sv_f" accept=".edt,application/json" style="display:none" onchange="restoreFile(this)">
-    <div class="actions"><button class="btn ghost" onclick="if(!sv_c.value){toast('Indiquez d\\'abord le code de la sauvegarde.');return;} sv_f.click()">⬆️ Restaurer une sauvegarde</button></div></div>
-  <div class="card"><h2>🧹 Tout effacer</h2><p>Supprime toutes les données de l'appli sur ce téléphone.</p>
-    <div class="actions"><button class="btn ghost" style="color:#c92a2a" onclick="askBox('Toutes les données et tous les documents seront supprimés de ce téléphone. Continuer ?','Tout effacer',async()=>{await kvClear();location.reload();})">Effacer toutes mes données</button></div></div>`; }
-async function setCode(){ const a=cf_1.value, b=cf_2.value;
-  if(!/^\d{6,}$/.test(a)){ toast("Le code doit contenir au moins 6 chiffres."); return; }
-  if(a!==b){ toast("Les deux codes ne sont pas identiques."); return; }
-  const docs=[]; for(const d of DOCS) docs.push([d.id, await unwrap(await kvGet("doc:"+d.id))]);
-  const salt=crypto.getRandomValues(new Uint8Array(16)); KEY=await deriveKey(a,salt); META={prot:true,salt:b64(salt)};
-  await kvSet("meta",META); for(const [id,data] of docs) await kvSet("doc:"+id, await wrap(data)); await saveNow();
-  toast("C'est fait : vos données sont chiffrées."); oOpen("coffre"); }
-async function removeCode(){ askBox("Sans code, vos données ne seront plus chiffrées. Continuer ?","Retirer le code",async()=>{
-  const docs=[]; for(const d of DOCS) docs.push([d.id, await unwrap(await kvGet("doc:"+d.id))]);
-  META={prot:false,salt:null}; KEY=null; await kvSet("meta",META); for(const [id,data] of docs) await kvSet("doc:"+id,data); await saveNow(); toast("Code retiré."); oOpen("coffre"); }); }
-function addDoc(inp){ const f=inp.files[0]; inp.value=""; if(!f) return; if(f.size>8e6){ toast("Fichier trop lourd (8 Mo au plus)."); return; }
-  const r=new FileReader(); r.onload=async()=>{ const id=Date.now().toString(36); DOCS.unshift({id,n:f.name,t:f.type,s:f.size,d:new Date().toLocaleDateString("fr-FR")});
-    await kvSet("doc:"+id, await wrap({data:r.result})); await saveNow(); docList(); toast("Document ajouté au coffre-fort."); }; r.readAsDataURL(f); }
-function docList(){ const l=document.getElementById("cf_l"); if(!l) return;
-  l.innerHTML = DOCS.length ? DOCS.map(d=>`<div class="exp"><span>${d.t.startsWith("image")?"🖼️":"📄"} ${esc(d.n)}<br><span class="meta">${d.d} · ${Math.round(d.s/1024)} Ko</span></span><span style="white-space:nowrap"><button class="chip" onclick="openDoc('${d.id}')">Voir</button> <button class="chip" onclick="delDoc('${d.id}')">✕</button></span></div>`).join("") : `<p class="meta">Aucun document.</p>`; }
-async function openDoc(id){ const o=await unwrap(await kvGet("doc:"+id)); if(!o) return; const b=await (await fetch(o.data)).blob(); window.open(URL.createObjectURL(b),"_blank"); }
-function delDoc(id){ askBox("Supprimer ce document du coffre-fort ?","Supprimer",async()=>{ DOCS=DOCS.filter(d=>d.id!==id); await kvDel("doc:"+id); await saveNow(); docList(); }); }
-async function backup(){ const code=sv_c.value; if(code.length<6){ toast("Choisissez un code d'au moins 6 caractères pour la sauvegarde."); return; }
-  const docs={}; for(const d of DOCS) docs[d.id]=await unwrap(await kvGet("doc:"+d.id));
-  const salt=crypto.getRandomValues(new Uint8Array(16)), k=await deriveKey(code,salt), box=await seal({state:snapshot(),docs},k);
-  const file=JSON.stringify({app:"entre-deux-toits",v:1,date:new Date().toISOString(),salt:b64(salt),...box});
-  const a=document.createElement("a"); a.href=URL.createObjectURL(new Blob([file],{type:"application/json"})); a.download=`sauvegarde-entre-deux-toits-${iso(new Date())}.edt`; document.body.appendChild(a); a.click(); a.remove();
-  toast("Sauvegarde créée. Gardez le fichier et son code."); }
-function restoreFile(inp){ const f=inp.files[0]; inp.value=""; if(!f) return; const r=new FileReader();
-  r.onload=async()=>{ try{ const j=JSON.parse(r.result); if(j.app!=="entre-deux-toits") throw 0;
-      const o=await unseal(j, await deriveKey(sv_c.value, ub64(j.salt)));
-      askBox("Les données actuelles de ce téléphone seront remplacées par la sauvegarde. Continuer ?","Restaurer",async()=>{
-        for(const d of DOCS) await kvDel("doc:"+d.id); restore(o.state);
-        for(const id in o.docs) await kvSet("doc:"+id, await wrap(o.docs[id])); await saveNow(); toast("Sauvegarde restaurée."); goTab("accueil"); });
-    }catch(e){ toast("Fichier ou code incorrect."); } }; r.readAsText(f); }
+<section>
+  <div class="wrap">
+    <div class="sos"><div style="flex:1;min-width:240px"><b>Vous êtes en danger, ou vous avez peur ?</b><br>La médiation et les accords amiables ne sont pas faits pour les situations de violence. L'appli propose un parcours protégé, avec un bouton de sortie rapide.</div>
+      <div class="num"><span>17 · Police</span><span>112 · Urgences</span><span>SMS 114</span><span>3919 · Écoute 24 h/24</span></div></div>
+  </div>
+</section>
 
-/* ================= ANNUAIRE (intégré) ================= */
-const CATS=[["⚖️","Conseils juridiques gratuits","Juristes et avocats, sur rendez-vous, sans frais.",["point_justice","mjd","cdad"]],
-  ["🏛️","Tribunal judiciaire","Où envoyer votre demande au juge aux affaires familiales.",["tgi"]],
-  ["💶","CAF et MSA","Pension alimentaire, médiation familiale, prestations.",["caf","msa"]],
-  ["🛟","Aide aux victimes et droits des femmes","Écoute, accompagnement, aide aux démarches.",["bav","cidf"]],
-  ["👩‍⚖️","Ordre des avocats","Pour trouver un avocat, ou une consultation.",["ordre_avocats"]],
-  ["🧾","France services","Aide pour remplir les formulaires et les démarches en ligne.",["france_services"]],
-  ["🤝","Services sociaux du Département","Accompagnement social et soutien aux familles.",["mds"]],
-  ["👶","PMI (protection maternelle et infantile)","Suivi des enfants de moins de 6 ans, soutien aux parents.",["pmi"]]];
-let ANN=null, COM=null;
-const getJSON=u=>fetch(u).then(r=>{ if(!r.ok) throw 0; return r.json(); });
-async function annData(){ return ANN || (ANN=await getJSON("data/annuaire.json")); }
-async function comData(){ return COM || (COM=await getJSON("data/communes.json")); }
-function km(a,b,c,d){ const R=6371,r=x=>x*Math.PI/180,dl=r(c-a),dg=r(d-b),h=Math.sin(dl/2)**2+Math.cos(r(a))*Math.cos(r(c))*Math.sin(dg/2)**2; return 2*R*Math.asin(Math.sqrt(h)); }
-function contactsHTML(){ setTimeout(contactsFill,0); return `<div id="an_box"><p class="meta">Recherche des contacts…</p></div>`; }
-async function contactsFill(){
-  const box=document.getElementById("an_box"); if(!box) return;
-  if(!ME.lat){ box.innerHTML=`<div class="card"><p>Indiquez votre code postal et votre commune pour voir les contacts les plus proches.</p><div class="actions"><button class="btn main" onclick="ME.prenomOld=ME.prenom;ME.prenom='';goTab('accueil')">Indiquer ma commune</button></div></div>`; return; }
-  let A; try{ A=await annData(); }catch(e){ box.innerHTML=`<div class="card"><p>L'annuaire n'a pas pu être ouvert. Fermez puis rouvrez l'appli.</p></div>`; return; }
-  const L=A.data.map(x=>({t:x[0],n:x[1],a:x[2],cp:x[3],v:x[4],tel:x[5],u:x[8]?"https://lannuaire.service-public.gouv.fr/"+x[8]:"",lat:x[9],lon:x[10],km:(x[9]!=null)?km(ME.lat,ME.lon,x[9],x[10]):999}));
-  box.innerHTML=`<p class="meta" style="margin:0 0 10px">Autour de ${esc(ME.ville||ME.cp)} · annuaire Service Public du ${esc(A.date)}</p>
-    <div class="card" style="border-left:6px solid var(--ok)" data-tts><h2>🧭 Médiation familiale</h2><p>Les services de médiation familiale sont financés par la CAF : demandez la liste à votre CAF ou à un Point-justice. Annuaire des médiateurs : Association pour la médiation familiale.</p><a class="lnk" href="https://www.apmf.fr" target="_blank" rel="noopener">↗ apmf.fr</a></div>`+
-  CATS.map(([i,t,s,types])=>{ const l=L.filter(x=>types.includes(x.t)).sort((a,b)=>a.km-b.km).slice(0,3); if(!l.length) return "";
-    return `<div class="card"><h2>${i} ${t}</h2><p>${s}</p>${l.map(x=>`<div class="exp" style="display:block"><b>${esc(x.n)}</b><br><span class="meta">${esc(x.a)} ${esc(x.cp)} ${esc(x.v)}${x.km<999?` · ${x.km<1?"moins d'1":Math.round(x.km)} km`:""}</span><br>
-      ${x.tel?`<a class="lnk" href="tel:${x.tel.replace(/\s/g,"")}">📞 ${esc(x.tel)}</a>`:""}${x.lat!=null?`<a class="lnk" href="https://www.openstreetmap.org/?mlat=${x.lat}&mlon=${x.lon}#map=17/${x.lat}/${x.lon}" target="_blank" rel="noopener">🗺️ Plan</a>`:""}${x.u?`<a class="lnk" href="${x.u}" target="_blank" rel="noopener">↗ Horaires</a>`:""}</div>`).join("")}</div>`; }).join("")+
-  `<p class="meta">Source : Annuaire de l'administration, Service Public (DILA), et découpage administratif (geo.api.gouv.fr), sous Licence Ouverte. Le tribunal compétent dépend de l'adresse des enfants : vérifiez sur justice.fr.</p>`;
-}
-
-/* ================= LECTURE À VOIX HAUTE ================= */
-function speak(btn){ const s=window.speechSynthesis; if(!s){ toast("La lecture à voix haute n'est pas disponible sur ce téléphone."); return; }
-  if(s.speaking){ s.cancel(); document.querySelectorAll(".tts").forEach(b=>b.textContent="🔊 Écouter"); return; }
-  const box=btn.closest("[data-tts]")||btn.parentElement; const c=box.cloneNode(true); c.querySelectorAll("button,.verif").forEach(x=>x.remove());
-  const u=new SpeechSynthesisUtterance(c.innerText.replace(/↗/g,"").replace(/…+/g," ")); u.lang="fr-FR"; u.rate=.95;
-  const v=s.getVoices().find(v=>v.lang&&v.lang.startsWith("fr")); if(v) u.voice=v;
-  u.onend=()=>btn.textContent="🔊 Écouter"; btn.textContent="⏹ Arrêter"; s.speak(u); }
-const TTS=`<button class="tts" onclick="speak(this)">🔊 Écouter</button>`;
-
-/* ================= INSTALLATION ================= */
-let installEvt=null; window.addEventListener("beforeinstallprompt",e=>{ e.preventDefault(); installEvt=e; });
-const isStandalone=()=>matchMedia("(display-mode: standalone)").matches||navigator.standalone;
-function installHTML(){ if(isStandalone()) return "";
-  const ios=/iphone|ipad|ipod/i.test(navigator.userAgent);
-  return `<div class="card"><h2>📲 Installer l'appli</h2><p>Elle s'ajoute à l'écran d'accueil et fonctionne sans connexion. Pas besoin de passer par un magasin d'applications.</p>
-  ${ios?`<p style="color:var(--ink)">Sur iPhone, dans Safari : touchez <b>Partager</b> (le carré avec une flèche ; sur les iPhone récents, d'abord <b>•••</b>), puis <b>Sur l'écran d'accueil</b>.</p>`:installEvt?`<div class="actions"><button class="btn main" onclick="installEvt.prompt()">Installer</button></div>`:`<p style="color:var(--ink)">Sur Android, dans Chrome : menu <b>⋮</b>, puis <b>Installer l'application</b> ou <b>Ajouter à l'écran d'accueil</b>.</p>`}</div>`; }
-
-/* ================= MENTIONS LÉGALES ================= */
-function legal(){ const d=document.createElement("div"); d.className="lock"; d.style.alignItems="stretch";
-  d.innerHTML=`<div class="lockbox" style="max-width:420px;text-align:left;overflow:auto;max-height:100%" data-tts>
-  <h2>Mentions légales et confidentialité</h2>
-  <h3 class="sub">Éditeur</h3><p>2A FORMATION, entreprise individuelle d'Alexandre BIGOT, 2885 route de Saint-Papoul, 11400 Castelnaudary. SIRET 897 695 235 00019. Directeur de la publication : Alexandre BIGOT. Contact : 2aa.formation@gmail.com. Hébergement : GitHub Pages, GitHub Inc., 88 Colin P. Kelly Jr. Street, San Francisco, CA 94107, États-Unis.</p>
-  <h3 class="sub">Vos données restent sur votre téléphone</h3><p>Pas de compte, pas de serveur, pas de cookie, pas de publicité. Ce que vous saisissez (messages, calendrier, frais, fiche enfant, documents) est enregistré uniquement sur votre téléphone. Avec un code, ces données sont chiffrées. L'éditeur n'y a jamais accès.</p>
-  <h3 class="sub">Rien ne sort de votre téléphone</h3><p>L\'annuaire des contacts et la liste des communes sont intégrés à l\'appli : la recherche des contacts proches se fait sur votre téléphone, sans connexion. Les messages que vous envoyez passent par l\'application de votre choix (SMS, WhatsApp, mail), qui a ses propres règles.</p>
-  <h3 class="sub">Durée et suppression</h3><p>Vos données sont conservées sur votre téléphone tant que vous ne les effacez pas (Outils › Coffre-fort › Tout effacer), ou que vous ne désinstallez pas l'appli.</p>
-  <h3 class="sub">Information, pas conseil</h3><p>Les informations sont générales et vérifiées à la date indiquée. Elles ne remplacent pas l'avis d'un professionnel du droit. En cas de danger : 17, 112, SMS 114, et 3919.</p>
-  <h3 class="sub">Données publiques</h3><p>Annuaire de l'administration (Service Public, DILA) et découpage administratif (geo.api.gouv.fr), réutilisés sous Licence Ouverte / Open Licence (Etalab).</p>
-  <div class="actions">${TTS}<button class="btn main">Fermer</button></div></div>`;
-  d.querySelector(".btn.main").onclick=()=>d.remove(); document.body.appendChild(d); }
-
-/* ================= DÉMARRAGE ================= */
-async function startApp(){ aRender(); oHome(); dHome(); renderThemes(); modele(0); }
-(async()=>{ const m=await kvGet("meta"); if(m) META=m;
-  if(META.prot) lockScreen(); else { restore(await kvGet("state")); startApp(); }
-  if("serviceWorker" in navigator && location.protocol==="https:") navigator.serviceWorker.register("sw.js").catch(()=>{});
-})();
-
-</script>
+<footer>
+  <div class="wrap">
+    <p><b>Entre Deux Toits</b> · application gratuite d'information pour les parents séparés. Les informations sont générales : elles ne remplacent pas l'avis d'un professionnel du droit.</p>
+    <p>Éditeur : 2A FORMATION, entreprise individuelle d'Alexandre BIGOT · 2885 route de Saint-Papoul, 11400 Castelnaudary · SIRET 897 695 235 00019 · Directeur de la publication : Alexandre BIGOT · Contact : <a href="mailto:2aa.formation@gmail.com">2aa.formation@gmail.com</a></p><p>Hébergement : GitHub Pages, GitHub Inc., 88 Colin P. Kelly Jr. Street, San Francisco, CA 94107, États-Unis.</p>
+    <p>Aucun cookie, aucune mesure d'audience, aucune donnée personnelle collectée sur ce site. Données publiques réutilisées sous Licence Ouverte : Annuaire de l'administration (Service Public, DILA) et découpage administratif (geo.api.gouv.fr).</p>
+  </div>
+</footer>
 </body>
 </html>
