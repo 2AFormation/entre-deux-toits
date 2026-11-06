@@ -64,6 +64,9 @@ h2{font-size:clamp(26px,4vw,36px);margin:0 0 8px;letter-spacing:-.01em}
 .sos b{font-size:20px}
 .num{display:flex;gap:10px;flex-wrap:wrap}
 .num span{background:#c92a2a;color:#fff;border-radius:12px;padding:8px 14px;font-weight:700}
+.vid{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center}
+.vid video{display:block;width:min(320px,80vw);aspect-ratio:9/16;border-radius:28px;background:#1d2433;box-shadow:0 24px 50px rgba(29,36,51,.25);justify-self:center}
+@media (max-width:900px){.vid{grid-template-columns:1fr}.vid .txt{text-align:center}}
 footer{padding:36px 0 48px;color:var(--soft);font-size:14px;border-top:1px solid var(--line);margin-top:24px}
 footer p{margin:6px 0}
 @media (max-width:900px){.hero{grid-template-columns:1fr}.feat{grid-template-columns:1fr 1fr}.promise{grid-template-columns:1fr 1fr}.install{grid-template-columns:1fr}.qr{display:none}}
@@ -85,6 +88,7 @@ footer p{margin:6px 0}
       <div class="cta">
         <a class="btn main" href="app.html">Ouvrir l'appli</a>
         <a class="btn ghost" href="#installer">L'installer sur mon téléphone</a>
+        <a class="btn ghost" href="#video">▶ La vidéo (48 s)</a>
       </div>
       <div class="badges"><span>✓ Gratuite</span><span>✓ Sans compte</span><span>✓ Sans publicité</span><span>✓ Vos données restent sur votre téléphone</span></div>
       <div class="qr"><img src="qr-entredeuxtoits.png" alt="QR code vers entredeuxtoits.fr"><p><b style="color:var(--ink)">Sur ordinateur ?</b><br>Scannez ce code avec l'appareil photo de votre téléphone pour ouvrir l'appli.</p></div>
@@ -92,6 +96,20 @@ footer p{margin:6px 0}
     <div class="phone"><img src="ecran-accueil.png" alt="Écran d'accueil de l'appli : chez qui sont les enfants aujourd'hui, prochaines vacances, feuille de route"></div>
   </div>
 </div>
+
+<section id="video">
+  <div class="wrap vid">
+    <div class="txt">
+      <h2>Entre Deux Toits en 48 secondes</h2>
+      <p class="sub">Messages, démarches, calendrier, contacts : découvrez l'appli en vidéo. Les sous-titres sont intégrés, vous pouvez la regarder sans le son.</p>
+      <a class="btn main" href="app.html">Ouvrir l'appli</a>
+    </div>
+    <video controls playsinline preload="none" poster="video-poster.jpg" aria-label="Vidéo de présentation de l'appli Entre Deux Toits">
+      <source src="presentation-entre-deux-toits.mp4" type="video/mp4">
+      Votre navigateur ne lit pas cette vidéo.
+    </video>
+  </div>
+</section>
 
 <section style="background:var(--card)">
   <div class="wrap">
