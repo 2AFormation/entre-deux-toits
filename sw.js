@@ -1,6 +1,6 @@
 /* Entre Deux Toits – fonctionnement hors connexion */
-const CACHE = "edt-v4";
-const FILES = ["./", "index.html", "app.html", "manifest.webmanifest", "annuaire.json", "communes.json", "icon-192.png", "icon-512.png", "icon-maskable-512.png", "apple-touch-icon.png", "icone.svg"];
+const CACHE = "edt-v5";
+const FILES = ["./", "index.html", "app.html", "manifest.webmanifest", "annuaire.json", "communes.json", "icon-192.png", "icon-512.png", "icon-maskable-512.png", "apple-touch-icon.png", "icone.svg", "logo-2a-formation.png"];
 self.addEventListener("install", e => { e.waitUntil(caches.open(CACHE).then(c => c.addAll(FILES))); self.skipWaiting(); });
 self.addEventListener("activate", e => { e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => k !== CACHE).map(k => caches.delete(k))))); self.clients.claim(); });
 self.addEventListener("fetch", e => {

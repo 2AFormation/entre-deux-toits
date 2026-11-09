@@ -848,7 +848,8 @@ function aRender(){
     <button class="path" style="--c:var(--brand);width:100%;margin-bottom:12px" onclick="goTab('outils');oOpen('contacts')"><span class="i">📍</span><span><b>Contacts près de chez vous</b><small>${ME.ville?esc(ME.ville)+" · ":""}Points-justice, tribunal, CAF, aide aux victimes</small></span></button>
     <div class="sos"><span><b>Vous avez peur ?</b><br><span class="meta">3919 · gratuit, 24 h/24</span></span><button onclick="goTab('demarches');dOpen('violences')">Parcours protégé</button></div>
     ${installHTML()}
-    <p style="text-align:center"><button class="back" onclick="ME.prenomOld=ME.prenom;ME.prenom='';aRender();if(ME.cp)cpLook(ME.cp)">Modifier mes informations</button> · <button class="back" onclick="legal()">Mentions légales et confidentialité</button></p>`;
+    <p style="text-align:center"><button class="back" onclick="ME.prenomOld=ME.prenom;ME.prenom='';aRender();if(ME.cp)cpLook(ME.cp)">Modifier mes informations</button> · <button class="back" onclick="legal()">Mentions légales et confidentialité</button></p>
+    <p style="display:flex;align-items:center;justify-content:center;gap:10px;margin:14px 0 4px;font-size:13px;color:var(--soft)"><img src="logo-2a-formation.png" alt="" width="40" height="37" style="background:#fff;border-radius:8px;padding:4px"><span>Une initiative <b style="color:var(--ink)">2A Formation</b></span></p>`;
 }
 let CPL=[];
 async function cpLook(v){ const sel=document.getElementById("m_v"); if(!/^\d{5}$/.test(v)){ sel.style.display="none"; CPL=[]; return; }
@@ -1138,6 +1139,7 @@ function installHTML(){ if(isStandalone()) return "";
 function legal(){ const d=document.createElement("div"); d.className="lock"; d.style.alignItems="stretch";
   d.innerHTML=`<div class="lockbox" style="max-width:420px;text-align:left;overflow:auto;max-height:100%" data-tts>
   <h2>Mentions légales et confidentialité</h2>
+  <p style="display:flex;align-items:center;gap:10px"><img src="logo-2a-formation.png" alt="Logo 2A Formation" width="48" height="44" style="background:#fff;border-radius:8px;padding:4px"><span>Entre Deux Toits est une initiative de <b>2A Formation</b>, organisme de formation du travail social (2aformation.com).</span></p>
   <h3 class="sub">Éditeur</h3><p>2A FORMATION, entreprise individuelle d'Alexandre BIGOT, 2885 route de Saint-Papoul, 11400 Castelnaudary. SIRET 897 695 235 00019. Directeur de la publication : Alexandre BIGOT. Contact : 2aa.formation@gmail.com. Hébergement : GitHub Pages, GitHub Inc., 88 Colin P. Kelly Jr. Street, San Francisco, CA 94107, États-Unis.</p>
   <h3 class="sub">Vos données restent sur votre téléphone</h3><p>Pas de compte, pas de serveur, pas de cookie, pas de publicité. Ce que vous saisissez (messages, calendrier, frais, fiche enfant, documents) est enregistré uniquement sur votre téléphone. Avec un code, ces données sont chiffrées. L'éditeur n'y a jamais accès.</p>
   <h3 class="sub">Rien ne sort de votre téléphone</h3><p>L\'annuaire des contacts et la liste des communes sont intégrés à l\'appli : la recherche des contacts proches se fait sur votre téléphone, sans connexion. Les messages que vous envoyez passent par l\'application de votre choix (SMS, WhatsApp, mail), qui a ses propres règles.</p>
