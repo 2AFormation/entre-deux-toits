@@ -349,10 +349,54 @@ const THEMES = {
   autre:{n:"Autre",i:"✉️",c:"var(--autre)",m:[]}
 };
 
-/* Règles de relecture : [regex, titre, explication, proposition] */
+/* Repérage des mots blessants : tolère accents, majuscules, pluriels, lettres répétées, chiffres à la place des lettres */
+const INS = (()=>{
+  const LEET={"0":"o","1":"i","3":"e","4":"a","@":"a","$":"s","€":"e","œ":"oe","æ":"ae","’":"'"};
+  /* Radicaux : le mot commence par ce radical (pluriels et féminins compris) */
+  const STEMS="connard conard connass conass salop salaud debile abruti idiot cretin enfoir minable pathetique lamentable pitoyable bouffon menteu mytho egoiste irresponsable incapable indigne imbecile stupide couillon pouffiass poufiass petass grognass garce chienne truie morue guenon hyene vipere sangsue vermine ordure raclure pourri pourav cassos clodo poivrot pochtron alcoolo ivrogne feignass faineant glandeu branleu loser looser pignouf plouc encul niqu batard merdeu emmerdeu chieu psychopat hysteri cingle gogol mongol attarde pervers manipulat narcissique toxique parasite profiteu tarlouz pede".split(" ");
+  /* Mots exacts (courts ou trop proches d'autres mots) */
+  const EXACT=new Set("naze nase con cons conne connes pute putes tare tares taree tarees barge barjo psycho beauf fdp ntm pd tg".split(" "));
+  const GROS=new Set("merde merdes putain ptn bordel chier foutre foutu foutue".split(" "));
+  /* Expressions */
+  const PHRASES=/(?<![a-z])(ta gueule|ferme[- ]la|fils de p[a-z]*|pauvre (?:type|fille|mec|nana|conne?|naze|nase|tache|cloche|merde)|trou du cul|trouduc|va te faire|allez vous faire|va chier|va crever|nique ta|sous[- ]merde|bonne? a rien|bons? a rien|mauvaise mere|mauvais pere|(?:mere|pere) indigne|cas social|malade mental\w*|(?:es|est|etes|vraiment|completement|trop|t'es) nul(?:le)?s?)(?![a-z])/g;
+  /* Mots ambigus (animaux, etc.) : signalés seulement dans une tournure d'insulte */
+  const AMB="vache|vaches|cochon|cochonne|porc|porcs|rat|rats|dinde|thon|boudin|baleine|pou|poux|chameau|mule|ane|oie|serpent|larve|limace|cafard|buse|bique|poule|chien|singe|veau|ours|grue|moule|blaireau|bouc|dechet|boulet|andouille|bete|folle|fou|malade|gamine?|gros(?:se)?|moche|laide?|sorciere|harpie|megere|mollusque|legume|plante";
+  const AMBRX=new RegExp("(?<![a-z])(?:espece d(?:e |')|sale |vieux |vieil |vieille |vielle |gros |grosse |pauvre |tete d(?:e |')|face d(?:e |')|bande d(?:e |')|t'es (?:une? )?|tu es (?:une? )?|vous etes (?:une? )?|qu'une? |completement |vraiment une? )(?:[a-z]+ )?(?:"+AMB+")(?![a-z])","g");
+  const ESPECE=/(?<![a-z])espece d(?:e |')[a-z]+/g;
+  const SALE=/(?<![a-z])sale (?!(?:et|ou|a|de|du|des|le|la|les|en|dans|sur|pour|comme|mais|donc|car|aussi|partout|ici)(?![a-z]))[a-z]+/g;
+  function norm(t){
+    let s="",map=[];
+    for(let i=0;i<t.length;i++){
+      let c=t[i].toLowerCase(); c=LEET[c]||c.normalize("NFD").replace(/[̀-ͯ]/g,"");
+      for(const ch of c){
+        if(/[a-z]/.test(ch) && s.length>=2 && s[s.length-1]===ch && s[s.length-2]===ch) continue; /* lettres répétées */
+        s+=ch; map.push(i);
+      }
+    }
+    map.push(t.length);
+    return [s,map];
+  }
+  function find(t){
+    const [s,map]=norm(t), hurt=[], gros=[];
+    const add=(arr,a,b)=>arr.push([map[a], map[b-1]+1]);
+    let m; const w=/[a-z]+/g;
+    while((m=w.exec(s))){
+      const x=m[0];
+      if(GROS.has(x)) add(gros,m.index,m.index+x.length);
+      else if(EXACT.has(x) || STEMS.some(st=>x.startsWith(st) && x.length<=st.length+4)) add(hurt,m.index,m.index+x.length);
+    }
+    for(const rx of [PHRASES,AMBRX,ESPECE,SALE]){ rx.lastIndex=0; while((m=rx.exec(s))) add(hurt,m.index,m.index+m[0].length); }
+    return {hurt,gros};
+  }
+  return {find};
+})();
+
+/* Règles de relecture : [regex ou fonction, titre, explication, proposition] */
 const RULES = [
-  [/\b(connard|connasse|conne?|salope|salaud|débile|abruti(?:e)?|idiot(?:e)?|crétin(?:e)?|enfoiré(?:e)?|minable|pathétique|bouffon|menteu(?:r|se)|égoïste|irresponsable|incapable|nul(?:le)?|pute|ta gueule|ferme[- ]la)\b/gi,
-   "Un mot blessant","Ce mot risque de bloquer la réponse, et il peut être relu par un juge.","Décrivez plutôt le fait : ce qui s'est passé, quand."],
+  [t=>INS.find(t).hurt,
+   "Un mot blessant","Ce mot risque de bloquer la réponse, et il peut être relu par un juge.","Décrivez plutôt le fait : ce qui s'est passé, quand. Besoin de vider votre sac d'abord ? Le Défouloir est fait pour ça : rien n'y est envoyé."],
+  [t=>INS.find(t).gros,
+   "Un gros mot","Même s'il ne vise pas la personne, il durcit le ton du message.","Retirez-le : votre demande passera mieux."],
   [/\b(jamais|toujours|comme d'habitude|comme d’habitude|encore une fois|à chaque fois|tout le temps|comme toujours)\b/gi,
    "Une généralisation","L'autre risque de répondre au mot « jamais » ou « toujours » plutôt qu'à votre demande.","Citez le fait précis : « Samedi 8, tu es arrivé à 11 h au lieu de 10 h. »"],
   [/\b(tu es|t'es|t’es|vous êtes)\b/gi,
@@ -370,7 +414,7 @@ const RULES = [
 ];
 
 /* Limites de mots compatibles avec les accents (é, è…) */
-RULES.forEach(r=>{ const s=r[0].source; if(s.startsWith("\\b")) r[0]=new RegExp(s.replace(/^\\b/,"(?<![\\p{L}])").replace(/\\b$/,"(?![\\p{L}])"), r[0].flags+"u"); });
+RULES.forEach(r=>{ if(typeof r[0]==="function") return; const s=r[0].source; if(s.startsWith("\\b")) r[0]=new RegExp(s.replace(/^\\b/,"(?<![\\p{L}])").replace(/\\b$/,"(?![\\p{L}])"), r[0].flags+"u"); });
 
 /* ---------- État (en mémoire, aperçu) ---------- */
 let theme = "sante", tv = "tu", journal = [], brouillons = [], hidden = new Set();
@@ -439,8 +483,9 @@ function relire(srcId, boxId){
   if(!txt.trim()){ box.innerHTML=""; return; }
   const ranges=[], tips=[];
   RULES.forEach((r,ri)=>{
-    r[0].lastIndex=0; let m, found=false;
-    while((m=r[0].exec(txt))){ ranges.push([m.index,m.index+m[0].length]); found=true; }
+    let m, found=false;
+    if(typeof r[0]==="function"){ r[0](txt).forEach(x=>{ ranges.push(x); found=true; }); }
+    else { r[0].lastIndex=0; while((m=r[0].exec(txt))){ ranges.push([m.index,m.index+m[0].length]); found=true; } }
     if(found && !hidden.has(ri)) tips.push([ri,r]);
   });
   if(txt.length>600 && !hidden.has(99)) tips.push([99,[null,"Un message long","Un seul sujet par message a plus de chances d'obtenir une réponse rapide.","Gardez l'essentiel ici, et le reste pour un autre message."]]);
@@ -449,7 +494,7 @@ function relire(srcId, boxId){
   ranges.forEach(([a,b])=>{ if(a<pos) return; html+=esc(txt.slice(pos,a))+"<mark>"+esc(txt.slice(a,b))+"</mark>"; pos=b; });
   html+=esc(txt.slice(pos));
   if(!tips.length){
-    box.innerHTML = `<div class="verdict ok">✓ Message clair et factuel</div><div class="okbox">Rien ne risque de bloquer la réponse. Vous pouvez l'envoyer.</div>`;
+    box.innerHTML = `<div class="verdict ok">✓ Rien de bloquant repéré</div><div class="okbox">La relecture automatique repère les pièges les plus courants, pas tout. Relisez-vous une dernière fois : ce message pourrait-il être lu par un juge sans vous gêner ?</div>`;
     return;
   }
   box.innerHTML = `<div class="verdict warn">À relire : ${tips.length} point${tips.length>1?"s":""}</div>
