@@ -34,7 +34,7 @@ header small{display:block;color:var(--soft);font-weight:400;font-size:12px}
 .exit{border:0;background:#c92a2a;color:#fff;border-radius:999px;padding:7px 12px;font-weight:600;font-size:13px;cursor:pointer}
 main{flex:1;padding:4px 16px 90px;overflow:auto}
 nav.bottom{position:sticky;bottom:0;display:flex;border-top:1px solid var(--line);background:var(--phone)}
-nav.bottom button{flex:1;border:0;background:none;padding:10px 0 12px;color:var(--soft);font-size:12px;cursor:pointer}
+nav.bottom button{flex:1;border:0;background:none;padding:10px 0 12px;color:var(--soft);font-size:12.5px;cursor:pointer}
 nav.bottom button span{display:block;font-size:20px}
 nav.bottom button.on{color:var(--brand);font-weight:600}
 .seg{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;margin:6px 0 12px}
@@ -73,7 +73,7 @@ mark{background:var(--mark);color:inherit;border-radius:3px;padding:0 2px}
 .okbox{border-left:4px solid var(--ok);background:var(--ok-soft);border-radius:8px;padding:8px 10px;font-size:13.5px}
 .list .it{border-bottom:1px solid var(--line);padding:10px 0}
 .list .it:last-child{border:0}
-.meta{font-size:12px;color:var(--soft)}
+.meta{font-size:13px;color:var(--soft)}
 .bref{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
 .bref div{background:var(--brand-soft);border-radius:12px;padding:10px;font-size:13px}
 .bref b{font-size:20px;color:var(--brand);display:block}
@@ -106,7 +106,7 @@ mark{background:var(--mark);color:inherit;border-radius:3px;padding:0 2px}
 .step.done .donebtn{background:var(--ok);color:#fff}
 .alert{border-left:4px solid #c92a2a;background:#fff0f0;color:#5c1010;border-radius:8px;padding:10px;margin-bottom:12px;font-size:13.5px}
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .alert{background:#3a1717;color:#ffd6d6}}
-.verif{font-size:12px;color:var(--warn);margin-top:10px}
+.verif{font-size:13px;color:var(--warn);margin-top:10px}
 .conv label{margin-top:12px}
 .lock{position:fixed;inset:0;z-index:50;background:var(--bg);display:flex;align-items:center;justify-content:center;padding:16px}
 .lockbox{background:var(--phone);border-radius:20px;padding:22px;width:100%;max-width:380px;text-align:center;box-shadow:0 10px 40px rgba(0,0,0,.15)}
@@ -114,7 +114,7 @@ mark{background:var(--mark);color:inherit;border-radius:3px;padding:0 2px}
 .tts{border:1px solid var(--line);background:none;color:var(--brand);border-radius:999px;padding:5px 12px;font-size:13px;cursor:pointer;margin:0 6px 8px 0}
 .two{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .cal{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;margin-top:8px}
-.cal .h{font-size:11px;color:var(--soft);text-align:center}
+.cal .h{font-size:12.5px;color:var(--soft);text-align:center}
 .cal .d{aspect-ratio:1;border-radius:8px;display:grid;place-items:center;font-size:13px;position:relative;color:#fff;font-weight:600}
 .cal .d.p1{background:#3b5bdb}.cal .d.p2{background:#e8590c}
 .cal .d.vac::after{content:"";position:absolute;bottom:3px;width:5px;height:5px;border-radius:50%;background:#fff}
@@ -137,7 +137,7 @@ mark{background:var(--mark);color:inherit;border-radius:3px;padding:0 2px}
 .tiles{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
 .tile{border:0;border-radius:14px;padding:12px;text-align:left;cursor:pointer;color:var(--ink);font:inherit;background:var(--brand-soft)}
 .tile span{font-size:22px;display:block;margin-bottom:4px}
-.tile small{display:block;color:var(--soft);font-size:12px}
+.tile small{display:block;color:var(--soft);font-size:12.5px}
 .sos{display:flex;justify-content:space-between;align-items:center;gap:10px;border:1px solid var(--line);border-radius:14px;padding:12px;margin-bottom:12px}
 .sos button{border:0;background:#c92a2a;color:#fff;border-radius:999px;padding:7px 12px;font-weight:600;cursor:pointer;white-space:nowrap}
 /* Qui décide : liste de situations */
@@ -299,8 +299,8 @@ mark{background:var(--mark);color:inherit;border-radius:3px;padding:0 2px}
           <div class="list" id="brouillons"><p>Aucun brouillon.</p></div>
         </div>
         <div class="card">
-          <h2>📒 Messages envoyés</h2>
-          <p>Une trace datée de ce que vous avez envoyé. Elle peut vous servir si la situation se tend.</p>
+          <h2>📒 Messages copiés ou partagés</h2>
+          <p>Une trace datée des messages que vous avez copiés ou partagés depuis l'appli. Elle peut vous aider à vous souvenir des échanges si la situation se tend.</p>
           <div class="list" id="journal"><p>Rien pour l'instant.</p></div>
         </div>
       </div>
@@ -437,7 +437,9 @@ const RULES = [
   [/\b[A-ZÀÂÉÈÊÎÔÛÇ]{4,}\b/g,
    "Des majuscules","Les majuscules se lisent comme des cris.","Écrivez normalement : le mot important suffit."],
   [/[!?]{2,}/g,
-   "Plusieurs points d'exclamation","Ils donnent un ton agacé, même si ce n'est pas voulu.","Un seul signe suffit."]
+   "Plusieurs points d'exclamation","Ils donnent un ton agacé, même si ce n'est pas voulu.","Un seul signe suffit."],
+  [/(?:\.{4,}|…{2,})/g,
+   "Un passage à compléter","Il reste des « ………… » dans le message.","Remplacez-les par l'information précise (date, heure, lieu, montant) avant d'envoyer."]
 ];
 
 /* Limites de mots compatibles avec les accents (é, è…) */
@@ -550,19 +552,23 @@ function toast(t){ const el=document.getElementById("toast"); el.textContent=t; 
 function now(){ return new Date().toLocaleString("fr-FR",{dateStyle:"short",timeStyle:"short"}); }
 async function envoyer(id){
   const t=document.getElementById(id).value.trim(); if(!t){toast("Le message est vide.");return;}
-  try{ if(navigator.share) await navigator.share({text:t}); else await navigator.clipboard.writeText(t); }catch(e){}
-  journal.unshift({d:now(),th:THEMES[theme].i+" "+THEMES[theme].n,t});
+  try{ if(navigator.share) await navigator.share({text:t}); else await navigator.clipboard.writeText(t); }
+  catch(e){ if(e && e.name==="AbortError"){ toast("Partage annulé : rien n'a été envoyé."); return; } try{ await navigator.clipboard.writeText(t); }catch(e2){} }
+  journal.unshift({d:now(),th:THEMES[theme].i+" "+THEMES[theme].n,t}); saveNow();
   toast("Copié. Collez-le dans SMS, WhatsApp ou mail. Une copie est dans le Journal.");
 }
 function plusTard(id){
   const t=document.getElementById(id).value.trim(); if(!t){toast("Le message est vide.");return;}
   const h=new Date(Date.now()+3600e3).toLocaleTimeString("fr-FR",{hour:"2-digit",minute:"2-digit"});
-  brouillons.unshift({h,t}); toast(`Mis de côté. Rappel à ${h} pour le relire à tête reposée.`);
+  brouillons.unshift({h,t,d:now()}); toast("Mis de côté dans « À relire ». Relisez-le à tête reposée, par exemple dans une heure.");
 }
 function renderJournal(){
-  document.getElementById("brouillons").innerHTML = brouillons.length ? brouillons.map(b=>`<div class="it"><div class="meta">À relire à ${b.h}</div>${esc(b.t).replace(/\n/g,"<br>")}</div>`).join("") : "<p>Aucun brouillon.</p>";
-  document.getElementById("journal").innerHTML = journal.length ? journal.map(j=>`<div class="it"><div class="meta">${j.d} · ${j.th}</div>${esc(j.t).replace(/\n/g,"<br>")}</div>`).join("") : "<p>Rien pour l'instant.</p>";
+  document.getElementById("brouillons").innerHTML = brouillons.length ? brouillons.map((b,i)=>`<div class="it"><div class="meta">Mis de côté${b.d?" le "+b.d:""}</div>${esc(b.t).replace(/\n/g,"<br>")}<div class="actions" style="margin-top:6px"><button class="chip" onclick="brReprendre(${i})">✍️ Reprendre</button><button class="chip" onclick="brSuppr(${i})">✕ Supprimer</button></div></div>`).join("") : "<p>Aucun brouillon.</p>";
+  document.getElementById("journal").innerHTML = journal.length ? journal.map((j,i)=>`<div class="it"><div class="meta">${j.d} · ${j.th}</div>${esc(j.t).replace(/\n/g,"<br>")}<div class="actions" style="margin-top:6px"><button class="chip" onclick="jSuppr(${i})">✕ Supprimer</button></div></div>`).join("") : "<p>Rien pour l'instant.</p>";
 }
+function brReprendre(i){ const b=brouillons[i]; if(!b) return; brouillons.splice(i,1); libre.value=b.t; show("relire"); hidden.clear(); relire("libre","rel2"); saveNow(); toast("Brouillon repris dans « Relire mon texte »."); }
+function brSuppr(i){ askBox("Supprimer ce brouillon ?","Supprimer",()=>{ brouillons.splice(i,1); saveNow(); renderJournal(); }); }
+function jSuppr(i){ askBox("Supprimer ce message du journal ?","Supprimer",()=>{ journal.splice(i,1); saveNow(); renderJournal(); }); }
 function effacer(){ def.value=""; toast("C'est effacé. Quand vous êtes prêt·e, écrivez le message utile."); show("ecrire"); }
 function sortie(){ try{ speechSynthesis.cancel(); }catch(e){} document.body.innerHTML=""; location.replace("https://meteofrance.com/"); }
 
@@ -581,29 +587,29 @@ const PIECES = `<ul><li>une copie de votre pièce d'identité ;</li><li>les acte
 const PATHS = {
   accord:{i:"🤝",c:"var(--ok)",t:"Nous sommes d'accord",s:"Écrire une convention parentale et la faire valider par le juge",steps:[
     ["Se mettre d'accord sur les points clés",`<p>Résidence des enfants, temps chez chacun, vacances, trajets, pension, partage des frais, façon de communiquer.</p><button class="lnk" style="border:0;cursor:pointer" onclick="dOpen('convention')">✍️ Préparer notre convention</button>`],
-    ["Rédiger et signer la convention",`<p>Les deux parents la datent et la signent. Chacun garde un exemplaire.</p><p>Tant qu'elle n'est pas validée par le juge, elle n'a pas de force obligatoire : en cas de désaccord, ni la CAF ni un huissier ne peuvent s'appuyer dessus.</p>`],
+    ["Rédiger et signer la convention",`<p>Les deux parents la datent et la signent. Chacun garde un exemplaire.</p><p>Tant qu'elle n'est pas homologuée par le juge, elle n'est pas exécutoire : si l'un de vous ne la respecte pas, l'autre ne peut pas la faire appliquer (par exemple par un commissaire de justice).</p><p>Pour la pension seulement, des parents qui ne sont pas mariés peuvent aussi demander ensemble à la CAF ou à la MSA de donner force exécutoire à leur accord.</p><p class="meta">Art. 373-2-7 et 373-2-2 C. civ. · art. L. 582-2 CSS</p>${lk("aripa")}`],
     ["Remplir la demande conjointe d'homologation",`<p>Il s'agit du formulaire Cerfa n° 16139. Il est signé par les deux parents et accompagné de la convention.</p>${lk("c16139")}`],
     ["Rassembler les pièces",PIECES],
     ["Envoyer le dossier au tribunal",`<p>Au greffe du juge aux affaires familiales (JAF) du tribunal judiciaire du lieu où vit l'un ou l'autre parent, au choix.</p><p>Pas besoin d'avocat. La démarche est gratuite.</p>`],
     ["Après la décision",`<p>Le juge peut valider la convention sans vous recevoir, ou vous convoquer. Une fois homologuée, elle a la même force qu'un jugement.</p><p>Si une pension est prévue, le versement passe en principe par la CAF ou la MSA (intermédiation financière).</p>${lk("aripa")}`]
   ]},
   desaccord:{i:"🧭",c:"var(--vac)",t:"Nous ne sommes pas d'accord",s:"Médiation, puis demande au juge si besoin",steps:[
-    ["Essayer la médiation familiale",`<p>Un médiateur familial diplômé, neutre, vous aide à trouver un accord. Ce qui s'y dit reste confidentiel. Le premier entretien d'information est gratuit ; ensuite, le prix dépend de vos revenus.</p><p>La médiation n'est pas obligatoire avant de saisir le juge, mais le formulaire vous demande ce que vous avez tenté, et le juge peut vous demander de rencontrer un médiateur.</p><button class="lnk" style="border:0;cursor:pointer" onclick="goTab('outils');oOpen('contacts')">📍 Contacts près de chez moi</button>`],
+    ["Essayer la médiation familiale",`<p>Un médiateur familial diplômé, neutre, vous aide à trouver un accord. Ce qui s'y dit reste confidentiel. Le premier entretien d'information est gratuit ; ensuite, le prix dépend de vos revenus.</p><p>La médiation n'est pas obligatoire avant de saisir le juge, mais le formulaire vous demande ce que vous avez tenté, et le juge peut vous ordonner de rencontrer un médiateur pour une réunion d'information. Si vous n'y allez pas sans motif légitime, vous risquez une amende civile (jusqu'à 10 000 €). Ce n'est pas possible en cas de violences.</p><p class="meta">Art. 373-2-10 C. civ. · art. 1533-3 CPC</p><button class="lnk" style="border:0;cursor:pointer" onclick="goTab('outils');oOpen('contacts')">📍 Contacts près de chez moi</button>`],
     ["Si un accord est trouvé",`<p>Passez au parcours « Nous sommes d'accord » pour écrire la convention et la faire homologuer.</p><button class="lnk" style="border:0;cursor:pointer" onclick="dOpen('accord')">🤝 Aller au parcours accord</button>`],
     ["Remplir la requête au JAF",`<p>Formulaire Cerfa n° 11530, avec sa notice n° 50720. Il sert à fixer ou modifier : l'autorité parentale, la résidence des enfants, le droit de visite et d'hébergement, la pension.</p><ul><li><b>Vous et l'autre parent</b> : état civil, adresses.</li><li><b>Les enfants</b> : un bloc par enfant.</li><li><b>Ce que vous demandez</b> : soyez précis (jours, horaires, montant).</li><li><b>Tentative amiable</b> : courrier, médiation, ou raison pour laquelle ce n'était pas possible.</li><li><b>Intermédiation financière</b> : versement de la pension par la CAF ou la MSA.</li></ul>${lk("c11530")}`],
     ["Rassembler les pièces",PIECES+`<p>Ajoutez ce qui appuie votre demande : planning de travail, attestation d'école, échanges écrits factuels (votre Journal peut aider).</p>`],
-    ["Déposer ou envoyer la requête",`<p>Au greffe du JAF du tribunal judiciaire du lieu où vivent les enfants. Pas d'avocat obligatoire, pas de frais. Vous pouvez vous faire aider : voir la fiche « Avocat et aide juridictionnelle ».</p>`],
+    ["Déposer ou envoyer la requête",`<p>Au greffe du JAF du tribunal judiciaire, en principe celui du lieu où vivent habituellement les enfants (en résidence alternée : celui du lieu où vit l'autre parent ; pour la pension seule, vous pouvez aussi choisir votre tribunal). Vérifiez le tribunal compétent sur justice.fr. Pas d'avocat obligatoire, pas de frais. Vous pouvez vous faire aider : voir la fiche « Avocat et aide juridictionnelle ».</p>`],
     ["Préparer l'audience",`<p>Vous recevez une convocation ; l'autre parent aussi. Venez avec vos pièces. Exposez les faits simplement, en pensant d'abord à l'organisation des enfants.</p><p>Un enfant capable de discernement peut demander à être entendu par le juge.</p>`],
     ["Après la décision",`<p>La décision s'applique aux deux parents. Elle indique le délai pour faire appel. Si la situation change (déménagement, emploi, besoins de l'enfant), une nouvelle demande est possible.</p>`]
   ]},
   divorce:{i:"💍",c:"var(--plan)",t:"Nous sommes mariés",s:"Les deux façons de divorcer, et la place des enfants",steps:[
-    ["Divorce par consentement mutuel",`<p>Sans juge : chaque époux a son propre avocat. La convention de divorce règle aussi la situation des enfants. Après un délai de réflexion de 15 jours, elle est signée puis déposée chez un notaire.</p><p>Si un enfant mineur demande à être entendu par le juge, le divorce passe devant le juge.</p>`],
+    ["Divorce par consentement mutuel",`<p>Sans juge : chaque époux a son propre avocat. La convention de divorce règle aussi la situation des enfants. Après un délai de réflexion de 15 jours, elle est signée puis déposée chez un notaire.</p><p>Il passe devant le juge si un enfant mineur demande à être entendu par le juge, ou si l'un des époux est sous mesure de protection (tutelle, curatelle…).</p><p class="meta">Art. 229-1 et 229-2 C. civ.</p>`],
     ["Divorce devant le juge",`<p>En cas de désaccord, ou si l'un des époux le choisit. L'avocat est obligatoire. Le juge fixe les mesures pour les enfants.</p>`],
     ["Financer l'avocat",`<p>L'aide juridictionnelle peut prendre en charge tout ou partie des frais.</p><button class="lnk" style="border:0;cursor:pointer" onclick="dOpen('avocat')">⚖️ Fiche avocat et aide</button>`]
   ]},
-  violences:{i:"🛟",c:"#c92a2a",t:"Il y a des violences, ou j'ai peur",s:"Un parcours protégé, sans médiation",alert:`<div class="alert"><b>En danger maintenant ?</b> Appelez le <b>17</b> ou le <b>112</b>. Si vous ne pouvez pas parler : SMS au <b>114</b>.<br>Écoute anonyme et gratuite, 24 h/24 : <b>3919</b>.</div>`,steps:[
-    ["La médiation n'est pas adaptée",`<p>Quand il y a des violences d'un parent sur l'autre ou sur l'enfant, le juge ne peut pas imposer de médiation. Vous n'avez pas à négocier un accord avec l'autre parent.</p>`],
-    ["Demander une ordonnance de protection",`<p>Le JAF peut, en urgence et même sans plainte : interdire le contact, attribuer le logement, fixer la résidence des enfants, permettre de cacher votre adresse.</p>${lk("viol")}`],
+  violences:{i:"🛟",c:"#c92a2a",t:"Il y a des violences, ou j'ai peur",s:"Un parcours protégé, sans médiation",alert:`<div class="alert"><b>En danger maintenant ?</b> Appelez le <b>17</b> ou le <b>112</b>. Si vous ne pouvez pas parler : SMS au <b>114</b>.<br>Écoute anonyme et gratuite, 24 h/24 : <b>3919</b>. Enfant en danger : <b>119</b>.</div>`,steps:[
+    ["La médiation n'est pas adaptée",`<p>Quand des violences sont invoquées, ou en cas d'emprise manifeste d'un parent sur l'autre, le juge ne peut ni vous proposer ni vous imposer une médiation. Vous n'avez pas à négocier un accord avec l'autre parent.</p><p class="meta">Art. 373-2-10 C. civ.</p>`],
+    ["Demander une ordonnance de protection",`<p>En cas de violences dans le couple, ou de la part d'un ex-conjoint ou ex-partenaire, même sans vie commune, le JAF peut, en urgence et même sans plainte : interdire le contact, attribuer le logement, fixer la résidence des enfants, permettre de cacher votre adresse.</p><p>En cas de danger grave et immédiat, le procureur peut aussi demander, avec votre accord, une <b>ordonnance provisoire de protection immédiate</b>, délivrée en 24 heures.</p><p>Si c'est l'enfant qui est en danger : appelez le <b>119</b> (Allô Enfance en danger, gratuit, 24 h/24). Le juge des enfants peut être saisi.</p><p class="meta">Art. 515-9 à 515-13-1 C. civ.</p>${lk("viol")}`],
     ["Garder les traces",`<p>Messages, mails, certificats médicaux, attestations. Vous pouvez les ranger dans le coffre-fort de l'appli, protégé par un code.</p><button class="lnk" style="border:0;cursor:pointer" onclick="goTab('outils');oOpen('coffre')">🔒 Mon coffre-fort</button>`],
     ["Se faire accompagner",`<p>France Victimes : <b>116 006</b> (gratuit). Associations et CIDFF : voir les contacts près de chez vous.</p><button class="lnk" style="border:0;cursor:pointer" onclick="goTab('outils');oOpen('contacts')">📍 Contacts près de chez moi</button><p> Un avocat peut être pris en charge par l'aide juridictionnelle.</p>`]
   ]}
@@ -612,11 +618,11 @@ const FICHES = {
   avocat:{i:"⚖️",c:"var(--ecole)",t:"Avocat et aide juridictionnelle",s:"Quand en prendre un, comment le financer",steps:[
     ["Faut-il un avocat ?",`<p>Pas obligatoire pour une demande au JAF hors divorce, ni pour l'homologation d'une convention. Obligatoire pour un divorce. Utile si le désaccord est fort ou si l'autre parent a un avocat.</p>`],
     ["Un conseil gratuit d'abord",`<p>Les Points-justice donnent des consultations gratuites avec des juristes et des avocats. Numéro unique : <b>30 39</b>.</p>${lk("justice")}`],
-    ["L'aide juridictionnelle",`<p>Plafonds 2026 pour une personne seule (revenu fiscal de référence) : prise en charge totale jusqu'à 12 957 €, partielle jusqu'à 19 433 €. Les plafonds augmentent avec les personnes à charge.</p><p>Demande en ligne ou par formulaire Cerfa n° 16146.</p>${lk("aj")}`]
+    ["L'aide juridictionnelle",`<p>Plafonds 2026 pour une personne seule (revenu fiscal de référence) : prise en charge totale jusqu'à 12 957 €, partielle jusqu'à 19 433 €. Les plafonds augmentent avec le nombre de personnes du foyer.</p><p>Demande en ligne ou par formulaire Cerfa n° 16146.</p>${lk("aj")}`]
   ]},
   pension:{i:"💶",c:"var(--frais)",t:"Pension alimentaire",s:"Combien, comment elle est versée, en cas d'impayé",steps:[
     ["Estimer un montant",`<p>Le ministère de la Justice propose un barème indicatif selon les revenus, le nombre d'enfants et le temps de résidence. Le juge n'est pas tenu de le suivre.</p>${lk("justice")}`],
-    ["Le versement par la CAF ou la MSA",`<p>Depuis 2023, l'intermédiation financière est automatique pour les séparations : l'organisme collecte la pension chaque mois et la reverse. C'est gratuit.</p>${lk("aripa")}`],
+    ["Le versement par la CAF ou la MSA",`<p>Quand la pension est fixée par un jugement, une convention homologuée, un divorce ou un titre délivré par la CAF, l'intermédiation financière est en principe automatique : l'organisme collecte la pension chaque mois et la reverse. C'est gratuit. Sans ce type de document, vous pouvez la demander.</p><p>Les deux parents peuvent la refuser ensemble, par écrit dans la convention, sauf en cas de plainte ou de condamnation pour violences ou menaces.</p><p class="meta">Art. 373-2-2 C. civ.</p>${lk("aripa")}`],
     ["En cas d'impayé",`<p>Signalez-le à la CAF ou à la MSA. Selon votre situation, l'allocation de soutien familial (ASF) peut être versée en attendant.</p>`]
   ]},
   convention:{i:"✍️",c:"var(--ok)",t:"Préparer notre convention",s:"Un modèle guidé à compléter ensemble",builder:true}
@@ -642,7 +648,7 @@ function dOpen(k){
     ${p.steps.map((s,i)=>`<details class="step ${dDone[k].includes(i)?"done":""}" ${i===firstTodo(k,n)?"open":""}>
       <summary><span class="n">${dDone[k].includes(i)?"✓":i+1}</span>${s[0]}</summary>
       <div class="body" data-tts>${TTS}${s[1]}${PATHS[k]?`<button class="donebtn" onclick="dToggle('${k}',${i})">${dDone[k].includes(i)?"✓ Fait":"C'est fait"}</button>`:""}</div></details>`).join("")}
-    <p class="verif">Aperçu : informations vérifiées le 05/11/2026, à relire avant mise en ligne.</p>`;
+    <p class="verif">Informations vérifiées le 12/11/2026 sur Légifrance et les sites officiels. Elles ne remplacent pas l'avis d'un professionnel du droit.</p>`;
 }
 function firstTodo(k,n){ for(let i=0;i<n;i++) if(!dDone[k].includes(i)) return i; return -1; }
 function dToggle(k,i){ const a=dDone[k]; const j=a.indexOf(i); j<0?a.push(i):a.splice(j,1); dOpen(k); }
@@ -691,7 +697,7 @@ ${V("c_vac")}.
 ${V("c_tra")}.
 
 5. Contribution à l'entretien et à l'éducation
-${pen ? `Une pension de ${pen} par mois et par enfant est versée par ………… à ………… , avec indexation annuelle. Elle est versée par l'intermédiaire de la CAF ou de la MSA, sauf refus des deux parents.` : "…………"}
+${pen ? `Une pension de ${pen} par mois et par enfant est versée par ………… à ………… , avec indexation annuelle. Elle est versée par l'intermédiaire de la CAF ou de la MSA (intermédiation financière). [Si vous la refusez tous les deux, remplacez cette phrase par : « Les deux parents refusent l'intermédiation financière. » Ce refus n'est pas possible en cas de plainte ou de condamnation pour violences ou menaces.]` : "…………"}
 
 6. Frais exceptionnels
 ${V("c_fra")}.
@@ -725,18 +731,19 @@ function oOpen(k){
 }
 
 /* --- Calendrier de garde --- */
-const VAC = { /* arrêté du 22/10/2025 – [début (samedi), reprise (lundi)] */
-  A:[["2026-10-17","2026-11-02","Toussaint"],["2026-12-19","2027-01-04","Noël"],["2027-02-13","2027-03-01","Hiver"],["2027-04-10","2027-04-26","Printemps"],["2027-07-03","2027-09-01","Été"]],
-  B:[["2026-10-17","2026-11-02","Toussaint"],["2026-12-19","2027-01-04","Noël"],["2027-02-20","2027-03-08","Hiver"],["2027-04-17","2027-05-03","Printemps"],["2027-07-03","2027-09-01","Été"]],
-  C:[["2026-10-17","2026-11-02","Toussaint"],["2026-12-19","2027-01-04","Noël"],["2027-02-06","2027-02-22","Hiver"],["2027-04-03","2027-04-19","Printemps"],["2027-07-03","2027-09-01","Été"]]
+const VAC = { /* arrêtés du 22/10/2025 (2026-2027) et du 21/07/2026 (2027-2028) – [fin des cours, reprise des cours] ; fin de l'été 2028 provisoire */
+  A:[["2026-10-17","2026-11-02","Toussaint"],["2026-12-19","2027-01-04","Noël"],["2027-02-13","2027-03-01","Hiver"],["2027-04-10","2027-04-26","Printemps"],["2027-07-03","2027-09-02","Été"],["2027-10-23","2027-11-08","Toussaint"],["2027-12-18","2028-01-03","Noël"],["2028-02-19","2028-03-06","Hiver"],["2028-04-22","2028-05-09","Printemps"],["2028-07-04","2028-09-01","Été"]],
+  B:[["2026-10-17","2026-11-02","Toussaint"],["2026-12-19","2027-01-04","Noël"],["2027-02-20","2027-03-08","Hiver"],["2027-04-17","2027-05-03","Printemps"],["2027-07-03","2027-09-02","Été"],["2027-10-23","2027-11-08","Toussaint"],["2027-12-18","2028-01-03","Noël"],["2028-02-05","2028-02-21","Hiver"],["2028-04-08","2028-04-24","Printemps"],["2028-07-04","2028-09-01","Été"]],
+  C:[["2026-10-17","2026-11-02","Toussaint"],["2026-12-19","2027-01-04","Noël"],["2027-02-06","2027-02-22","Hiver"],["2027-04-03","2027-04-19","Printemps"],["2027-07-03","2027-09-02","Été"],["2027-10-23","2027-11-08","Toussaint"],["2027-12-18","2028-01-03","Noël"],["2028-02-12","2028-02-28","Hiver"],["2028-04-15","2028-05-02","Printemps"],["2028-07-04","2028-09-01","Été"]]
 };
+const PONTS = [["2027-05-07","2027-05-08","Pont de l'Ascension (pas de classe le vendredi 7 mai 2027)"],["2028-05-26","2028-05-28","Pont de l'Ascension (pas de classe les 26 et 27 mai 2028)"]];
 const D = s => { const [y,m,d]=s.split("-").map(Number); return new Date(y,m-1,d,12); };
 const DAY = 864e5, iso = d => d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
 const G={p1:"Moi",p2:"l'autre parent",r:"alt",j:"5",z:"C",d:"2026-11-06",w:"1",v:"1"};
 let gMonth = new Date(); gMonth = new Date(gMonth.getFullYear(), gMonth.getMonth(), 1, 12);
 function gardeHTML(){ return `
   <div class="card">
-    <div class="two"><div><label>Vous</label><input id="g_p1" value="Moi"></div><div><label>L'autre parent</label><input id="g_p2" value="Papa"></div></div>
+    <div class="two"><div><label>Vous</label><input id="g_p1" value="Moi"></div><div><label>L'autre parent</label><input id="g_p2" value="L'autre parent"></div></div>
     <label>Rythme habituel</label>
     <select id="g_r"><option value="alt">Une semaine sur deux (garde alternée)</option><option value="we">Résidence chez vous, un week-end sur deux chez l'autre parent</option></select>
     <div class="two"><div><label>Jour du changement</label><select id="g_j"><option value="5">vendredi</option><option value="1">lundi</option><option value="0">dimanche</option></select></div>
@@ -747,12 +754,12 @@ function gardeHTML(){ return `
     <select id="g_v"><option value="1">chez vous les années paires</option><option value="2">chez l'autre parent les années paires</option></select>
   </div>
   <div class="card">
-    <div class="calnav"><button onclick="gMove(-1)">‹</button><b id="g_m"></b><button onclick="gMove(1)">›</button></div>
+    <div class="calnav"><button onclick="gMove(-1)" aria-label="Mois précédent">‹</button><b id="g_m" aria-live="polite"></b><button onclick="gMove(1)" aria-label="Mois suivant">›</button></div>
     <div class="cal" id="g_cal"></div>
     <div class="leg"><span><i style="background:#3b5bdb"></i><span id="l1"></span></span><span><i style="background:#e8590c"></i><span id="l2"></span></span><span>• vacances scolaires</span></div>
     <div id="g_info" class="meta" style="margin-top:8px"></div>
     <div class="actions"><button class="btn main" onclick="gIcs()">📲 Ajouter à mon agenda</button></div>
-    <p class="meta" style="margin-top:8px">Dates des vacances : arrêté du 22 octobre 2025. La fin des vacances d'été (rentrée 2027) n'est pas encore publiée : fixée provisoirement au 1er septembre 2027.</p>
+    <p class="meta" style="margin-top:8px">Dates des vacances : arrêtés du 22 octobre 2025 et du 21 juillet 2026. La rentrée de septembre 2028 n'est pas encore publiée : fixée provisoirement au 1er septembre 2028.</p>${ME.horsZone?`<p class="alert" style="margin-top:8px">Corse et outre-mer : votre académie a son propre calendrier. Les dates affichées sont celles de la zone ${G.z} ; vérifiez-les auprès de votre académie.</p>`:""}
   </div>`; }
 function who(d){
   const r=G.r, ref=+G.w, j=+G.j, start=D(G.d||"2026-11-06");
@@ -787,7 +794,8 @@ function gRender(){
   for(let i=1;i<=n;i++){ const d=new Date(y,m,i,12), w=who(d); w.p===1?c1++:c2++;
     h+=`<div class="d p${w.p} ${w.vac?"vac":""} ${iso(d)===t?"today":""}" title="${w.p===1?p1:p2}">${i}</div>`; }
   g_cal.innerHTML=h;
-  const vs=VAC[G.z].filter(([a,b])=>D(a)<=new Date(y,m+1,0,12)&&D(b)>new Date(y,m,1,12)).map(v=>`${v[2]} : du ${D(v[0]).toLocaleDateString("fr-FR")} au ${new Date(D(v[1])-DAY).toLocaleDateString("fr-FR")}`);
+  const vs=VAC[G.z].filter(([a,b])=>D(a)<=new Date(y,m+1,0,12)&&D(b)>new Date(y,m,1,12)).map(v=>`${v[2]} : du ${D(v[0]).toLocaleDateString("fr-FR")} au ${new Date(D(v[1])-DAY).toLocaleDateString("fr-FR")}`)
+    .concat(PONTS.filter(([a,b])=>D(a)<=new Date(y,m+1,0,12)&&D(b)>new Date(y,m,1,12)).map(v=>v[2]));
   g_info.innerHTML=`Ce mois-ci : ${c1} jours avec ${esc(p1)}, ${c2} avec ${esc(p2)}.`+(vs.length?"<br>"+vs.join("<br>"):"");
 }
 function gIcs(){
@@ -830,7 +838,8 @@ async function fShare(){ if(!frais.length){toast("Aucune dépense.");return;} co
 const FICHE=[["Prénom et NOM",""],["Date de naissance",""],["Médecin traitant",""],["Allergies",""],["Traitement en cours",""],["École et classe",""],["Enseignant·e",""],["Activités (jour, heure, lieu)",""],["Taille vêtements / pointure",""],["Personnes à contacter",""],["Ce qui le ou la rassure (doudou, rituels…)",""]];
 function ficheHTML(){ return `<div class="card">${FICHE.map((f,i)=>`<label>${f[0]}</label><input id="fe${i}" value="${esc(FV[i]||"").replace(/"/g,"&quot;")}" oninput="FV[${i}]=this.value">`).join("")}
   <div class="actions"><button class="btn main" onclick="feShare()">📤 Partager la fiche à jour</button></div>
-  <p class="meta" style="margin-top:8px">La fiche reste sur votre téléphone, dans le coffre-fort. Vous choisissez quand l'envoyer à l'autre parent.</p></div>`; }
+  <p class="meta" style="margin-top:8px">La fiche reste sur votre téléphone. Vous choisissez quand l'envoyer à l'autre parent.</p></div>${noCode("Cette fiche contient des informations de santé.")}`; }
+function noCode(why){ return META.prot?"":`<div class="card" style="border-left:6px solid var(--warn)"><b>🔓 Ces informations ne sont pas encore protégées</b><p style="margin:4px 0 0">${why} Choisissez un code : elles seront chiffrées sur votre téléphone.</p><div class="actions"><button class="btn ghost" onclick="oOpen('coffre')">Choisir un code</button></div></div>`; }
 async function feShare(){ const t="Fiche de l'enfant – mise à jour du "+new Date().toLocaleDateString("fr-FR")+"\n"+FICHE.map((f,i)=>`${f[0]} : ${document.getElementById("fe"+i).value.trim()||"…"}`).join("\n");
   try{ navigator.share?await navigator.share({text:t}):await navigator.clipboard.writeText(t);}catch(err){} toast("Fiche copiée."); }
 
@@ -844,7 +853,7 @@ function parlerHTML(){ return `<div class="card age" data-tts>${TTS}
   <li>Ne pas critiquer l'autre parent devant lui, ni lui demander de choisir.</li>
   <li>Ne pas en faire un messager ni un confident.</li></ul>
   <h3>👶 0 – 3 ans</h3><ul><li>Garder les mêmes rituels (repas, coucher) dans les deux maisons.</li><li>Un objet familier qui fait le trajet avec lui.</li><li>Des passages de relais courts et calmes.</li></ul>
-  <h3>🧸 3 – 6 ans</h3><ul><li>Des phrases simples, répétées : « Papa et maman ne vont plus vivre ensemble. On t'aime toujours tous les deux. »</li><li>À cet âge, l'enfant peut se croire responsable : le rassurer souvent.</li><li>Les livres et les dessins aident à en parler.</li></ul>
+  <h3>🧸 3 – 6 ans</h3><ul><li>Des phrases simples, répétées : « Papa et maman ne vont plus vivre ensemble. On t'aime toujours tous les deux. » Prenez les mots de votre famille : vos prénoms, « tes deux parents »…</li><li>À cet âge, l'enfant peut se croire responsable : le rassurer souvent.</li><li>Les livres et les dessins aident à en parler.</li></ul>
   <h3>🎒 6 – 11 ans</h3><ul><li>Répondre aux questions concrètes, sans entrer dans les raisons du conflit.</li><li>Un calendrier visible chez chacun.</li><li>Il ou elle peut espérer que vous vous remettiez ensemble, ou se sentir déloyal en aimant l'autre parent : le laisser aimer les deux.</li></ul>
   <h3>🎧 Adolescents</h3><ul><li>Plus d'explications, sans détails sur la vie du couple.</li><li>Son avis compte, mais la décision reste celle des adultes.</li><li>Respecter sa vie sociale dans l'organisation.</li><li>Il ou elle peut demander à être entendu par le juge.</li></ul>
   <h3>Si cela reste difficile</h3><ul><li>Changements durables du sommeil, de l'appétit, des résultats : en parler au médecin ou à un psychologue.</li><li>La médiation familiale et les groupes de parole d'enfants de parents séparés existent dans de nombreux départements.</li></ul>
@@ -871,6 +880,7 @@ const ME={prenom:"",cp:"",enf:""};
 const ZC="75 77 78 91 92 93 94 95 09 12 31 32 46 65 81 82 11 30 34 48 66".split(" ");
 const ZA="25 39 70 90 24 33 40 47 64 03 15 43 63 21 58 71 89 07 26 38 73 74 19 23 87 01 42 69 16 17 79 86 20".split(" ");
 const zoneOf=cp=>{ const d=cp.slice(0,2); return ZC.includes(d)?"C":ZA.includes(d)?"A":"B"; };
+const horsZone=cp=>/^(20|97|98)/.test(cp); /* Corse et outre-mer : calendrier propre (art. 5 des arrêtés) */
 const TIPS=["Un message, un sujet : c'est la façon la plus sûre d'obtenir une réponse.","Avant d'envoyer un message difficile, laissez-le reposer une heure.","Vous n'êtes pas obligé·e de répondre aux reproches. Répondez à la question pratique.","Les règles peuvent être différentes dans chaque maison. Ce qui compte, c'est que chacun s'y tienne.","Évitez de parler du conflit pendant le passage de relais : l'enfant est là.","Notez les dépenses au fil de l'eau : les comptes restent simples."];
 function goTab(v){ document.querySelector(`#nav button[data-v="${v}"]`).click(); }
 function enfants(){ return ME.enf.trim() || "Les enfants"; }
@@ -892,7 +902,7 @@ function aRender(){
   const v=VAC[G.z].find(x=>D(x[1])>today);
   let vtxt="";
   if(v){ const s0=D(v[0]), e0=D(v[1]), n=Math.round((e0-s0)/DAY), mid=new Date(s0.getTime()+Math.floor(n/2)*DAY), f1=who(s0).p;
-    vtxt=`<div class="card"><div class="big"><span class="i">🏖️</span><span><b>${s0<=today?"Vacances en cours":"Prochaines vacances"} : ${v[2]}</b><span class="meta">Zone ${G.z} · du ${s0.toLocaleDateString("fr-FR")} au ${new Date(e0-DAY).toLocaleDateString("fr-FR")}</span></span></div>
+    vtxt=`<div class="card"><div class="big"><span class="i">🏖️</span><span><b>${s0<=today?"Vacances en cours":"Prochaines vacances"} : ${v[2]}</b><span class="meta">Zone ${G.z}${ME.horsZone?" (à vérifier : votre académie a son propre calendrier)":""} · du ${s0.toLocaleDateString("fr-FR")} au ${new Date(e0-DAY).toLocaleDateString("fr-FR")}</span></span></div>
     <p style="margin:8px 0 0">1re moitié chez ${nm(f1)}, 2de moitié à partir du ${mid.toLocaleDateString("fr-FR")} chez ${nm(3-f1)}.</p></div>`; }
   const started=Object.entries(dDone).find(([k,a])=>PATHS[k]&&a.length);
   let route;
@@ -929,7 +939,7 @@ async function cpLook(v){ const sel=document.getElementById("m_v"); if(!/^\d{5}$
   sel.innerHTML=CPL.map((c,i)=>`<option value="${i}" ${c[0]===ME.ville?"selected":""}>${esc(c[0])}</option>`).join(""); sel.style.display=CPL.length>1?"block":"none"; }
 function aSave(){ ME.prenom=m_p.value.trim(); ME.cp=m_c.value.trim(); ME.enf=m_e.value.trim(); if(m_o.value.trim()) G.p2=m_o.value.trim();
   if(!ME.prenom){toast("Indiquez votre prénom.");return;}
-  if(/^\d{5}$/.test(ME.cp)){ G.z=zoneOf(ME.cp);
+  if(/^\d{5}$/.test(ME.cp)){ G.z=zoneOf(ME.cp); ME.horsZone=horsZone(ME.cp);
     const c=CPL[+(document.getElementById("m_v").value||0)];
     if(c){ ME.ville=c[0]; ME.lat=c[2]; ME.lon=c[3]; } else { ME.ville=""; ME.lat=null; ME.lon=null; } }
   G.p1="Moi"; aRender(); modele(0); }
@@ -965,7 +975,7 @@ function lockScreen(){
   const d=document.createElement("div"); d.id="lock"; d.className="lock";
   d.innerHTML=`<div class="lockbox">${document.querySelector("header svg").outerHTML.replace('width="34" height="34"','width="72" height="72"')}
     <h2>Entre Deux Toits</h2><p>Entrez votre code pour ouvrir l'appli.</p>
-    <input id="lk_c" type="password" inputmode="numeric" autocomplete="off" placeholder="Code" style="text-align:center;font-size:22px;letter-spacing:6px">
+    <input id="lk_c" type="password" ${META.num===false?"":'inputmode="numeric"'} autocomplete="off" placeholder="Code" aria-label="Code" style="text-align:center;font-size:22px;letter-spacing:6px">
     <div class="actions"><button class="btn main" onclick="unlock()">Ouvrir</button></div>
     <p id="lk_m" class="meta"></p>
     <button class="back" onclick="forgot()">Code oublié ?</button></div>`;
@@ -989,8 +999,8 @@ const QV={un:["✅","Un parent peut agir seul, avec l'accord supposé de l'autre
 const QD=[
  ["🩺","Santé",[
   ["Aller chez le médecin traitant","un","C'est un acte de la vie courante. Le parent qui est avec l'enfant peut l'emmener seul : le médecin n'a pas à demander l'accord de l'autre.","Si l'autre parent a prévenu le médecin qu'il n'était pas d'accord, le médecin ne peut plus faire comme s'il l'ignorait.","Art. 372-2 C. civ. · cours"],
-  ["Faire un vaccin obligatoire","un","Le médecin peut vacciner l'enfant avec un seul parent présent.","Si l'autre parent a dit au médecin qu'il s'y oppose, le médecin ne peut plus vacciner sans une décision du juge.","Art. 372-2 C. civ. · art. L. 3111-2 CSP · cours"],
-  ["Une urgence médicale","special","En cas d'urgence, les médecins soignent l'enfant sans attendre l'accord des parents. Prévenez l'autre parent dès que possible.","Gardez les comptes rendus : ils serviront pour la suite des soins.","Art. R. 1112-35 CSP · cours"],
+  ["Faire un vaccin obligatoire","un","Le médecin peut vacciner l'enfant avec un seul parent présent.","Les vaccins obligatoires s'imposent aux deux parents. Si l'autre parent a fait savoir au médecin qu'il s'y oppose, mieux vaut ne pas passer outre : en cas de blocage, le juge aux affaires familiales peut trancher.","Art. 372-2 C. civ. · art. L. 3111-2 CSP"],
+  ["Une urgence médicale","special","En cas d'urgence, les médecins soignent l'enfant sans attendre l'accord des parents. Prévenez l'autre parent dès que possible.","Gardez les comptes rendus : ils serviront pour la suite des soins.","Art. L. 1111-4 et R. 1112-35 CSP"],
   ["Premier rendez-vous chez un spécialiste","deux","Dermatologue, ORL, rhumatologue… Dès qu'on change de pratique médicale, c'est un choix : il se fait à deux. Une fois le suivi accepté par les deux, les rendez-vous suivants peuvent se faire avec un seul parent.","Si l'autre parent refuse obstinément, le juge aux affaires familiales peut vous autoriser à décider seul, en urgence si besoin.","Art. 372 C. civ. · cours"],
   ["Voir un psychologue ou un psychiatre","deux","La première consultation et le choix du praticien demandent l'accord des deux parents. Un traitement (par exemple des antidépresseurs) aussi.","Si l'enfant est en danger, le juge des enfants peut être saisi.","Art. 372 C. civ. · cours"],
   ["Une opération non urgente","deux","Une intervention programmée (amygdales, végétations…) est un acte important : l'accord des deux parents est nécessaire.","Le chirurgien ou l'anesthésiste demande souvent une autorisation signée par les deux.","Art. 372 C. civ. · art. R. 1112-35 CSP · cours"],
@@ -1014,7 +1024,7 @@ const QD=[
   ["Continuer la même activité","un","Renouveler l'inscription au club ou à l'activité habituelle est un acte courant.","","Art. 372-2 C. civ. · guide du ministère"],
   ["Commencer une activité à risque","deux","Une première inscription à une activité dangereuse (sports mécaniques, sports de combat, plongée…) demande l'accord des deux.","","Art. 372 C. civ. · guide du ministère"],
   ["Colonie de vacances","un","Les vacances organisées sont en général un acte courant.","Pour une première colonie ou un long séjour, mieux vaut en parler à l'autre parent : c'est plus serein pour tout le monde.","Art. 372-2 C. civ. · guide du ministère"],
-  ["Première soirée pyjama","special","Pour beaucoup, c'est banal. Pour l'enseignante en droit de la famille, une « première fois » de ce type n'est pas un acte usuel.","Le plus simple : en parler avant, en deux lignes.","Art. 372 et 372-2 C. civ. · cours"]
+  ["Première soirée pyjama","special","Pour beaucoup, c'est banal. Mais ce n'est pas tranché : une « première fois » qui sort des habitudes de l'enfant peut ne pas être un acte usuel.","Le plus simple : en parler avant, en deux lignes.","Art. 372 et 372-2 C. civ."]
  ]],
  ["✂️","Apparence",[
   ["Coupe de cheveux habituelle","un","Retourner chez le coiffeur pour la coupe habituelle ne demande pas l'accord de l'autre.","","Art. 372-2 C. civ. · cours"],
@@ -1024,12 +1034,12 @@ const QD=[
  ["📸","Photos et réseaux",[
   ["Photo de classe","un","Un parent peut l'accepter seul.","","Art. 372-2 et 372-1 C. civ. · guide du ministère"],
   ["Publier une photo sur les réseaux sociaux","deux","La loi dit que les parents protègent ensemble le droit à l'image de leur enfant. Publier ses photos demande l'accord des deux, et l'enfant doit être associé selon son âge.","En cas de désaccord, le juge peut interdire à un parent de publier quoi que ce soit sur l'enfant sans l'accord de l'autre.","Art. 372-1 et 373-2-6 C. civ."],
-  ["Passage à la télévision","deux","Un reportage où l'enfant est reconnaissable n'est pas un acte usuel : une chaîne a été condamnée pour l'avoir diffusé sans l'accord de l'autre parent.","","Art. 372-1 C. civ. · cours (jurisprudence)"]
+  ["Passage à la télévision","deux","Montrer l'enfant à la télévision, de façon reconnaissable, touche à son droit à l'image : les parents le protègent ensemble. Il faut l'accord des deux, et associer l'enfant selon son âge.","Si l'autre parent refuse, le juge peut être saisi.","Art. 372-1 C. civ."]
  ]],
  ["🪪","Papiers et voyages",[
   ["Carte d'identité ou passeport","un","Un seul parent peut faire la demande. La mairie ne doit pas exiger l'autorisation de l'autre parent.","Apportez votre propre pièce d'identité. En résidence alternée, le jugement permet d'inscrire les deux adresses.","Art. 372-2 C. civ. · service-public.gouv.fr"],
   ["Partir en vacances en France","un","Pendant son temps avec l'enfant, chaque parent organise ses vacances.","Donnez à l'autre parent l'adresse et un moyen de vous joindre : c'est rassurant et souvent prévu dans le jugement.","Art. 372-2 C. civ. · conseil"],
-  ["Voyager à l'étranger avec l'enfant","un","Un parent peut voyager seul avec l'enfant, sans autorisation de sortie du territoire : elle n'est demandée que si l'enfant voyage sans ses parents.","Sauf si le juge a interdit la sortie du territoire sans l'accord des deux parents. En cas de crainte d'enlèvement, une opposition d'urgence est possible en préfecture.","Art. 371-6 et 373-2-6 C. civ. · service-public.gouv.fr"],
+  ["Voyager à l'étranger avec l'enfant","un","Un parent peut voyager seul avec l'enfant, sans autorisation de sortie du territoire : elle n'est demandée que si l'enfant voyage sans ses parents.","Sauf si le juge a interdit la sortie du territoire sans l'accord des deux parents. En cas de crainte d'enlèvement, une opposition d'urgence est possible en préfecture. Certains pays demandent une autorisation écrite de l'autre parent : vérifiez sur diplomatie.gouv.fr (Conseils aux voyageurs).","Art. 371-6 et 373-2-6 C. civ. · service-public.gouv.fr"],
   ["Déménager","special","Si votre déménagement change l'organisation (trajets, école, rythme), vous devez prévenir l'autre parent avant, en temps utile. En cas de désaccord, le juge aux affaires familiales tranche.","Cette obligation ne s'applique pas au parent protégé par une ordonnance de protection qui l'autorise à cacher son adresse.","Art. 373-2 C. civ."],
   ["Changer le nom ou le prénom","deux","C'est une décision importante qui se prend à deux. Si l'enfant a plus de 13 ans, son accord personnel est aussi nécessaire.","Pour le prénom, la demande se fait à la mairie ; l'officier d'état civil peut saisir le procureur si elle lui paraît contraire à l'intérêt de l'enfant.","Art. 372, 60 et 61-3 C. civ."]
  ]],
@@ -1039,7 +1049,7 @@ const QD=[
  ]],
  ["💶","Argent et téléphone",[
   ["Donner de l'argent de poche","un","C'est votre choix, pendant votre temps avec l'enfant.","","Art. 372-2 C. civ. · guide du ministère"],
-  ["Retirer une grosse somme sur son livret","deux","L'argent de l'enfant est géré par les deux parents. Retirer une somme importante sur son livret demande l'accord des deux : une banque a été jugée fautive de ne pas l'avoir vérifié.","Les petites opérations courantes peuvent être faites par un seul parent, sauf si l'autre a prévenu la banque qu'il s'y opposait.","Art. 382-1 C. civ. · cours (Cass. com., 12 juin 2025)"],
+  ["Retirer de l'argent de son livret","deux","L'argent de l'enfant est géré par les deux parents. Tout retrait ou virement depuis le livret de l'enfant demande l'accord des deux, quel que soit le montant : une banque a été jugée fautive d'avoir laissé un seul parent le faire.","Le livret appartient à l'enfant : l'argent doit être utilisé dans son intérêt.","Art. 382-1 C. civ. · décret n° 2008-1484, annexe 1 · Cass. com., 12 juin 2025, n° 24-13.604"],
   ["Premier téléphone portable","special","Il n'y a pas de règle précise. Avant le collège, c'est plutôt un choix à faire ensemble ; ensuite, c'est devenu courant.","Mettez-vous d'accord sur les règles (heures, applications) : c'est plus simple si elles sont les mêmes dans les deux maisons.","Art. 372 et 372-2 C. civ. · guide du ministère"]
  ]]
 ];
@@ -1049,9 +1059,9 @@ const QT={
    o:[["Oui","q2"],["Non","non"],["Je ne sais pas","aide1"]]},
  aide1:{t:"Comment savoir ?",h:"Vous avez l'autorité parentale si votre lien de parent est établi",p:`<ul><li><b>La mère</b> : son nom figure sur l'acte de naissance.</li><li><b>Le père marié</b> avec la mère : automatiquement.</li><li><b>Le père non marié</b> : s'il a reconnu l'enfant (avant ou après la naissance).</li></ul><p>Vous ne l'avez plus seulement si un juge vous l'a retirée (cas très rares et graves) ou a prononcé une déclaration de délaissement. Votre acte de naissance intégral et les jugements vous concernant permettent de vérifier.</p><p class="meta">Articles 372, 378 (retrait) et 381-1 (délaissement) du Code civil</p>`,
    o:[["J'ai l'autorité parentale","q2"],["Je ne l'ai pas","non"]]},
- q2:{t:"Question 2 sur 2",h:"L'exercez-vous tous les deux ?",p:"<p><b>Avoir</b> l'autorité parentale et <b>l'exercer</b> (prendre les décisions), ce n'est pas la même chose. En général, les deux parents l'exercent ensemble, même séparés, même s'ils n'ont jamais vécu ensemble.</p><p>Exception fréquente : <b>le parent qui a reconnu l'enfant plus d'un an après sa naissance</b> (souvent le père) n'exerce pas l'autorité parentale, sauf déclaration commune au tribunal ou décision du juge.</p><p class=\"meta\">Votre enfant est confié par un juge à l'aide sociale à l'enfance ou à un tiers ? Vous gardez l'autorité parentale, mais les règles du quotidien sont différentes : parlez-en à son référent.</p><p class=\"meta\">Articles 372, 373-2 et 375-7 du Code civil</p>",
+ q2:{t:"Question 2 sur 2",h:"L'exercez-vous tous les deux ?",p:"<p><b>Avoir</b> l'autorité parentale et <b>l'exercer</b> (prendre les décisions), ce n'est pas la même chose. En général, les deux parents l'exercent ensemble, même séparés, même s'ils n'ont jamais vécu ensemble.</p><p>Exception fréquente : <b>le parent qui a reconnu l'enfant plus d'un an après sa naissance</b>, alors que l'autre l'avait déjà reconnu (souvent le père), n'exerce pas l'autorité parentale, sauf déclaration commune au tribunal ou décision du juge.</p><p class=\"meta\">Votre enfant est confié par un juge à l'aide sociale à l'enfance ou à un tiers ? Vous gardez l'autorité parentale, mais les règles du quotidien sont différentes : parlez-en à son référent.</p><p class=\"meta\">Articles 372, 373-2 et 375-7 du Code civil</p>",
    o:[["Oui, tous les deux","ok"],["Non, je l'exerce seul(e)","seul"],["Non, c'est l'autre parent qui l'exerce seul","autre"],["Je ne sais pas","aide2"]]},
- aide2:{t:"Comment savoir ?",h:"Par défaut, vous l'exercez tous les deux",p:`<p>La séparation ne change rien : les deux parents continuent d'exercer l'autorité parentale ensemble. Un seul parent l'exerce dans quelques cas :</p><ul><li>un <b>juge</b> l'a décidé (« exercice exclusif » ou « unilatéral » dans le jugement) ;</li><li>un parent (souvent le père) a <b>reconnu l'enfant plus d'un an après sa naissance</b>, alors que l'autre l'avait déjà reconnu : l'autre reste seul à exercer l'autorité parentale, sauf <b>déclaration commune</b> des deux parents au greffe du tribunal judiciaire ou <b>décision du juge</b> aux affaires familiales. C'est la même chose quand la filiation a été établie par un jugement ;</li><li>l'autre parent est <b>décédé</b> ou hors d'état de manifester sa volonté.</li></ul><p>Regardez votre jugement ou votre convention homologuée : la mention « exercice conjoint » ou « en commun » confirme que vous décidez à deux.</p><p class="meta">Articles 372 et 373-1 du Code civil</p>`,
+ aide2:{t:"Comment savoir ?",h:"Par défaut, vous l'exercez tous les deux",p:`<p>La séparation ne change rien : les deux parents continuent d'exercer l'autorité parentale ensemble. Un seul parent l'exerce dans quelques cas :</p><ul><li>un <b>juge</b> l'a décidé (« exercice exclusif » ou « unilatéral » dans le jugement) ;</li><li>un parent (souvent le père) a <b>reconnu l'enfant plus d'un an après sa naissance</b>, alors que l'autre l'avait déjà reconnu : l'autre reste seul à exercer l'autorité parentale, sauf <b>déclaration commune</b> des deux parents au greffe du tribunal judiciaire ou <b>décision du juge</b> aux affaires familiales. C'est la même chose quand la filiation a été établie par un jugement ;</li><li>l'autre parent est <b>décédé</b> ou hors d'état de manifester sa volonté (articles 373 et 373-1).</li></ul><p>Regardez votre jugement ou votre convention homologuée : la mention « exercice conjoint » ou « en commun » confirme que vous décidez à deux.</p><p class="meta">Articles 372, 373 et 373-1 du Code civil</p>`,
    o:[["Nous l'exerçons tous les deux","ok"],["Je l'exerce seul(e)","seul"],["C'est l'autre parent","autre"]]},
  non:{t:"Votre situation",h:"Sans autorité parentale, vous ne prenez pas les décisions",p:`<p>Les décisions sur l'enfant reviennent au parent (ou à la personne) qui a l'autorité parentale. Vous ne pouvez pas inscrire l'enfant à l'école, l'emmener chez le médecin pour un choix de soins ou signer ses papiers à sa place.</p><p>Selon votre situation, un juge peut quand même vous accorder un droit de visite, et l'enfant a le droit de garder des liens avec vous si c'est dans son intérêt.</p><p><b>Si le lien de parent n'est pas encore établi</b> (père qui n'a pas reconnu l'enfant, par exemple), une reconnaissance en mairie peut changer la situation : renseignez-vous auprès d'un Point-justice.</p><p class="meta">Articles 371-1, 371-4 et 373-2-1 du Code civil</p>`,
    o:[["Trouver un Point-justice","contacts"],["↺ Recommencer depuis le début","q1"]]},
@@ -1144,15 +1154,16 @@ TOOLS.contacts={i:"📍",c:"var(--brand)",t:"Contacts près de chez vous",s:"Poi
 Object.keys(TOOLS).filter(k=>k!=="qui").forEach(k=>{const v=TOOLS[k]; delete TOOLS[k]; TOOLS[k]=v;});
 function coffreHTML(){ return `
   <div class="card"><h2>${META.prot?"🔒 Vos données sont protégées":"🔓 Vos données ne sont pas protégées"}</h2>
-    <p>${META.prot?"L'appli demande votre code à l'ouverture et se verrouille après 5 minutes d'absence. Tout est chiffré sur votre téléphone.":"Toutes vos données restent sur votre téléphone. Avec un code, elles sont chiffrées : personne ne peut les lire sans lui, même en ayant votre téléphone en main."}</p>
-    <label>${META.prot?"Nouveau code":"Choisissez un code"} <em>— 6 chiffres ou plus</em></label><input id="cf_1" type="password" inputmode="numeric" autocomplete="new-password">
-    <label>Confirmez le code</label><input id="cf_2" type="password" inputmode="numeric" autocomplete="new-password">
+    <p>${META.prot?"L'appli demande votre code à l'ouverture et se verrouille après 5 minutes d'absence. Tout est chiffré sur votre téléphone.":"Toutes vos données restent sur votre téléphone. Avec un code, elles sont chiffrées : sans le code, quelqu'un qui prend votre téléphone ne peut pas les lire dans l'appli."}</p>
+    <label>${META.prot?"Nouveau code":"Choisissez un code"} <em>— 6 caractères ou plus</em></label><input id="cf_1" type="password" autocomplete="new-password">
+    <label>Confirmez le code</label><input id="cf_2" type="password" autocomplete="new-password">
+    <p class="meta">Chiffres seuls ou chiffres et lettres. Plus le code est long, plus il est sûr : évitez une date de naissance ou 123456.</p>
     <div class="actions"><button class="btn main" onclick="setCode()">${META.prot?"Changer le code":"Protéger par un code"}</button>${META.prot?`<button class="btn ghost" onclick="removeCode()">Retirer le code</button>`:""}</div>
     <p class="meta" style="margin-top:8px">Gardez ce code pour vous. S'il est perdu, les données ne peuvent pas être récupérées, sauf avec une sauvegarde.</p></div>
   <div class="card"><h2>📎 Mes documents</h2><p>Messages importants, certificats, justificatifs de frais, décisions de justice. Ils sont gardés dans le coffre-fort.</p>
     <input type="file" id="cf_f" accept="image/*,application/pdf" style="display:none" onchange="addDoc(this)">
     <div class="actions"><button class="btn ghost" onclick="cf_f.click()">＋ Ajouter une photo ou un PDF</button></div>
-    <div id="cf_l" style="margin-top:8px"></div></div>
+    <div id="cf_l" style="margin-top:8px"></div>${META.prot?"":`<p class="alert" style="margin-top:8px">Sans code, les documents sont enregistrés sur le téléphone mais pas chiffrés. Choisissez d'abord un code ci-dessus.</p>`}</div>
   <div class="card"><h2>💾 Ma sauvegarde</h2><p>Un fichier chiffré qui contient toutes vos données et vos documents. Gardez-le en lieu sûr (sur un autre appareil, ou envoyé à vous-même) pour changer de téléphone ou en cas de perte.</p>
     <label>Code de la sauvegarde</label><input id="sv_c" type="password" inputmode="numeric" autocomplete="off" placeholder="Il vous sera demandé pour la restaurer">
     <div class="actions"><button class="btn main" onclick="backup()">⬇️ Créer la sauvegarde</button></div>
@@ -1161,10 +1172,11 @@ function coffreHTML(){ return `
   <div class="card"><h2>🧹 Tout effacer</h2><p>Supprime toutes les données de l'appli sur ce téléphone.</p>
     <div class="actions"><button class="btn ghost" style="color:#c92a2a" onclick="askBox('Toutes les données et tous les documents seront supprimés de ce téléphone. Continuer ?','Tout effacer',async()=>{await kvClear();location.reload();})">Effacer toutes mes données</button></div></div>`; }
 async function setCode(){ const a=cf_1.value, b=cf_2.value;
-  if(!/^\d{6,}$/.test(a)){ toast("Le code doit contenir au moins 6 chiffres."); return; }
+  if(a.length<6){ toast("Le code doit contenir au moins 6 caractères."); return; }
+  if(/^(\d)\1+$/.test(a)||"0123456789".includes(a)||"9876543210".includes(a)){ toast("Ce code est trop facile à deviner. Choisissez-en un autre."); return; }
   if(a!==b){ toast("Les deux codes ne sont pas identiques."); return; }
   const docs=[]; for(const d of DOCS) docs.push([d.id, await unwrap(await kvGet("doc:"+d.id))]);
-  const salt=crypto.getRandomValues(new Uint8Array(16)); KEY=await deriveKey(a,salt); META={prot:true,salt:b64(salt)};
+  const salt=crypto.getRandomValues(new Uint8Array(16)); KEY=await deriveKey(a,salt); META={prot:true,salt:b64(salt),num:/^\d+$/.test(a)};
   await kvSet("meta",META); for(const [id,data] of docs) await kvSet("doc:"+id, await wrap(data)); await saveNow();
   toast("C'est fait : vos données sont chiffrées."); oOpen("coffre"); }
 async function removeCode(){ askBox("Sans code, vos données ne seront plus chiffrées. Continuer ?","Retirer le code",async()=>{
@@ -1212,7 +1224,7 @@ async function contactsFill(){
   let A; try{ A=await annData(); }catch(e){ box.innerHTML=`<div class="card"><p>L'annuaire n'a pas pu être ouvert. Fermez puis rouvrez l'appli.</p></div>`; return; }
   const L=A.data.map(x=>({t:x[0],n:x[1],a:x[2],cp:x[3],v:x[4],tel:x[5],u:x[8]?"https://lannuaire.service-public.gouv.fr/"+x[8]:"",lat:x[9],lon:x[10],km:(x[9]!=null)?km(ME.lat,ME.lon,x[9],x[10]):999}));
   box.innerHTML=`<p class="meta" style="margin:0 0 10px">Autour de ${esc(ME.ville||ME.cp)} · annuaire Service Public du ${esc(A.date)}</p>
-    <div class="card" style="border-left:6px solid var(--ok)" data-tts><h2>🧭 Médiation familiale</h2><p>Les services de médiation familiale sont financés par la CAF : demandez la liste à votre CAF ou à un Point-justice. Annuaire des médiateurs : Association pour la médiation familiale.</p><a class="lnk" href="https://www.apmf.fr" target="_blank" rel="noopener">↗ apmf.fr</a></div>`+
+    <div class="card" style="border-left:6px solid var(--ok)" data-tts><h2>🧭 Médiation familiale</h2><p>Les services de médiation familiale sont financés par la CAF : demandez la liste à votre CAF ou à un Point-justice. Chaque cour d'appel publie aussi une liste de médiateurs. Annuaire de l'Association pour la médiation familiale (ses adhérents).</p><a class="lnk" href="https://www.apmf.fr" target="_blank" rel="noopener">↗ apmf.fr</a></div>`+
   CATS.map(([i,t,s,types])=>{ const l=L.filter(x=>types.includes(x.t)).sort((a,b)=>a.km-b.km).slice(0,3); if(!l.length) return "";
     return `<div class="card"><h2>${i} ${t}</h2><p>${s}</p>${l.map(x=>`<div class="exp" style="display:block"><b>${esc(x.n)}</b><br><span class="meta">${esc(x.a)} ${esc(x.cp)} ${esc(x.v)}${x.km<999?` · ${x.km<1?"moins d'1":Math.round(x.km)} km`:""}</span><br>
       ${x.tel?`<a class="lnk" href="tel:${x.tel.replace(/\s/g,"")}">📞 ${esc(x.tel)}</a>`:""}${x.lat!=null?`<a class="lnk" href="https://www.openstreetmap.org/?mlat=${x.lat}&mlon=${x.lon}#map=17/${x.lat}/${x.lon}" target="_blank" rel="noopener">🗺️ Plan</a>`:""}${x.u?`<a class="lnk" href="${x.u}" target="_blank" rel="noopener">↗ Horaires</a>`:""}</div>`).join("")}</div>`; }).join("")+
@@ -1233,7 +1245,7 @@ let installEvt=null; window.addEventListener("beforeinstallprompt",e=>{ e.preven
 const isStandalone=()=>matchMedia("(display-mode: standalone)").matches||navigator.standalone;
 function installHTML(){ if(isStandalone()) return "";
   const ios=/iphone|ipad|ipod/i.test(navigator.userAgent);
-  return `<div class="card"><h2>📲 Installer l'appli</h2><p>Elle s'ajoute à l'écran d'accueil et fonctionne sans connexion. Pas besoin de passer par un magasin d'applications.</p>
+  return `<div class="card" style="border-left:6px solid var(--warn)"><h2>📲 Installer l'appli</h2><p>Elle s'ajoute à l'écran d'accueil et fonctionne sans connexion. Pas besoin de passer par un magasin d'applications.</p>${ios?`<p style="color:var(--ink)"><b>Important sur iPhone :</b> si vous utilisez l'appli dans Safari sans l'installer, l'iPhone peut effacer vos données après quelques jours sans visite. Installée sur l'écran d'accueil, elle les garde.</p>`:""}
   ${ios?`<p style="color:var(--ink)">Sur iPhone, dans Safari : touchez <b>Partager</b> (le carré avec une flèche ; sur les iPhone récents, d'abord <b>•••</b>), puis <b>Sur l'écran d'accueil</b>.</p>`:installEvt?`<div class="actions"><button class="btn main" onclick="installEvt.prompt()">Installer</button></div>`:`<p style="color:var(--ink)">Sur Android, dans Chrome : menu <b>⋮</b>, puis <b>Installer l'application</b> ou <b>Ajouter à l'écran d'accueil</b>.</p>`}</div>`; }
 
 /* ================= MENTIONS LÉGALES ================= */
@@ -1255,6 +1267,7 @@ async function startApp(){ aRender(); oHome(); dHome(); renderThemes(); modele(0
 (async()=>{ const m=await kvGet("meta"); if(m) META=m;
   if(META.prot) lockScreen(); else { restore(await kvGet("state")); startApp(); }
   if("serviceWorker" in navigator && location.protocol==="https:") navigator.serviceWorker.register("sw.js").catch(()=>{});
+  try{ if(navigator.storage && navigator.storage.persist) navigator.storage.persist(); }catch(e){}
 })();
 
 </script>
