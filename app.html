@@ -1300,11 +1300,15 @@ const TTS=`<button class="tts" onclick="speak(this)">🔊 Écouter</button>`;
 
 /* ================= INSTALLATION ================= */
 let installEvt=null; window.addEventListener("beforeinstallprompt",e=>{ e.preventDefault(); installEvt=e; });
+/* Mesure d'audience anonyme (GoatCounter, sans cookie) : seulement des compteurs, jamais le contenu saisi */
+function stat(path,title,event){ let n=0; (function go(){ if(window.goatcounter && window.goatcounter.count){ try{ window.goatcounter.count({path,title,event:!!event}); }catch(e){} } else if(n++<20) setTimeout(go,500); })(); }
+window.addEventListener("load",()=>{ stat("app.html","Appli : ouverture"); if(matchMedia("(display-mode: standalone)").matches||navigator.standalone) stat("ouverture-appli-installee","Ouverture depuis l'icône installée",true); });
+window.addEventListener("appinstalled",()=>stat("installation-android","Installation (Android / ordinateur)",true));
 const isStandalone=()=>matchMedia("(display-mode: standalone)").matches||navigator.standalone;
 function installHTML(){ if(isStandalone()) return "";
   const ios=/iphone|ipad|ipod/i.test(navigator.userAgent);
   return `<div class="card" style="border-left:6px solid var(--warn)"><h2>📲 Installer l'appli</h2><p>Elle s'ajoute à l'écran d'accueil et fonctionne sans connexion. Pas besoin de passer par un magasin d'applications.</p>${ios?`<p style="color:var(--ink)"><b>Important sur iPhone :</b> si vous utilisez l'appli dans Safari sans l'installer, l'iPhone peut effacer vos données après quelques jours sans visite. Installée sur l'écran d'accueil, elle les garde.</p>`:""}
-  ${ios?`<p style="color:var(--ink)">Sur iPhone, dans Safari : touchez <b>Partager</b> (le carré avec une flèche ; sur les iPhone récents, d'abord <b>•••</b>), puis <b>Sur l'écran d'accueil</b>.</p>`:installEvt?`<div class="actions"><button class="btn main" onclick="installEvt.prompt()">Installer</button></div>`:`<p style="color:var(--ink)">Sur Android, dans Chrome : menu <b>⋮</b>, puis <b>Installer l'application</b> ou <b>Ajouter à l'écran d'accueil</b>.</p>`}</div>`; }
+  ${ios?`<p style="color:var(--ink)">Sur iPhone, dans Safari : touchez <b>Partager</b> (le carré avec une flèche ; sur les iPhone récents, d'abord <b>•••</b>), puis <b>Sur l'écran d'accueil</b>.</p>`:installEvt?`<div class="actions"><button class="btn main" onclick="stat('clic-installer','Clic sur Installer',true);installEvt.prompt()">Installer</button></div>`:`<p style="color:var(--ink)">Sur Android, dans Chrome : menu <b>⋮</b>, puis <b>Installer l'application</b> ou <b>Ajouter à l'écran d'accueil</b>.</p>`}</div>`; }
 
 /* ================= MENTIONS LÉGALES ================= */
 function legal(){ const d=document.createElement("div"); d.className="lock"; d.style.alignItems="stretch";
@@ -1314,6 +1318,7 @@ function legal(){ const d=document.createElement("div"); d.className="lock"; d.s
   <h3 class="sub">Éditeur</h3><p>2A FORMATION, entreprise individuelle d'Alexandre BIGOT, 2885 route de Saint-Papoul, 11400 Castelnaudary. SIRET 897 695 235 00019. Directeur de la publication : Alexandre BIGOT. Contact : 2aa.formation@gmail.com. Hébergement : GitHub Pages, GitHub Inc., 88 Colin P. Kelly Jr. Street, San Francisco, CA 94107, États-Unis.</p>
   <h3 class="sub">Vos données restent sur votre téléphone</h3><p>Pas de compte, pas de cookie, pas de publicité : aucune de vos données n'est envoyée à un serveur. Ce que vous saisissez (messages, calendrier, frais, fiche enfant, documents) est enregistré uniquement sur votre téléphone. Avec un code, ces données sont chiffrées. L'éditeur n'y a jamais accès.</p>
   <h3 class="sub">Vos recherches restent sur votre téléphone</h3><p>L\'annuaire des contacts et la liste des communes sont intégrés à l\'appli : la recherche des contacts proches se fait sur votre téléphone, sans connexion. Les messages que vous envoyez passent par l\'application de votre choix (SMS, WhatsApp, mail), qui a ses propres règles.</p>
+  <h3 class="sub">Mesure d'audience anonyme</h3><p>Pour savoir combien de personnes utilisent l'appli, nous comptons les ouvertures de l'appli et du site, et les installations, avec l'outil GoatCounter : sans cookie, sans rien enregistrer sur votre téléphone, sans conserver votre adresse IP. Ces chiffres sont anonymes, servent uniquement à des statistiques et sont effacés au bout de 25 mois. Rien de ce que vous écrivez dans l'appli n'est envoyé.</p>
   <h3 class="sub">Durée et suppression</h3><p>Vos données sont conservées sur votre téléphone tant que vous ne les effacez pas (Outils › Coffre-fort › Tout effacer), ou que vous ne désinstallez pas l'appli.</p>
   <h3 class="sub">Information, pas conseil</h3><p>Les informations sont générales et vérifiées à la date indiquée. Elles ne remplacent pas l'avis d'un professionnel du droit. En cas de danger : 17, 112, SMS 114, et 3919.</p>
   <h3 class="sub">Données publiques</h3><p>Annuaire de l'administration (Service Public, DILA) et découpage administratif (geo.api.gouv.fr), réutilisés sous Licence Ouverte / Open Licence (Etalab).</p>
@@ -1329,5 +1334,6 @@ async function startApp(){ aRender(); oHome(); dHome(); renderThemes(); modele(0
 })();
 
 </script>
+<script data-goatcounter="https://entredeuxtoits.goatcounter.com/count" data-goatcounter-settings='{"no_onload":true,"no_events":true}' async src="https://gc.zgo.at/count.js"></script>
 </body>
 </html>
