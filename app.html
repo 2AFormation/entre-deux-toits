@@ -146,18 +146,21 @@ mark{background:var(--mark);color:inherit;border-radius:3px;padding:0 2px}
 .qd-tabs{display:flex;gap:6px;overflow-x:auto;padding:8px 0 2px;scrollbar-width:none}
 .qd-tabs::-webkit-scrollbar{display:none}
 .qd-tab{flex:none;border:1px solid var(--line);background:var(--phone);color:var(--ink);border-radius:999px;padding:7px 12px;font-size:13.5px;cursor:pointer;white-space:nowrap}
-.qd-tab.on{background:var(--ink);color:var(--phone);border-color:var(--ink)}
+.qd-tab{border-color:color-mix(in srgb,var(--gc,var(--ink)) 35%,var(--line))}
+.qd-tab.on{background:var(--gc,var(--ink));color:#fff;border-color:var(--gc,var(--ink))}
 .qd-legend{display:flex;flex-wrap:wrap;gap:6px 12px;font-size:12.5px;color:var(--soft);margin:2px 0 10px}
 .qd-prog{font-size:12.5px;color:var(--soft);margin:0 0 6px}
 .qd-prog i{display:block;height:5px;border-radius:9px;background:var(--line);margin-top:4px;overflow:hidden}
 .qd-prog i b{display:block;height:100%;background:var(--brand);border-radius:9px;transition:width .3s}
 .qd-group{margin-bottom:14px}
-.qd-group h3{font-size:14px;margin:4px 2px 6px;color:var(--soft);font-weight:700;text-transform:uppercase;letter-spacing:.03em}
-.qd-list{border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.qd-group h3{display:flex;align-items:center;gap:8px;font-size:14px;margin:4px 2px 8px;color:var(--gc);font-weight:800;text-transform:uppercase;letter-spacing:.03em}
+.qd-group h3 .ic{display:grid;place-items:center;width:30px;height:30px;border-radius:10px;background:color-mix(in srgb,var(--gc) 16%,transparent);font-size:17px}
+.qd-list{border:1px solid color-mix(in srgb,var(--gc) 30%,var(--line));border-left:5px solid var(--gc);border-radius:14px;overflow:hidden}
 .qd-row{display:flex;align-items:center;gap:10px;width:100%;text-align:left;background:var(--phone);color:var(--ink);border:0;border-top:1px solid var(--line);padding:13px 12px;font-size:15px;cursor:pointer;min-height:50px}
 .qd-list>div:first-child .qd-row{border-top:0}
 .qd-row .t{flex:1}
-.qd-row .b{flex:none;font-size:12px;font-weight:700;border-radius:999px;padding:4px 9px;background:var(--line);color:var(--soft);white-space:nowrap}
+.qd-row .b{flex:none;font-size:12px;font-weight:700;border-radius:999px;padding:4px 9px;background:color-mix(in srgb,var(--gc) 14%,transparent);color:var(--gc);white-space:nowrap}
+.qd-row[aria-expanded="true"]{background:color-mix(in srgb,var(--gc) 8%,var(--phone))}
 .qd-row .ch{flex:none;color:var(--soft);transition:transform .2s}
 .qd-row[aria-expanded="true"] .ch{transform:rotate(90deg)}
 .qd-ans{padding:0 12px 12px;background:var(--phone)}
@@ -1081,7 +1084,7 @@ function quiHTML(){ if(!ME.quiOk){ setTimeout(()=>quiTree((ME.quiSit==="non"||ME
   </div>
   <div class="qd-tools">
     <input class="qd-search" id="qd-q" type="search" placeholder="🔎 Chercher : passeport, médecin, coiffeur…" oninput="quiList()" aria-label="Chercher une situation">
-    <div class="qd-tabs" id="qd-tabs">${["Tout"].concat(QD.map(g=>g[0]+" "+g[1])).map((l,k)=>`<button class="qd-tab ${k===0?"on":""}" onclick="quiTab(${k-1},this)">${l}</button>`).join("")}</div>
+    <div class="qd-tabs" id="qd-tabs">${["Tout"].concat(QD.map(g=>g[0]+" "+g[1])).map((l,k)=>`<button class="qd-tab ${k===0?"on":""}" ${k?`style="--gc:${QD_COL[k-1]}"`:""} onclick="quiTab(${k-1},this)">${l}</button>`).join("")}</div>
   </div>
   <p style="margin:0 0 6px;color:var(--ink)"><b>Devinez d'abord, puis touchez la situation</b> pour voir la réponse.</p>
   <div class="qd-legend">${Object.values(QV).map(v=>`<span>${v[0]} ${QV_SHORT[v[0]]}</span>`).join("")}</div>
@@ -1091,6 +1094,7 @@ function quiHTML(){ if(!ME.quiOk){ setTimeout(()=>quiTree((ME.quiSit==="non"||ME
     <div class="actions"><button class="btn ghost" onclick="goTab('demarches');dOpen('desaccord')">Voir les démarches</button></div></div>
   <details class="card"><summary style="cursor:pointer;font-weight:700">📚 Tous les textes cités</summary><p class="meta">Vérifiés sur Légifrance le 06/11/2026, dans leur version en vigueur. </p><ul style="padding-left:18px;font-size:13.5px"><li><a href="https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000054527338" target="_blank" rel="noopener">Art. 60 C. civ. – changement de prénom</a></li><li><a href="https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000006421039" target="_blank" rel="noopener">Art. 61-3 C. civ. – nom, accord de l'enfant de plus de 13 ans</a></li><li><a href="https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000049164413" target="_blank" rel="noopener">Art. 371-1 C. civ. – définition de l'autorité parentale</a></li><li><a href="https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000039778192" target="_blank" rel="noopener">Art. 371-2 C. civ. – contribution à l'entretien</a></li><li><a href="https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000027432028" target="_blank" rel="noopener">Art. 371-4 C. civ. – liens avec les grands-parents</a></li><li><a href="https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000032634037" target="_blank" rel="noopener">Art. 371-6 C. civ. – autorisation de sortie du territoire</a></li><li><a href="https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000043895534" target="_blank" rel="noopener">Art. 372 C. civ. – exercice en commun</a></li><li><a href="https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000049164419" target="_blank" rel="noopener">Art. 372-1 C. civ. – droit à l'image</a></li><li><a href="https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000006426536" target="_blank" rel="noopener">Art. 372-2 C. civ. – accord présumé pour les actes usuels</a></li><li><a href="https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000045136678" target="_blank" rel="noopener">Art. 373-1 C. civ. – décès d'un parent</a></li><li><a href="https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000049294125" target="_blank" rel="noopener">Art. 373-2 C. civ. – séparation, déménagement</a></li><li><a href="https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000022469781" target="_blank" rel="noopener">Art. 373-2-1 C. civ. – exercice par un seul parent</a></li><li><a href="https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000049164431" target="_blank" rel="noopener">Art. 373-2-6 C. civ. – sortie du territoire, publications</a></li><li><a href="https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000045136610" target="_blank" rel="noopener">Art. 375-7 C. civ. – enfant confié par le juge des enfants</a></li><li><a href="https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000049294106" target="_blank" rel="noopener">Art. 378 C. civ. – retrait de l'autorité parentale</a></li><li><a href="https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000032206532" target="_blank" rel="noopener">Art. 381-1 C. civ. – délaissement</a></li><li><a href="https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000031322882" target="_blank" rel="noopener">Art. 382-1 C. civ. – biens de l'enfant</a></li><li><a href="https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000031927576" target="_blank" rel="noopener">Art. L. 1111-5 CSP – secret médical du mineur</a></li><li><a href="https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000006908207" target="_blank" rel="noopener">Art. R. 1112-35 CSP – opération, urgence</a></li><li><a href="https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000018150775" target="_blank" rel="noopener">Art. R. 1311-11 CSP – tatouage et perçage</a></li><li><a href="https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000048701919" target="_blank" rel="noopener">Art. L. 3111-2 CSP – vaccins obligatoires</a></li><li><a href="https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000048701924" target="_blank" rel="noopener">Art. L. 5134-1 CSP – contraception</a></li></ul><p class="meta">Autres sources : cours « La personne vulnérable » (DU droit de l'enfant et de la famille, Université Toulouse Capitole) ; guide de la DGCS sur l'exercice de l'autorité parentale des enfants placés (mars 2026), indicatif ; service-public.gouv.fr (cartes d'identité et passeports des mineurs).</p></details>
   <p class="verif">Il n'existe pas de liste officielle des actes « usuels » : tout dépend de la situation et de l'âge de l'enfant. Ces repères viennent du Code civil (vérifié sur Légifrance), d'un cours universitaire de droit de la famille et du guide du ministère sur l'autorité parentale (DGCS, mars 2026), écrit pour les enfants placés et indicatif. Ils ne remplacent pas l'avis d'un professionnel du droit. Si un juge a confié l'autorité parentale à un seul parent, ces règles ne s'appliquent pas de la même façon.</p>`; }
+const QD_COL=["#e03131","#e8590c","#1971c2","#2f9e44","#d6336c","#7048e8","#0c8599","#5c7cfa","#a87b00"];
 const QV_SHORT={"✅":"Un parent seul","🤝":"Les deux parents","🧑":"L'enfant","⚠️":"Règle particulière"};
 let QD_TAB=-1, QD_OPEN="";
 function quiSeen(){ try{ return ME.quiSeen||(ME.quiSeen=[]); }catch(e){ return []; } }
@@ -1106,7 +1110,7 @@ function quiList(){
       if(q && !quiNorm(it[0]+" "+it[2]+" "+nom).includes(q)) return "";
       n++; const s=seen.includes(id), v=QV[it[1]];
       return `<div><button class="qd-row" id="qd-${id}" aria-expanded="${QD_OPEN===id}" onclick="quiOpen(${ci},${ii})"><span class="t">${it[0]}</span>${s?`<span class="b" style="background:${v[3]};color:${v[2]}">${v[0]} ${QV_SHORT[v[0]]}</span>`:`<span class="b">?</span>`}<span class="ch">›</span></button><div class="qd-ans" id="qa-${id}">${QD_OPEN===id?quiAnswer(ci,ii):""}</div></div>`; }).join("");
-    return rows?`<div class="qd-group"><h3>${ic} ${nom}</h3><div class="qd-list">${rows}</div></div>`:"";
+    return rows?`<div class="qd-group" style="--gc:${QD_COL[ci]||"var(--brand)"}"><h3><span class="ic">${ic}</span>${nom}</h3><div class="qd-list">${rows}</div></div>`:"";
   }).join("");
   box.innerHTML = html || `<p class="qd-empty">Aucune situation ne correspond. En cas de doute, demandez l'accord de l'autre parent.</p>`;
   const p=document.getElementById("qd-prog"); const k=seen.length;
