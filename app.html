@@ -119,6 +119,8 @@ mark{background:var(--mark);color:inherit;border-radius:3px;padding:0 2px}
 .cal .d.p1{background:#3b5bdb}.cal .d.p2{background:#e8590c}
 .cal .d.vac::after{content:"";position:absolute;bottom:3px;width:5px;height:5px;border-radius:50%;background:#fff}
 .cal .d.today{outline:3px solid var(--ink);outline-offset:-1px}
+.cal button.d{font:inherit;font-size:13px;font-weight:600;padding:0}
+.cal .d.ex::before{content:"◆";position:absolute;top:1px;right:4px;font-size:9px;line-height:1}
 .calnav{display:flex;justify-content:space-between;align-items:center;margin-top:12px}
 .calnav button{border:1px solid var(--line);background:none;color:var(--ink);border-radius:10px;padding:5px 12px;cursor:pointer}
 .leg{display:flex;gap:12px;flex-wrap:wrap;font-size:12.5px;margin-top:8px;color:var(--soft)}
@@ -739,65 +741,116 @@ const VAC = { /* arrêtés du 22/10/2025 (2026-2027) et du 21/07/2026 (2027-2028
 const PONTS = [["2027-05-07","2027-05-08","Pont de l'Ascension (pas de classe le vendredi 7 mai 2027)"],["2028-05-26","2028-05-28","Pont de l'Ascension (pas de classe les 26 et 27 mai 2028)"]];
 const D = s => { const [y,m,d]=s.split("-").map(Number); return new Date(y,m-1,d,12); };
 const DAY = 864e5, iso = d => d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
-const G={p1:"Moi",p2:"l'autre parent",r:"alt",j:"5",z:"C",d:"2026-11-06",w:"1",v:"1"};
+const G={p1:"Moi",p2:"l'autre parent",r:"alt",j:"5",z:"C",d:"2026-11-06",w:"1",v:"1",mw:"3",wed:"2",pv:"moitie",ev:"moitie",cl:"2",cy:"",ex:{}};
 let gMonth = new Date(); gMonth = new Date(gMonth.getFullYear(), gMonth.getMonth(), 1, 12);
+const G_KEYS=["p1","p2","r","j","z","d","w","v","mw","wed","pv","ev","cl"];
+const JOURS=["dimanche","lundi","mardi","mercredi","jeudi","vendredi","samedi"];
+function gOpt(id,opts,lab){ return `<select id="${id}" aria-label="${lab||""}">${opts.map(([v,l])=>`<option value="${v}">${l}</option>`).join("")}</select>`; }
 function gardeHTML(){ return `
   <div class="card">
     <div class="two"><div><label>Vous</label><input id="g_p1" value="Moi"></div><div><label>L'autre parent</label><input id="g_p2" value="L'autre parent"></div></div>
     <label>Rythme habituel</label>
-    <select id="g_r"><option value="alt">Une semaine sur deux (garde alternée)</option><option value="we">Résidence chez vous, un week-end sur deux chez l'autre parent</option></select>
-    <div class="two"><div><label>Jour du changement</label><select id="g_j"><option value="5">vendredi</option><option value="1">lundi</option><option value="0">dimanche</option></select></div>
-    <div><label>Zone scolaire</label><select id="g_z"><option>A</option><option>B</option><option selected>C</option></select></div></div>
+    ${gOpt("g_r",[["alt","Une semaine sur deux (alternée)"],["we","Un week-end sur deux chez l'autre"],["wem","Un week-end sur deux + un soir"],["223","Alternance 2-2-3 (tout-petits)"],["sur","Sur mesure"]],"Rythme habituel")}
+    <p class="meta" id="g_rhelp" style="margin:6px 0 0"></p>
+    <div id="g_opt_alt" class="two"><div><label>Jour du changement</label>${gOpt("g_j",[["5","vendredi"],["1","lundi"],["0","dimanche"],["3","mercredi"]])}</div><div></div></div>
+    <div id="g_opt_we" class="two"><div><label>Le week-end comprend</label>${gOpt("g_wed",[["2","sam. et dim."],["3","du ven. au dim."]])}</div><div id="g_opt_mw"><label>Soir en semaine</label>${gOpt("g_mw",[["3","mercredi"],["1","lundi"],["2","mardi"],["4","jeudi"]])}</div></div>
+    <div id="g_opt_sur">
+      <label>Le rythme se répète toutes les</label>${gOpt("g_cl",[["1","1 semaine"],["2","2 semaines"],["3","3 semaines"],["4","4 semaines"]])}
+      <p class="meta" style="margin:6px 0 4px">Touchez chaque jour pour choisir chez qui est l'enfant. La semaine 1 est celle du point de départ.</p>
+      <div id="g_cy"></div>
+      <div class="actions"><button class="btn ghost" onclick="gCyFrom()">↺ Repartir de la garde alternée</button></div>
+    </div>
+    <div class="two"><div><label>Zone scolaire</label><select id="g_z"><option>A</option><option>B</option><option selected>C</option></select></div><div></div></div>
     <label>Point de départ <em>— une date où vous savez qui a l'enfant</em></label>
-    <div class="two"><input type="date" id="g_d" value="2026-11-06"><select id="g_w"><option value="1">chez vous</option><option value="2">chez l'autre parent</option></select></div>
-    <label>Vacances : première moitié</label>
-    <select id="g_v"><option value="1">chez vous les années paires</option><option value="2">chez l'autre parent les années paires</option></select>
+    <div class="two"><input type="date" id="g_d" value="2026-11-06" aria-label="Date de départ"><select id="g_w" aria-label="Chez qui à cette date"><option value="1">chez vous</option><option value="2">chez l'autre parent</option></select></div>
+  </div>
+  <div class="card">
+    <h2>🏖️ Les vacances scolaires</h2>
+    <div class="two"><div><label>Petites vacances</label>${gOpt("g_pv",[["moitie","moitié / moitié"],["semaine","semaine par semaine"],["normal","rythme habituel"]],"Petites vacances")}</div>
+    <div><label>Vacances d'été</label>${gOpt("g_ev",[["moitie","moitié / moitié"],["quinzaine","par quinzaines"],["semaine","semaine par semaine"],["normal","rythme habituel"]],"Vacances d'été")}</div></div>
+    <label>Qui commence les vacances ?</label>
+    ${gOpt("g_v",[["1","Vous, les années paires"],["2","L'autre parent, les années paires"]],"Qui commence")}
+    <p class="meta" style="margin:6px 0 0">Les années impaires, c'est l'inverse. L'année retenue est celle du début des vacances (2026 pour Noël 2026).</p>
   </div>
   <div class="card">
     <div class="calnav"><button onclick="gMove(-1)" aria-label="Mois précédent">‹</button><b id="g_m" aria-live="polite"></b><button onclick="gMove(1)" aria-label="Mois suivant">›</button></div>
     <div class="cal" id="g_cal"></div>
-    <div class="leg"><span><i style="background:#3b5bdb"></i><span id="l1"></span></span><span><i style="background:#e8590c"></i><span id="l2"></span></span><span>• vacances scolaires</span></div>
+    <div class="leg"><span><i style="background:#3b5bdb"></i><span id="l1"></span></span><span><i style="background:#e8590c"></i><span id="l2"></span></span><span>• vacances scolaires</span><span>◆ jour modifié</span></div>
+    <p class="meta" style="margin:6px 0 0">Un échange ponctuel (fête, anniversaire, week-end déplacé) ? <b>Touchez le jour</b> pour le passer chez l'autre parent. Touchez-le encore pour revenir au rythme habituel.</p>
     <div id="g_info" class="meta" style="margin-top:8px"></div>
-    <div class="actions"><button class="btn main" onclick="gIcs()">📲 Ajouter à mon agenda</button></div>
+    <div class="actions"><button class="btn main" onclick="gIcs()">📲 Ajouter à mon agenda</button><button class="btn ghost" id="g_exb" onclick="gExClear()">Effacer les jours modifiés</button></div>
     <p class="meta" style="margin-top:8px">Dates des vacances : arrêtés du 22 octobre 2025 et du 21 juillet 2026. La rentrée de septembre 2028 n'est pas encore publiée : fixée provisoirement au 1er septembre 2028.</p>${ME.horsZone?`<p class="alert" style="margin-top:8px">Corse et outre-mer : votre académie a son propre calendrier. Les dates affichées sont celles de la zone ${G.z} ; vérifiez-les auprès de votre académie.</p>`:""}
+    <p class="meta">Ce calendrier sert à s'organiser. S'il existe un jugement ou une convention homologuée, c'est ce document qui fait foi.</p>
   </div>`; }
-function who(d){
-  const r=G.r, ref=+G.w, j=+G.j, start=D(G.d||"2026-11-06");
-  for(const [a,b] of VAC[G.z]){
-    const s=D(a), e=D(b);
-    if(d>=s && d<e){ const n=Math.round((e-s)/DAY), half=Math.floor(n/2), i=Math.round((d-s)/DAY);
-      const even = s.getFullYear()%2===0, first = (+G.v===1)===even ? 1 : 2;
-      return {p: i<half?first:3-first, vac:true}; }
-  }
-  if(r==="alt"){
-    const anchor=new Date(start); while(anchor.getDay()!==j) anchor.setDate(anchor.getDate()-1);
-    const idx=Math.floor(Math.round((d-anchor)/DAY)/7);
-    const refAtStart = ref; return {p: idx%2===0?refAtStart:3-refAtStart, vac:false};
-  }
-  const wd=d.getDay(); if(wd!==6 && wd!==0) return {p:1,vac:false};
-  const sat=new Date(d); if(wd===0) sat.setDate(sat.getDate()-1);
-  const s0=new Date(start); while(s0.getDay()!==6) s0.setDate(s0.getDate()+1);
-  const idx=Math.round((sat-s0)/(7*DAY));
-  const firstWE = ref===2 ? 2 : 1; /* week-end de départ */
-  return {p: ((idx%2+2)%2===0) ? (firstWE===2?2:1) : (firstWE===2?1:2), vac:false};
+const RHELP={alt:"L'enfant change de maison chaque semaine, le jour choisi.",we:"L'enfant vit chez vous et passe un week-end sur deux chez l'autre parent.",wem:"Comme le week-end sur deux, avec en plus un soir par semaine chez l'autre parent.",
+  "223":"Sur deux semaines : 2 jours chez l'un, 2 jours chez l'autre, puis 3 jours (le week-end), en alternant. Souvent proposé pour les tout-petits.",sur:"Pour un rythme différent : choisissez la durée du cycle, puis touchez les jours."};
+function mondayOf(d){ const m=new Date(d); m.setDate(m.getDate()-((m.getDay()+6)%7)); return new Date(m.getFullYear(),m.getMonth(),m.getDate(),12); }
+function base(d){ /* rythme hors vacances : 1 = vous, 2 = l'autre parent */
+  const r=G.r, ref=+G.w, start=D(G.d||"2026-11-06");
+  const wk=Math.floor(Math.round((mondayOf(d)-mondayOf(start))/DAY)/7), odd=((wk%2)+2)%2;
+  if(r==="alt"){ const j=+G.j; const anchor=new Date(start); while(anchor.getDay()!==j) anchor.setDate(anchor.getDate()-1);
+    const idx=Math.floor(Math.round((d-anchor)/DAY)/7); return ((idx%2)+2)%2===0?ref:3-ref; }
+  if(r==="we"||r==="wem"){ const wd=d.getDay(), days=G.wed==="3"?[5,6,0]:[6,0];
+    if(r==="wem" && wd===+G.mw) return 2;
+    if(!days.includes(wd)) return 1;
+    const sat=new Date(d); if(wd===0) sat.setDate(sat.getDate()-1); if(wd===5) sat.setDate(sat.getDate()+1);
+    const s0=new Date(start); while(s0.getDay()!==6) s0.setDate(s0.getDate()+1);
+    const idx=Math.round((sat-s0)/(7*DAY)), firstWE=ref===2?2:1;
+    return ((idx%2)+2)%2===0 ? firstWE : 3-firstWE; }
+  if(r==="223"){ const i=(d.getDay()+6)%7, a=[0,0,1,1,0,0,0][i]; const p=(a===0)?ref:3-ref; return odd?3-p:p; }
+  if(r==="sur"){ const L=+G.cl||2, cy=gCy(); const w=((wk%L)+L)%L, i=(d.getDay()+6)%7; return +cy[w*7+i]||1; }
+  return 1;
 }
-function gInit(){ ["p1","p2","r","j","z","d","w","v"].forEach(k=>document.getElementById("g_"+k).value=G[k]); document.querySelectorAll("#o-content input,#o-content select").forEach(el=>el.oninput=gRender); gRender(); }
+function gCy(){ const L=+G.cl||2; let cy=(G.cy||""); if(cy.length!==7*L){ const s=mondayOf(D(G.d||"2026-11-06")), r0=G.r; G.r="alt"; cy=""; for(let i=0;i<7*L;i++) cy+=base(new Date(s.getTime()+i*DAY)); G.r=r0; G.cy=cy; } return cy; }
+function who(d){
+  const k=iso(d);
+  for(const [a,b,nom] of VAC[G.z]){
+    const s=D(a), e=D(b);
+    if(d>=s && d<e){
+      const rule = nom==="Été" ? G.ev : G.pv;
+      const even=s.getFullYear()%2===0, first=(+G.v===1)===even?1:2;
+      const n=Math.round((e-s)/DAY), i=Math.round((d-s)/DAY);
+      let p;
+      if(rule==="semaine") p = Math.floor(i/7)%2===0 ? first : 3-first;
+      else if(rule==="quinzaine") p = Math.floor(i/14)%2===0 ? first : 3-first;
+      else if(rule==="normal") p = base(d);
+      else p = i<Math.floor(n/2) ? first : 3-first;
+      if(G.ex && G.ex[k]) p=3-p;
+      return {p, vac:true, ex:!!(G.ex&&G.ex[k])};
+    }
+  }
+  let p=base(d); if(G.ex && G.ex[k]) p=3-p;
+  return {p, vac:false, ex:!!(G.ex&&G.ex[k])};
+}
+function gShow(){ const r=G.r; const sh=(id,v)=>{const e=document.getElementById(id); if(e) e.style.display=v?"":"none";};
+  sh("g_opt_alt",r==="alt"); sh("g_opt_we",r==="we"||r==="wem"); sh("g_opt_mw",r==="wem"); sh("g_opt_sur",r==="sur");
+  const h=document.getElementById("g_rhelp"); if(h) h.textContent=RHELP[r]||""; if(r==="sur") gCyRender(); }
+function gCyRender(){ const box=document.getElementById("g_cy"); if(!box) return; const L=+G.cl||2, cy=gCy(), p1=G.p1||"Vous", p2=G.p2||"L'autre parent";
+  let h=""; for(let w=0;w<L;w++){ h+=`<p class="meta" style="margin:8px 0 2px">Semaine ${w+1}</p><div class="cal" style="margin-top:0">`+["L","M","M","J","V","S","D"].map((x,i)=>{ const v=cy[w*7+i]; return `<button class="d p${v}" style="border:0;cursor:pointer" aria-label="${["Lundi","Mardi","Mercredi","Jeudi","Vendredi","Samedi","Dimanche"][i]} semaine ${w+1} : ${v==="1"?esc(p1):esc(p2)}" onclick="gCyToggle(${w*7+i})">${x}</button>`; }).join("")+`</div>`; }
+  box.innerHTML=h; }
+function gCyToggle(i){ const cy=gCy().split(""); cy[i]=cy[i]==="1"?"2":"1"; G.cy=cy.join(""); gCyRender(); gRender(); scheduleSave(); }
+function gCyFrom(){ G.cy=""; gCy(); gCyRender(); gRender(); scheduleSave(); }
+function gExToggle(k){ G.ex=G.ex||{}; if(G.ex[k]) delete G.ex[k]; else G.ex[k]=1; gRender(); scheduleSave(); }
+function gExClear(){ askBox("Revenir au rythme habituel pour tous les jours modifiés ?","Effacer",()=>{ G.ex={}; oOpen("garde"); scheduleSave(); }); }
+function gInit(){ G_KEYS.forEach(k=>{ const el=document.getElementById("g_"+k); if(el) el.value=G[k]; }); document.querySelectorAll("#o-content input,#o-content select").forEach(el=>el.oninput=()=>{ if(el.id==="g_cl"||el.id==="g_d") G.cy=""; gRender(); }); gRender(); }
 function gMove(n){ gMonth=new Date(gMonth.getFullYear(),gMonth.getMonth()+n,1,12); gRender(); }
 function gRender(){
-  ["p1","p2","r","j","z","d","w","v"].forEach(k=>G[k]=document.getElementById("g_"+k).value);
+  G_KEYS.forEach(k=>{ const el=document.getElementById("g_"+k); if(el) G[k]=el.value; });
+  gShow();
   const p1=G.p1||"Vous", p2=G.p2||"L'autre parent";
   l1.textContent=p1; l2.textContent=p2;
   g_m.textContent=gMonth.toLocaleDateString("fr-FR",{month:"long",year:"numeric"});
   const y=gMonth.getFullYear(), m=gMonth.getMonth(), first=(new Date(y,m,1).getDay()+6)%7, n=new Date(y,m+1,0).getDate();
   let h=["L","M","M","J","V","S","D"].map(x=>`<div class="h">${x}</div>`).join("")+"<div></div>".repeat(first);
   const t=iso(new Date()); let c1=0,c2=0;
-  for(let i=1;i<=n;i++){ const d=new Date(y,m,i,12), w=who(d); w.p===1?c1++:c2++;
-    h+=`<div class="d p${w.p} ${w.vac?"vac":""} ${iso(d)===t?"today":""}" title="${w.p===1?p1:p2}">${i}</div>`; }
-  g_cal.innerHTML=h;
+  for(let i=1;i<=n;i++){ const d=new Date(y,m,i,12), w=who(d), k=iso(d); w.p===1?c1++:c2++;
+    h+=`<button class="d p${w.p} ${w.vac?"vac":""} ${w.ex?"ex":""} ${k===t?"today":""}" style="border:0;cursor:pointer" onclick="gExToggle('${k}')" aria-label="${d.toLocaleDateString("fr-FR",{weekday:"long",day:"numeric",month:"long"})} : chez ${esc(w.p===1?p1:p2)}${w.ex?", jour modifié":""}">${i}</button>`; }
+  g_cal.innerHTML=h; const exb=document.getElementById("g_exb"); if(exb) exb.style.display=Object.keys(G.ex||{}).length?"":"none";
   const vs=VAC[G.z].filter(([a,b])=>D(a)<=new Date(y,m+1,0,12)&&D(b)>new Date(y,m,1,12)).map(v=>`${v[2]} : du ${D(v[0]).toLocaleDateString("fr-FR")} au ${new Date(D(v[1])-DAY).toLocaleDateString("fr-FR")}`)
     .concat(PONTS.filter(([a,b])=>D(a)<=new Date(y,m+1,0,12)&&D(b)>new Date(y,m,1,12)).map(v=>v[2]));
   g_info.innerHTML=`Ce mois-ci : ${c1} jours avec ${esc(p1)}, ${c2} avec ${esc(p2)}.`+(vs.length?"<br>"+vs.join("<br>"):"");
 }
+
 function gIcs(){
   const p1=G.p1||"Vous", p2=G.p2||"L'autre parent";
   let d=new Date(); d=new Date(d.getFullYear(),d.getMonth(),d.getDate(),12);
@@ -903,7 +956,11 @@ function aRender(){
   let vtxt="";
   if(v){ const s0=D(v[0]), e0=D(v[1]), n=Math.round((e0-s0)/DAY), mid=new Date(s0.getTime()+Math.floor(n/2)*DAY), f1=who(s0).p;
     vtxt=`<div class="card"><div class="big"><span class="i">🏖️</span><span><b>${s0<=today?"Vacances en cours":"Prochaines vacances"} : ${v[2]}</b><span class="meta">Zone ${G.z}${ME.horsZone?" (à vérifier : votre académie a son propre calendrier)":""} · du ${s0.toLocaleDateString("fr-FR")} au ${new Date(e0-DAY).toLocaleDateString("fr-FR")}</span></span></div>
-    <p style="margin:8px 0 0">1re moitié chez ${nm(f1)}, 2de moitié à partir du ${mid.toLocaleDateString("fr-FR")} chez ${nm(3-f1)}.</p></div>`; }
+    <p style="margin:8px 0 0">${(()=>{ const rule=v[2]==="Été"?G.ev:G.pv;
+      if(rule==="moitie") return `1re moitié chez ${nm(f1)}, 2de moitié à partir du ${mid.toLocaleDateString("fr-FR")} chez ${nm(3-f1)}.`;
+      if(rule==="semaine") return `Semaine par semaine, en commençant chez ${nm(f1)}.`;
+      if(rule==="quinzaine") return `Par quinzaines, en commençant chez ${nm(f1)}.`;
+      return "Le rythme habituel continue pendant ces vacances."; })()}</p></div>`; }
   const started=Object.entries(dDone).find(([k,a])=>PATHS[k]&&a.length);
   let route;
   if(started){ const [k,a]=started, P=PATHS[k], n=P.steps.length, nx=firstTodo(k,n);
