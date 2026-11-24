@@ -5,15 +5,17 @@ Tous les fichiers sont à la racine du dépôt GitHub (pas de sous-dossier).
 - app.html : l'appli (entredeuxtoits.fr/app.html)
 - manifest.webmanifest, sw.js : installation et fonctionnement hors connexion
 - count.js : compteur de visites GoatCounter (licence ISC), hébergé ici pour ne charger aucun code d'un autre site
+- qrcode.js : fabrication du QR code du calendrier partagé, sur le téléphone (qrcode-generator 1.4.4, Kazuhiko Arase, licence MIT)
 - annuaire.json, communes.json : annuaire Service Public (8 830 contacts) et 34 969 communes, extraits le 05/11/2026
 - icone.svg, icon-*.png, apple-touch-icon.png, favicon-32.png : icônes
 - ecran-*.png, qr-entredeuxtoits.* : images de la page de présentation
 
 METTRE À JOUR
 - « Add file » > « Upload files », déposer les fichiers modifiés (ils remplacent ceux du même nom), puis « Commit changes ».
-- À chaque mise à jour de l'appli, augmenter le numéro « edt-v15 » dans sw.js (edt-v16, edt-v17…).
+- À chaque mise à jour de l'appli, augmenter le numéro du cache dans sw.js (en ligne : edt-v18 ; prochaine mise à jour : edt-v19, puis edt-v20…).
 - Annuaire : chaque trimestre, ouvrir outil-extraction-annuaire.html, envoyer le fichier obtenu à Claude, qui prépare les nouveaux annuaire.json et communes.json.
 
 IMPORTANT
 - Ne plus changer d'adresse une fois l'appli diffusée : les données des parents sont liées à l'adresse du site.
+- Les liens de calendrier partagés pointent vers https://entredeuxtoits.fr/app.html#cal=… : ne pas renommer app.html.
 - Éditeur : 2A FORMATION (EI d'Alexandre BIGOT), mentions complétées le 24/11/2026 (téléphone éditeur et hébergeur).
