@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /annuaire.json
+Disallow: /communes.json
+
+Sitemap: https://entredeuxtoits.fr/sitemap.xml
