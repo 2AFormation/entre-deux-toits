@@ -1,5 +1,5 @@
 /* Entre Deux Toits – fonctionnement hors connexion */
-const CACHE = "edt-v16";
+const CACHE = "edt-v17";
 const FILES = ["./", "index.html", "app.html", "manifest.webmanifest", "annuaire.json", "communes.json", "icon-192.png", "icon-512.png", "icon-maskable-512.png", "apple-touch-icon.png", "icone.svg", "logo-2a-formation.png", "count.js"];
 
 /* Installation : copie fraîche des fichiers (sans passer par le cache du navigateur) */

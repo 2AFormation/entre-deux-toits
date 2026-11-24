@@ -114,6 +114,8 @@ mark{background:var(--mark);color:inherit;border-radius:3px;padding:0 2px}
 .lockbox h2{margin:10px 0 4px}.lockbox p{color:var(--soft)}
 .tts{border:1px solid var(--line);background:none;color:var(--brand);border-radius:999px;padding:5px 12px;font-size:13px;cursor:pointer;margin:0 6px 8px 0}
 .two{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.ck{display:flex;gap:10px;align-items:flex-start;font-weight:400;font-size:14px;margin:9px 0;cursor:pointer}
+.ck input{width:20px;height:20px;margin:1px 0 0;flex:none;accent-color:var(--brand)}
 .cal{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;margin-top:8px}
 .cal .h{font-size:12.5px;color:var(--soft);text-align:center}
 .cal .d{aspect-ratio:1;border-radius:8px;display:grid;place-items:center;font-size:13px;position:relative;color:#fff;font-weight:600}
@@ -687,24 +689,27 @@ function dToggle(k,i){ const a=dDone[k]; const j=a.indexOf(i); j<0?a.push(i):a.s
 function builderHTML(){
   return `<div class="hero" style="border-left:6px solid var(--ok)"><h2>✍️ Préparer notre convention</h2><p>Remplissez ensemble ce qui est décidé. Les cases vides restent en « ………… » : vous les compléterez plus tard. Ce texte est une base, à relire avant de signer.</p></div>
   <div class="card conv">
-    <label>Les enfants <em>— prénom, nom, date de naissance</em></label><textarea id="c_enf" placeholder="Léa MARTIN, née le 03/04/2016"></textarea>
+    <label>Les enfants <em>— prénom, nom, date de naissance</em></label><textarea id="c_enf" placeholder="Léa MARTIN, née le 03/04/2016">${esc(CV.c_enf||"")}</textarea>
     <label>Résidence habituelle</label><select id="c_res"><option value="">…</option><option>en alternance au domicile de chacun des parents</option><option>au domicile du parent 1</option><option>au domicile du parent 2</option></select>
-    <label>Rythme <em>— alternance, week-ends, milieu de semaine</em></label><input id="c_ryt" placeholder="une semaine sur deux, du vendredi sortie d'école au vendredi suivant">
+    <label>Rythme <em>— alternance, week-ends, milieu de semaine</em></label><input id="c_ryt" value="${esc(CV.c_ryt||"")}" placeholder="une semaine sur deux, du vendredi sortie d'école au vendredi suivant">
     <label>Vacances scolaires</label><select id="c_vac"><option value="">…</option><option>par moitié, première moitié au parent 1 les années paires, au parent 2 les années impaires</option><option>par moitié, en alternant les moitiés chaque année</option></select>
-    <label>Trajets</label><input id="c_tra" placeholder="le parent qui accueille va chercher l'enfant">
-    <label>Pension <em>— montant par mois et par enfant</em></label><input id="c_pen" placeholder="150 €">
-    <label>Frais exceptionnels <em>— santé non remboursée, voyages scolaires…</em></label><input id="c_fra" placeholder="partagés par moitié, sur justificatif">
-    <label>Comment nous communiquons</label><input id="c_com" placeholder="par écrit pour l'organisation, réponse sous 48 h">
+    <label>Trajets</label><input id="c_tra" value="${esc(CV.c_tra||"")}" placeholder="le parent qui accueille va chercher l'enfant">
+    <label>Pension <em>— montant par mois et par enfant</em></label><input id="c_pen" value="${esc(CV.c_pen||"")}" placeholder="150 €">
+    <label>Frais exceptionnels <em>— santé non remboursée, voyages scolaires…</em></label><input id="c_fra" value="${esc(CV.c_fra||"")}" placeholder="partagés par moitié, sur justificatif">
+    <label>Comment nous communiquons</label><input id="c_com" value="${esc(CV.c_com||"")}" placeholder="par écrit pour l'organisation, réponse sous 48 h">
   </div>
-  <div class="card"><h2>Votre projet de convention</h2><textarea id="c_out" style="min-height:260px" aria-label="Projet de convention"></textarea>
+  <div class="card"><h2>Votre projet de convention</h2><textarea id="c_out" style="min-height:260px" aria-label="Projet de convention" oninput="CV._out=this.value"></textarea>
     <div class="actions"><button class="btn main" onclick="copier('c_out')">📋 Copier le texte</button><button class="btn ghost" onclick="dOpen('accord')">Étape suivante ›</button></div></div>`;
 }
-const V = id => (document.getElementById(id).value.trim() || "…………");
+let CV={}; /* convention préparée : enregistrée (chiffrée si un code est choisi) depuis la mise à jour 15 */
+const V = id => ((CV[id]||"").trim() || "…………");
 function convGen(){
-  document.querySelectorAll(".conv input,.conv select,.conv textarea").forEach(el=>el.oninput=convGen);
-  const pen = document.getElementById("c_pen").value.trim();
-  document.getElementById("c_out").value =
-`CONVENTION PARENTALE
+  document.querySelectorAll(".conv input,.conv select,.conv textarea").forEach(el=>{ if(el.tagName==="SELECT"&&CV[el.id]!=null) el.value=CV[el.id]; el.oninput=()=>{ CV[el.id]=el.value; delete CV._out; convGen(); scheduleSave(); }; });
+  document.getElementById("c_out").value = CV._out || convText();
+}
+function convText(){
+  const pen = (CV.c_pen||"").trim();
+  return `CONVENTION PARENTALE
 
 Entre :
 ………… (parent 1), né·e le …………, demeurant …………
@@ -738,6 +743,7 @@ ${V("c_com")}.
 Fait à …………, le …………
 Signature du parent 1                    Signature du parent 2`.replace(/…\./g,"…");
 }
+
 async function copier(id){ try{ await navigator.clipboard.writeText(document.getElementById(id).value); }catch(e){} toast("Texte copié."); }
 
 /* ================= OUTILS ================= */
@@ -746,7 +752,8 @@ const TOOLS = {
   frais:{i:"💶",c:"var(--frais)",t:"Frais partagés",s:"Qui a payé quoi, et qui doit combien"},
   fiche:{i:"🧒",c:"var(--sante)",t:"Fiche enfant",s:"Santé, école, contacts, tailles : tout au même endroit"},
   parler:{i:"🗣️",c:"var(--ecole)",t:"Parler de la séparation à son enfant",s:"Les mots selon son âge"},
-  quiz:{i:"🎯",c:"var(--vac)",t:"Mises en situation",s:"Que feriez-vous ? 4 situations du quotidien"}
+  quiz:{i:"🎯",c:"var(--vac)",t:"Mises en situation",s:"Que feriez-vous ? 4 situations du quotidien"},
+  dossier:{i:"📄",c:"var(--brand)",t:"Mon dossier en PDF",s:"Calendrier, frais, messages… à remettre au juge, au médiateur ou à l'avocat"}
 };
 function oHome(){
   document.getElementById("otools").innerHTML = Object.entries(TOOLS).map(([k,p])=>`<button class="path" style="--c:${p.c}" onclick="oOpen('${k}')"><span class="i">${p.i}</span><span><b>${p.t}</b><small>${p.s}</small></span></button>`).join("");
@@ -756,7 +763,7 @@ function oOpen(k){
   document.getElementById("o-home").classList.add("hide"); document.getElementById("o-tool").classList.remove("hide");
   document.getElementById("main").scrollTop=0;
   const p=TOOLS[k];
-  document.getElementById("o-content").innerHTML = `<div class="hero" style="border-left:6px solid ${p.c}"><h2>${p.i} ${p.t}</h2><p>${p.s}</p></div>` + ({garde:gardeHTML,frais:fraisHTML,fiche:ficheHTML,parler:parlerHTML,quiz:quizHTML,coffre:coffreHTML,contacts:contactsHTML,qui:quiHTML}[k])();
+  document.getElementById("o-content").innerHTML = `<div class="hero" style="border-left:6px solid ${p.c}"><h2>${p.i} ${p.t}</h2><p>${p.s}</p></div>` + ({garde:gardeHTML,frais:fraisHTML,fiche:ficheHTML,parler:parlerHTML,quiz:quizHTML,coffre:coffreHTML,contacts:contactsHTML,qui:quiHTML,dossier:dossierHTML}[k])();
   if(k==="garde") gInit(); if(k==="frais") fRender(); if(k==="quiz") qRender(); if(k==="coffre") docList();
 }
 
@@ -928,6 +935,207 @@ function noCode(why){ return META.prot?"":`<div class="card" style="border-left:
 async function feShare(){ const t="Fiche de l'enfant – mise à jour du "+new Date().toLocaleDateString("fr-FR")+"\n"+FICHE.map((f,i)=>`${f[0]} : ${document.getElementById("fe"+i).value.trim()||"…"}`).join("\n");
   try{ navigator.share?await navigator.share({text:t}):await navigator.clipboard.writeText(t);}catch(err){} toast("Fiche copiée."); }
 
+
+/* ================= MON DOSSIER EN PDF (mise à jour 15) =================
+   Le PDF est fabriqué ici, sur le téléphone : aucun serveur, aucune bibliothèque d'un autre site.
+   Police Helvetica intégrée aux lecteurs PDF, codage WinAnsi (accents, €, œ) ; les emojis sont retirés. */
+const PDF_W=[278,278,355,556,556,889,667,191,333,333,389,584,278,333,278,278,556,556,556,556,556,556,556,556,556,556,278,278,584,584,584,556,1015,667,667,722,722,667,611,778,722,278,500,667,556,833,722,778,667,778,722,667,611,722,667,944,667,667,611,278,278,278,469,556,333,556,556,500,556,556,278,556,556,222,222,500,222,833,556,556,556,556,333,500,278,556,500,722,500,500,500,334,260,334,584,761,556,556,222,556,333,1000,556,556,333,1000,667,333,1000,556,611,556,556,222,222,333,333,350,556,1000,333,1000,500,333,944,556,500,667,278,333,556,556,556,556,260,556,333,737,370,556,584,333,737,333,400,584,333,333,333,556,537,278,333,333,365,556,834,834,834,611,667,667,667,667,667,667,1000,722,667,667,667,667,278,278,278,278,722,722,778,778,778,778,778,584,778,722,722,722,722,667,667,611,556,556,556,556,556,556,889,500,556,556,556,556,278,278,278,278,556,556,556,556,556,556,556,584,611,556,556,556,556,500,556,500], PDF_WB=[278,333,474,556,556,889,722,238,333,333,389,584,278,333,278,278,556,556,556,556,556,556,556,556,556,556,333,333,584,584,584,611,975,722,722,722,722,667,611,778,722,278,556,722,611,833,722,778,667,778,722,667,611,722,667,944,667,667,611,333,278,333,584,556,333,556,611,556,611,556,333,611,611,278,278,556,278,889,611,611,611,611,389,556,333,611,556,778,556,556,500,389,280,389,584,761,556,611,278,556,500,1000,556,556,333,1000,667,333,1000,611,611,611,611,278,278,500,500,350,556,1000,333,1000,556,333,944,611,500,667,278,333,556,556,556,556,280,556,333,737,370,556,584,333,737,333,400,584,333,333,333,611,556,278,333,333,365,556,834,834,834,611,722,722,722,722,722,722,1000,722,667,667,667,667,278,278,278,278,722,722,778,778,778,778,778,584,778,722,722,722,722,667,667,611,556,556,556,556,556,556,889,556,556,556,556,556,278,278,278,278,611,611,611,611,611,611,611,584,611,611,611,611,611,556,611,556];
+const WINA={0x20AC:128,0x201A:130,0x0192:131,0x201E:132,0x2026:133,0x2020:134,0x2021:135,0x02C6:136,0x2030:137,0x0160:138,0x2039:139,0x0152:140,0x017D:142,0x2018:145,0x2019:146,0x201C:147,0x201D:148,0x2022:149,0x2013:150,0x2014:151,0x02DC:152,0x2122:153,0x0161:154,0x203A:155,0x0153:156,0x017E:158,0x0178:159};
+function pdfTxt(s){ let o=""; for(const ch of String(s==null?"":s).normalize("NFC")){ const c=ch.codePointAt(0);
+    if(c===10) o+="\n"; else if(c===9) o+=" "; else if(c>=32&&c<127) o+=ch; else if(c===160) o+=" "; else if(c>160&&c<256) o+=ch;
+    else if(WINA[c]) o+=String.fromCharCode(WINA[c]); else if(c===0x202F||c===0x2009||c===0x2007||c===0x2002||c===0x2003) o+=" ";
+    else if(c===0x2010||c===0x2011||c===0x2212) o+="-"; }
+  return o.replace(/[ ]{2,}/g," ").replace(/ *\n */g,"\n"); }
+function pdfW(s,size,bold){ const t=bold?PDF_WB:PDF_W; let w=0; for(let i=0;i<s.length;i++){ const b=s.charCodeAt(i); w+=(b>=32&&b<256?t[b-32]:556); } return w*size/1000; }
+function PdfDoc(){
+  const W=595.28,H=841.89,M=50, CW=W-2*M; const pages=[]; let ops=null; const D={W,H,M,CW,y:0,pages};
+  const pe=s=>s.replace(/[\\()]/g,c=>"\\"+c), f=n=>(Math.round(n*100)/100).toString();
+  D.page=()=>{ ops=[]; pages.push(ops); D.y=H-M; return pages.length-1; };
+  D.need=h=>{ if(D.y-h<M+18) D.page(); };
+  D.text=(x,y,s,size,bold,gray)=>ops.push(`BT ${f(gray||0)} g /${bold?"F2":"F1"} ${f(size)} Tf ${f(x)} ${f(y)} Td (${pe(s)}) Tj ET`);
+  D.textOn=(pi,x,y,s,size,bold,gray)=>pages[pi].push(`BT ${f(gray||0)} g /${bold?"F2":"F1"} ${f(size)} Tf ${f(x)} ${f(y)} Td (${pe(s)}) Tj ET`);
+  D.rect=(x,y,w,h,fill,stroke)=>ops.push(`q ${fill!=null?f(fill)+" g ":""}${stroke!=null?f(stroke)+" G 0.6 w ":""}${f(x)} ${f(y)} ${f(w)} ${f(h)} re ${fill!=null&&stroke!=null?"B":fill!=null?"f":"S"} Q`);
+  D.line=(x1,y1,x2,y2,g)=>ops.push(`q ${f(g==null?0.75:g)} G 0.6 w ${f(x1)} ${f(y1)} m ${f(x2)} ${f(y2)} l S Q`);
+  D.wrap=(s,width,size,bold)=>{ const out=[]; pdfTxt(s).split("\n").forEach(par=>{ if(!par.trim()){ out.push(""); return; }
+      let cur=""; par.split(" ").forEach(wd=>{ while(pdfW(wd,size,bold)>width){ let k=wd.length; while(k>1&&pdfW(wd.slice(0,k),size,bold)>width) k--; if(cur){ out.push(cur); cur=""; } out.push(wd.slice(0,k)); wd=wd.slice(k); }
+        const t=cur?cur+" "+wd:wd; if(pdfW(t,size,bold)<=width) cur=t; else { out.push(cur); cur=wd; } }); out.push(cur); }); return out; };
+  D.para=(s,o)=>{ o=o||{}; const size=o.size||10.5, lh=size*(o.lead||1.38), x=M+(o.indent||0), w=o.width||CW-(o.indent||0);
+    D.wrap(s,w,size,o.bold).forEach(l=>{ D.need(lh); D.y-=lh; if(l) D.text(x,D.y,l,size,o.bold,o.gray); }); D.y-=(o.gap==null?5:o.gap); };
+  D.h1=s=>{ D.need(40); D.y-=22; D.text(M,D.y,pdfTxt(s),17,true); D.y-=6; D.line(M,D.y,W-M,D.y,0.3); D.y-=10; };
+  D.h2=s=>{ D.need(34); D.y-=16; D.text(M,D.y,pdfTxt(s),12,true); D.y-=6; };
+  D.box=(lines,o)=>{ o=o||{}; const size=o.size||9.5, lh=size*1.38, pad=8, inner=CW-2*pad; let all=[]; lines.forEach(([t,b])=>D.wrap(t,inner,size,b).forEach(l=>all.push([l,b])));
+    const h=all.length*lh+2*pad; D.need(h+6); D.rect(M,D.y-h,CW,h,o.fill==null?0.94:o.fill,o.stroke==null?0.55:o.stroke); let yy=D.y-pad; all.forEach(([l,b])=>{ yy-=lh; if(l) D.text(M+pad,yy+2,l,size,b); }); D.y-=h+8; };
+  D.table=(cols,rows,o)=>{ o=o||{}; const size=o.size||9, lh=size*1.3, pad=4;
+    const lay=(cells,bold)=>{ const L=cells.map((c,i)=>D.wrap(c,cols[i].w-2*pad,size,bold)); return {L,h:Math.max(...L.map(l=>l.length))*lh+2*pad}; };
+    const draw=(cells,bold,fill)=>{ const r=lay(cells,bold); if(D.y-r.h<M+18){ D.page(); if(!bold && o.head) draw(o.head,true,0.88); }
+      let x=M; cols.forEach((c,i)=>{ D.rect(x,D.y-r.h,c.w,r.h,fill,0.6); r.L[i].forEach((l,k)=>{ const tw=pdfW(l,size,bold), tx=c.a==="r"?x+c.w-pad-tw:x+pad; D.text(tx,D.y-pad-(k+1)*lh+2,l,size,bold); }); x+=c.w; }); D.y-=r.h; };
+    if(o.head) draw(o.head,true,0.88); rows.forEach(r=>draw(r.c,!!r.b,r.fill)); D.y-=8; };
+  D.bytes=(footer,title)=>{ const n=pages.length; pages.forEach((p,i)=>{ const t=pdfTxt(footer.replace("{p}",i+1).replace("{n}",n)); p.push(`BT 0.4 g /F1 8 Tf ${f((W-pdfW(t,8))/2)} 26 Td (${pe(t)}) Tj ET`); });
+    const objs=[]; objs[1]="<< /Type /Catalog /Pages 2 0 R >>"; const kids=[]; let k=5;
+    pages.forEach(()=>{ kids.push(k+" 0 R"); k+=2; });
+    objs[2]=`<< /Type /Pages /Kids [${kids.join(" ")}] /Count ${n} >>`;
+    objs[3]="<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>";
+    objs[4]="<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>";
+    k=5; pages.forEach(p=>{ const c=p.join("\n"); objs[k]=`<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${f(W)} ${f(H)}] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents ${k+1} 0 R >>`; objs[k+1]=`<< /Length ${c.length} >>\nstream\n${c}\nendstream`; k+=2; });
+    const info=k; objs[info]=`<< /Title (${pe(pdfTxt(title))}) /Producer (Entre Deux Toits) /CreationDate (D:${iso(new Date()).replace(/-/g,"")}) >>`;
+    let s="%PDF-1.4\n%\xE2\xE3\xCF\xD3\n"; const off=[];
+    for(let i=1;i<objs.length;i++){ off[i]=s.length; s+=`${i} 0 obj\n${objs[i]}\nendobj\n`; }
+    const xr=s.length; s+=`xref\n0 ${objs.length}\n0000000000 65535 f \n`+off.slice(1).map(o=>String(o).padStart(10,"0")+" 00000 n \n").join("");
+    s+=`trailer\n<< /Size ${objs.length} /Root 1 0 R /Info ${info} 0 R >>\nstartxref\n${xr}\n%%EOF\n`;
+    const u=new Uint8Array(s.length); for(let i=0;i<s.length;i++) u[i]=s.charCodeAt(i)&255; return u; };
+  return D;
+}
+
+/* --- L'écran « Mon dossier » --- */
+let DZ={dest:"juge"}, DZX={j:new Set(),f:new Set()}, DZ_PDF=null;
+const DZ_FICHE_ON=[0,1,5];
+const DZ_DEST={juge:["Le juge","du juge aux affaires familiales"],med:["Un médiateur","de la médiatrice ou du médiateur familial"],avo:["Mon avocat","de mon avocate ou de mon avocat"]};
+const DZ_DEF={juge:{cal:1,fra:1,jou:1,con:0,fic:0},med:{cal:1,fra:1,jou:0,con:1,fic:0},avo:{cal:1,fra:1,jou:1,con:1,fic:0}};
+const dzDate=s=>{ const m=/(\d{2})\/(\d{2})\/(\d{4})/.exec(s||""); return m?new Date(+m[3],+m[2]-1,+m[1],12):null; };
+const dzP1=()=>{ const p=(G.p1||"").trim(); return p && !/^(moi|vous)$/i.test(p) ? p : (dzVal("dz_pre")||ME.prenom||"Moi"); };
+const dzP2=()=>{ const p=(G.p2||"").trim(); return p && !/^l'autre parent$/i.test(p) ? p : "L'autre parent"; };
+function dzVal(id){ const e=document.getElementById(id); return e?e.value.trim():""; }
+function dzPeriod(){ const a=dzVal("dz_du"), b=dzVal("dz_au"); return [a?D(a):null, b?D(b):null]; }
+const dzIn=(d,[a,b])=>!!d && (!a||d>=a) && (!b||d<=b);
+function dzJ(){ const p=dzPeriod(); return journal.map((j,i)=>({j,i,d:dzDate(j.d)})).filter(x=>dzIn(x.d,p)).reverse(); }
+function dzF(){ const p=dzPeriod(); return frais.map((f,i)=>({f,i,d:dzDate(f.d)})).filter(x=>dzIn(x.d,p)).reverse(); }
+const convHas=()=>!!(CV._out || ["c_enf","c_res","c_ryt","c_vac","c_tra","c_pen","c_fra","c_com"].some(k=>(CV[k]||"").trim()));
+function dossierHTML(){ setTimeout(dzInit,0);
+  const dates=journal.map(j=>dzDate(j.d)).concat(frais.map(f=>dzDate(f.d))).filter(Boolean), t=new Date();
+  const du=DZ.du || (dates.length?iso(new Date(Math.min(...dates))):iso(new Date(t.getFullYear(),t.getMonth()-3,t.getDate(),12)));
+  const ck=(id,lab,on,dis)=>`<label class="ck" for="${id}"><input type="checkbox" id="${id}" ${on?"checked":""} ${dis?"disabled":""}><span>${lab}</span></label>`;
+  return `<div class="card"><p style="margin:0;color:var(--ink)">Un PDF qui rassemble ce que vous choisissez, à joindre à une demande au juge, à donner à un médiateur ou à votre avocat. Il est fabriqué sur votre téléphone : rien n'est envoyé, rien n'est gardé.</p></div>
+  <div class="card"><h2>1. Pour qui ?</h2><div class="seg" id="dz_dest" role="group" aria-label="Destinataire">${Object.entries(DZ_DEST).map(([k,v])=>`<button type="button" data-k="${k}" class="${DZ.dest===k?"on":""}" aria-pressed="${DZ.dest===k}" onclick="dzDest('${k}')">${v[0]}</button>`).join("")}</div></div>
+  <div class="card"><h2>2. Qui présente le dossier ?</h2>
+    <div class="two"><div><label>Votre prénom</label><input id="dz_pre" value="${esc(DZ.pre!=null?DZ.pre:ME.prenom||"")}"></div><div><label>Votre nom <em>— facultatif</em></label><input id="dz_nom" value="${esc(DZ.nom||"")}"></div></div>
+    <label>Enfant(s) concerné(s) <em>— prénoms ; la date de naissance seulement si elle est utile</em></label><input id="dz_enf" value="${esc(DZ.enf!=null?DZ.enf:ME.enf||"")}">
+    <p class="meta" style="margin:8px 0 0">Aucune adresse n'est ajoutée. En cas de violences, le juge peut vous autoriser à cacher votre domicile (art. 515-11, 6° du code civil) : n'en écrivez aucun ici.</p></div>
+  <div class="card"><h2>3. Que mettre ?</h2>
+    <label>Période <em>— pour les messages et les frais</em></label><div class="two"><input type="date" id="dz_du" value="${du}" aria-label="Du"><input type="date" id="dz_au" value="${DZ.au||iso(t)}" aria-label="Au"></div>
+    ${ck("dz_cal","📅 <b>Calendrier prévu</b>",DZ_DEF[DZ.dest].cal)}
+    <div class="two" id="dz_calopt" style="margin:-2px 0 6px 28px"><div><label>À partir de</label><input type="month" id="dz_m0" value="${DZ.m0||iso(t).slice(0,7)}"></div><div><label>Nombre de mois</label><select id="dz_mn">${[1,2,3,4,5,6,9,12].map(n=>`<option ${n===(+DZ.mn||3)?"selected":""}>${n}</option>`).join("")}</select></div></div>
+    ${ck("dz_fra","💶 <b>Frais partagés</b> <span class='meta' id='dz_fran'></span>",DZ_DEF[DZ.dest].fra)}<div id="dz_fral" style="margin-left:28px"></div>
+    ${ck("dz_jou","💬 <b>Messages que j'ai envoyés</b> <span class='meta' id='dz_joun'></span>",DZ_DEF[DZ.dest].jou)}<div id="dz_joul" style="margin-left:28px"></div>
+    ${ck("dz_con","✍️ <b>Projet de convention</b>"+(convHas()?"":" <span class='meta'>— rien de préparé pour l'instant (Démarches › Préparer notre convention)</span>"),DZ_DEF[DZ.dest].con&&convHas(),!convHas())}
+    ${ck("dz_fic","🧒 <b>Fiche enfant</b> <span class='meta'>— seulement les lignes cochées</span>",DZ_DEF[DZ.dest].fic)}
+    <div id="dz_ficl" style="margin-left:28px">${FICHE.map((f,i)=>ck("dz_fe"+i,esc(f[0])+([2,3,4].includes(i)?" <span class='meta'>(santé)</span>":i===9?" <span class='meta'>(d'autres personnes)</span>":"")+(FV[i]&&FV[i].trim()?"":" <span class='meta'>— vide</span>"),DZ_FICHE_ON.includes(i)&&!!(FV[i]||"").trim(),!(FV[i]||"").trim())).join("")}</div>
+    <p class="meta" style="margin:10px 0 0">Jamais dans le dossier : les brouillons, le Défouloir, les messages de l'autre parent. Pas de paroles, de messages ou de dessins de votre enfant : s'il le souhaite, il peut être entendu par le juge (art. 388-1 du code civil).</p>
+    <label>Mot d'introduction <em>— facultatif, 1 500 caractères au plus</em></label><textarea id="dz_in" maxlength="1500" placeholder="Quelques phrases factuelles : ce que vous demandez, et pourquoi ce document.">${esc(DZ.intro||"")}</textarea>
+    <p class="meta" id="dz_inmed" style="margin:4px 0 0"></p><div id="dz_rel"></div>
+    <label>Pièces que je joins <em>— une par ligne ; pré-remplie avec les documents du coffre-fort</em></label><textarea id="dz_pj" placeholder="Facture de l'orthodontiste du 12/10/2026">${esc(DZ.pieces!=null?DZ.pieces:DOCS.map(d=>d.n).join("\n"))}</textarea>
+  </div>
+  <div class="card" style="border-left:6px solid var(--warn)"><h2>4. Avant de créer</h2><ol id="dz_rap" style="margin:0;padding-left:20px;font-size:14px"></ol></div>
+  <div class="actions"><button class="btn main" onclick="dzMake()">📄 Créer le PDF</button></div>
+  <div id="dz_res"></div>${noCode("Ce dossier rassemble des informations personnelles.")}`; }
+function dzDest(k){ DZ.dest=k; document.querySelectorAll("#dz_dest button").forEach(b=>{ const on=b.dataset.k===k; b.classList.toggle("on",on); b.setAttribute("aria-pressed",on); });
+  const d=DZ_DEF[k]; [["cal","dz_cal"],["fra","dz_fra"],["jou","dz_jou"],["con","dz_con"],["fic","dz_fic"]].forEach(([a,id])=>{ const e=document.getElementById(id); if(e&&!e.disabled) e.checked=!!d[a]; });
+  dzSync(); scheduleSave(); }
+function dzSync(){
+  const on=id=>{ const e=document.getElementById(id); return !!(e&&e.checked); }, sh=(id,v)=>{ const e=document.getElementById(id); if(e) e.style.display=v?"":"none"; };
+  sh("dz_calopt",on("dz_cal")); sh("dz_ficl",on("dz_fic")); sh("dz_fral",on("dz_fra")); sh("dz_joul",on("dz_jou"));
+  const fl=dzF(), jl=dzJ(), e=v=>v.toLocaleString("fr-FR",{style:"currency",currency:"EUR"});
+  dz_fran.textContent=`— ${fl.filter(x=>!DZX.f.has(x.i)).length} sur ${fl.length} dans la période`;
+  dz_joun.textContent=`— ${jl.filter(x=>!DZX.j.has(x.i)).length} sur ${jl.length} dans la période`;
+  const box=(arr,set,lab)=>arr.length?`<details><summary style="cursor:pointer;font-size:13.5px;color:var(--brand)">Choisir un par un</summary>${arr.map(lab).join("")}</details>`:"";
+  dz_fral.innerHTML=box(fl,DZX.f,x=>`<label class="ck" for="dzf${x.i}"><input type="checkbox" id="dzf${x.i}" ${DZX.f.has(x.i)?"":"checked"} onchange="dzPick('f',${x.i},this.checked)"><span>${esc(x.f.d)} · ${esc(x.f.l)} · ${e(x.f.m)}</span></label>`);
+  dz_joul.innerHTML=box(jl,DZX.j,x=>`<label class="ck" for="dzj${x.i}"><input type="checkbox" id="dzj${x.i}" ${DZX.j.has(x.i)?"":"checked"} onchange="dzPick('j',${x.i},this.checked)"><span><span class="meta">${esc(x.j.d)}</span><br>${esc(x.j.t.length>140?x.j.t.slice(0,140)+"…":x.j.t)}</span></label>`);
+  dz_inmed.innerHTML = DZ.dest==="juge" ? "N'y mettez pas ce qui s'est dit en médiation : c'est confidentiel, sauf accord des deux parents (art. 21-3 de la loi du 8 février 1995)." : "";
+  const r1={juge:"<b>L'autre parent lira tout.</b> Ce que vous remettez au juge est communiqué à l'autre parent (art. 15 et 132 du code de procédure civile). Écrivez comme s'il lisait par-dessus votre épaule.",
+    med:"<b>Ce que vous donnez au médiateur reste confidentiel</b>, sauf accord des deux parents ou exceptions prévues par la loi, notamment pour protéger l'enfant (art. 21-3 de la loi du 8 février 1995). Si vous le remettez ensuite au juge, l'autre parent le lira.",
+    avo:"<b>Votre avocat est tenu au secret professionnel</b> (art. 66-5 de la loi du 31 décembre 1971). C'est avec lui que vous choisirez ce qui sera remis au juge ; ce qui est remis au juge est lu par l'autre parent."}[DZ.dest];
+  dz_rap.innerHTML=`<li>${r1}</li><li><b>Ce dossier ne prouve rien à lui seul.</b> C'est à chacun de prouver ce qu'il avance (art. 9 du code de procédure civile) : joignez les justificatifs. La date d'un message est celle où il a été copié dans l'appli, pas la preuve qu'il a été reçu.</li>`+
+    (on("dz_con")?`<li><b>Un projet de convention n'engage personne.</b> Pour qu'elle s'impose, les parents peuvent la faire homologuer par le juge (art. 373-2-7 du code civil).</li>`:`<li><b>Relisez avant d'envoyer.</b> Restez sur les faits qui concernent l'enfant ; laissez de côté la vie privée de l'autre parent (art. 9 du code civil).</li>`);
+}
+function dzPick(k,i,on){ on?DZX[k].delete(i):DZX[k].add(i); dzSync(); }
+function dzKeep(){ DZ.pre=dzVal("dz_pre"); DZ.nom=dzVal("dz_nom"); DZ.enf=dzVal("dz_enf"); DZ.du=dzVal("dz_du"); DZ.au=dzVal("dz_au"); DZ.m0=dzVal("dz_m0"); DZ.mn=dzVal("dz_mn");
+  const i=document.getElementById("dz_in"), p=document.getElementById("dz_pj"); if(i) DZ.intro=i.value; if(p) DZ.pieces=p.value; }
+function dzInit(){ const c=document.getElementById("o-content"); if(!c) return;
+  c.querySelectorAll("input,select,textarea").forEach(el=>el.addEventListener(el.type==="checkbox"?"change":"input",()=>{ dzKeep(); if(el.id==="dz_in") relire("dz_in","dz_rel"); else if(!/^dz[fj]\d/.test(el.id)) dzSync(); }));
+  dzSync(); relire("dz_in","dz_rel"); }
+
+/* --- Fabrication du PDF --- */
+function dzBuild(){
+  const on=id=>{ const e=document.getElementById(id); return !!(e&&e.checked); };
+  const P=PdfDoc(), p1=dzP1(), p2=dzP2(), pre=dzVal("dz_pre"), nom=dzVal("dz_nom"), enf=dzVal("dz_enf"), [pa,pb]=dzPeriod();
+  const fd=d=>d.toLocaleDateString("fr-FR"), eur=v=>v.toLocaleString("fr-FR",{minimumFractionDigits:2,maximumFractionDigits:2})+" €";
+  const qui=[pre,nom?nom.toUpperCase():""].filter(Boolean).join(" ")||"le parent";
+  const SEC=[];
+  /* Couverture */
+  const cover=P.page(); P.y-=14; P.text(P.M,P.y,"Mon dossier",26,true); P.y-=12; P.line(P.M,P.y,P.W-P.M,P.y,0.3); P.y-=8;
+  const per=(pa||pb)?`du ${pa?fd(pa):"début"} au ${pb?fd(pb):fd(new Date())}`:"toute la période";
+  [["Préparé par",qui],["À l'attention",DZ_DEST[DZ.dest][1]],["Enfant(s)",enf||"…"],["Messages et frais",per],["Document créé le",fd(new Date())]].forEach(([a,b])=>{ P.need(18); P.y-=17; P.text(P.M,P.y,pdfTxt(a+" :"),10.5,true); P.wrap(b,P.CW-120,10.5).forEach((l,k)=>{ if(k){ P.y-=14; } P.text(P.M+120,P.y,l,10.5); }); });
+  P.y-=12; P.h2("Sommaire"); const somY=P.y; const somN=[on("dz_cal"),on("dz_fra"),on("dz_jou"),on("dz_con"),on("dz_fic"),!!dzVal("dz_pj")].filter(Boolean).length; P.y-=somN*15+10;
+  P.box([["Comment ce document a été fait",true],[`Ce document a été rempli par ${qui} sur son téléphone, avec l'appli gratuite Entre Deux Toits. L'appli met en forme ce que la personne a saisi : elle ne vérifie pas les informations. Les justificatifs sont joints à part.`,false]]);
+  const intro=(document.getElementById("dz_in")||{}).value||"";
+  if(intro.trim()){ P.h2("Mot d'introduction"); P.para(intro.trim()); }
+  /* Calendrier */
+  if(on("dz_cal")){ const pg=P.page(); SEC.push(["Calendrier prévu",pg]); P.h1("Calendrier prévu");
+    const R={alt:`une semaine sur deux, changement le ${JOURS[+G.j]}`,we:`un week-end sur deux chez ${p2} (${G.wed==="3"?"du vendredi au dimanche":"samedi et dimanche"})`,wem:`un week-end sur deux chez ${p2} (${G.wed==="3"?"du vendredi au dimanche":"samedi et dimanche"}) et le ${JOURS[+G.mw]} soir`,"223":"alternance 2-2-3",sur:`rythme sur mesure, qui se répète toutes les ${G.cl} semaine${+G.cl>1?"s":""}`}[G.r]||"";
+    const PV={moitie:"moitié / moitié",semaine:"semaine par semaine",normal:"rythme habituel"}, EV={moitie:"moitié / moitié",quinzaine:"par quinzaines",semaine:"semaine par semaine",normal:"rythme habituel"};
+    P.para(`Rythme habituel : ${R}. Petites vacances : ${PV[G.pv]||""} ; été : ${EV[G.ev]||""} ; ${G.v==="1"?p1:p2} commence les vacances les années paires. Zone ${G.z}.`);
+    P.box([["Calendrier prévu : ce n'est pas un relevé de ce qui s'est réellement passé.",true],["S'il existe un jugement ou une convention homologuée, c'est ce document qui fait foi. Dates des vacances : arrêtés du 22 octobre 2025 et du 21 juillet 2026.",false]]);
+    P.para(`Légende : case blanche = ${p1} ; case grise = ${p2} ; • = vacances scolaires ; * = jour modifié ponctuellement.`,{size:9,gray:0.25});
+    const [yy0,mm0]=(dzVal("dz_m0")||iso(new Date()).slice(0,7)).split("-").map(Number), nm=Math.min(12,Math.max(1,+dzVal("dz_mn")||3)), cw=P.CW/7, rh=25, exl=[];
+    const finVac=D(VAC[G.z][VAC[G.z].length-1][1]);
+    for(let k=0;k<nm;k++){ const y=new Date(yy0,mm0-1+k,1,12).getFullYear(), m=new Date(yy0,mm0-1+k,1,12).getMonth(), first=(new Date(y,m,1).getDay()+6)%7, n=new Date(y,m+1,0).getDate(), rows=Math.ceil((first+n)/7);
+      P.need(36+rows*rh); P.y-=16; const mt=new Date(y,m,1,12).toLocaleDateString("fr-FR",{month:"long",year:"numeric"}); P.text(P.M,P.y,pdfTxt(mt.charAt(0).toUpperCase()+mt.slice(1)),11.5,true); P.y-=6;
+      ["lun.","mar.","mer.","jeu.","ven.","sam.","dim."].forEach((j,i)=>P.text(P.M+i*cw+4,P.y-9,j,8,false,0.35)); P.y-=13;
+      for(let d=1;d<=n;d++){ const pos=first+d-1, r=Math.floor(pos/7), c=pos%7, x=P.M+c*cw, yb=P.y-(r+1)*rh, dt=new Date(y,m,d,12), w=who(dt);
+        if(w.ex) exl.push(fd(dt));
+        P.rect(x,yb,cw,rh,w.p===2?0.8:1,0.55); P.text(x+3,yb+rh-9,pdfTxt(String(d)+(dt>=finVac?"":w.vac?" •":"")+(w.ex?" *":"")),8,true);
+        let nmz=pdfTxt(w.p===1?p1:p2); while(nmz.length>1&&pdfW(nmz,7.5)>cw-6) nmz=nmz.slice(0,-2)+"."; P.text(x+3,yb+5,nmz,7.5,false,0.15); }
+      P.y-=rows*rh+4; }
+    if(exl.length) P.para("Jours modifiés ponctuellement : "+exl.join(", ")+".",{size:9});
+    const last=new Date(yy0,mm0-1+nm,0,12); if(last>=finVac) P.para("Les vacances scolaires après l'été 2028 ne sont pas encore publiées : elles ne sont pas marquées.",{size:9,gray:0.3});
+  }
+  /* Frais */
+  if(on("dz_fra")){ const pg=P.page(); SEC.push(["Frais partagés",pg]); P.h1("Frais partagés");
+    const L=dzF().filter(x=>!DZX.f.has(x.i)).map(x=>x.f);
+    P.para(`Dépenses notées dans l'appli ${per}. La date est celle où la dépense a été notée. Les justificatifs sont joints à part.`,{size:9.5,gray:0.25});
+    if(!L.length) P.para("Aucune dépense choisie.");
+    else { let t=0,a1=0,a2=0,s1=0,s2=0; const rows=L.map(f=>{ const m1=f.m*f.s/100, m2=f.m-m1; t+=f.m; f.p===1?a1+=f.m:a2+=f.m; s1+=m1; s2+=m2;
+        return {c:[f.d,f.l,eur(f.m),f.p===1?p1:p2,`${f.s} / ${100-f.s}`,eur(m1),eur(m2)]}; });
+      rows.push({c:["","Total",eur(t),"","",eur(s1),eur(s2)],b:true,fill:0.94});
+      P.table([{w:58},{w:139},{w:62,a:"r"},{w:76},{w:44},{w:58,a:"r"},{w:58,a:"r"}],rows,{head:["Date","Dépense","Montant","Payé par","Partage",`Part de ${p1}`,`Part de ${p2}`]});
+      const b=a1-s1;
+      P.para(`Avancé par ${p1} : ${eur(a1)} ; avancé par ${p2} : ${eur(a2)}.`);
+      P.para(Math.abs(b)<0.005?"Selon les partages indiqués, les comptes sont équilibrés.":`Selon les partages indiqués, solde de ${eur(Math.abs(b))} en faveur de ${b>0?p1:p2}.`,{bold:true}); }
+  }
+  /* Messages */
+  if(on("dz_jou")){ const pg=P.page(); SEC.push(["Messages que j'ai envoyés",pg]); P.h1("Messages que j'ai envoyés");
+    const L=dzJ().filter(x=>!DZX.j.has(x.i)).map(x=>x.j);
+    P.para(`Copie gardée par l'appli des messages écrits par ${qui} ${per}, du plus ancien au plus récent. La date est celle où le message a été partagé depuis l'appli : ce n'est pas une preuve qu'il a été reçu. Les messages de l'autre parent n'y figurent pas.`,{size:9.5,gray:0.25});
+    if(!L.length) P.para("Aucun message choisi.");
+    L.forEach(j=>{ P.need(40); P.y-=4; P.para(`${j.d} · ${j.th}`,{bold:true,size:9.5,gap:1}); P.para(j.t,{size:10,indent:10,gap:6}); P.line(P.M,P.y+2,P.W-P.M,P.y+2,0.85); P.y-=4; });
+  }
+  /* Convention */
+  if(on("dz_con")&&convHas()){ const pg=P.page(); SEC.push(["Projet de convention",pg]); P.h1("Projet de convention");
+    P.box([["PROJET – non signé, non homologué",true],["Ce texte est une base de discussion préparée dans l'appli. Il n'engage personne tant qu'il n'est pas signé ; les parents peuvent le faire homologuer par le juge aux affaires familiales.",false]],{fill:0.88,stroke:0.2,size:10});
+    P.para(convText(),{size:10}); }
+  /* Fiche enfant */
+  if(on("dz_fic")){ const ls=FICHE.map((f,i)=>[f[0],(FV[i]||"").trim(),on("dz_fe"+i)]).filter(x=>x[1]&&x[2]);
+    if(ls.length){ const pg=P.page(); SEC.push(["Fiche enfant",pg]); P.h1("Fiche enfant"); P.para("Informations choisies par le parent.",{size:9.5,gray:0.25});
+      P.table([{w:170},{w:P.CW-170}],ls.map(x=>({c:[x[0],x[1]]}))); } }
+  /* Pièces */
+  const pj=dzVal("dz_pj").split("\n").map(s=>s.trim()).filter(Boolean);
+  if(pj.length){ P.need(80); P.y-=10; const pg=P.pages.length-1; SEC.push(["Pièces jointes",pg]); P.h1("Pièces jointes"); pj.forEach((s,k)=>P.para(`Pièce n° ${k+1} : ${s}`,{gap:2})); }
+  /* Sommaire sur la couverture */
+  let sy=somY; SEC.forEach(([t,pg])=>{ sy-=15; const tt=pdfTxt(t), pn="page "+(pg+1); P.textOn(cover,P.M,sy,tt,10.5); P.textOn(cover,P.W-P.M-pdfW(pn,10.5),sy,pn,10.5); });
+  if(!SEC.length) P.textOn(cover,P.M,sy-15,pdfTxt("Mot d'introduction seulement."),10.5);
+  return {bytes:P.bytes("Mon dossier – page {p}/{n} – créé le "+fd(new Date())+" avec Entre Deux Toits","Mon dossier"),n:P.pages.length};
+}
+function dzMake(){ dzKeep(); const on=id=>{ const e=document.getElementById(id); return !!(e&&e.checked); };
+  if(![ "dz_cal","dz_fra","dz_jou","dz_con","dz_fic"].some(on) && !dzVal("dz_in") && !dzVal("dz_pj")){ toast("Choisissez au moins une partie."); return; }
+  let r; try{ r=dzBuild(); }catch(e){ toast("Le PDF n'a pas pu être créé. Réessayez."); return; }
+  const name="mon-dossier-"+iso(new Date())+".pdf"; DZ_PDF={blob:new Blob([r.bytes],{type:"application/pdf"}),name};
+  stat("dossier-pdf","Mon dossier en PDF créé",true);
+  dz_res.innerHTML=`<div class="okbox" style="margin-top:10px"><b>Votre PDF est prêt</b> (${r.n} page${r.n>1?"s":""}). Relisez-le avant de le transmettre.</div><div class="actions"><button class="btn main" onclick="dzShare()">📤 Partager</button><button class="btn ghost" onclick="dzSave()">⬇️ Enregistrer / ouvrir</button></div>`;
+  dz_res.scrollIntoView({block:"nearest",behavior:"smooth"}); }
+async function dzShare(){ if(!DZ_PDF) return; let file=null; try{ file=new File([DZ_PDF.blob],DZ_PDF.name,{type:"application/pdf"}); }catch(e){}
+  if(file && navigator.canShare && navigator.canShare({files:[file]})){ try{ await navigator.share({files:[file],title:"Mon dossier"}); toast("PDF partagé."); }catch(e){ if(e&&e.name==="AbortError") toast("Partage annulé : rien n'a été envoyé."); else dzSave(); } }
+  else { toast("Le partage n'est pas disponible ici : le PDF est enregistré."); dzSave(); } }
+function dzSave(){ if(!DZ_PDF) return; const u=URL.createObjectURL(DZ_PDF.blob), a=document.createElement("a"); a.href=u; a.download=DZ_PDF.name; document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(u),60000); }
+
 /* --- Parler à l'enfant --- */
 function parlerHTML(){ return `<div class="card age" data-tts>${TTS}
   <h3>Pour tous les âges</h3><ul>
@@ -1057,9 +1265,9 @@ async function unseal(box,key){ const pt=await crypto.subtle.decrypt({name:"AES-
 const wrap = async o => META.prot ? await seal(o,KEY) : o;
 const unwrap = async o => (o && o.ct && o.iv) ? await unseal(o,KEY) : o;
 
-function snapshot(){ return {ME,G,frais,journal,brouillons,dDone,FV,tv,DOCS:DOCS.map(d=>({id:d.id,n:d.n,t:d.t,s:d.s,d:d.d}))}; }
+function snapshot(){ return {ME,G,frais,journal,brouillons,dDone,FV,tv,CV,DZ,DOCS:DOCS.map(d=>({id:d.id,n:d.n,t:d.t,s:d.s,d:d.d}))}; }
 function restore(s){ if(!s) return; Object.assign(ME,s.ME||{}); Object.assign(G,s.G||{});
-  frais=s.frais||[]; journal=s.journal||[]; brouillons=s.brouillons||[]; dDone=s.dDone||{}; FV=s.FV||FV; tv=s.tv||"tu"; DOCS=s.DOCS||[]; }
+  frais=s.frais||[]; journal=s.journal||[]; brouillons=s.brouillons||[]; dDone=s.dDone||{}; FV=s.FV||FV; tv=s.tv||"tu"; DOCS=s.DOCS||[]; CV=s.CV||{}; DZ=Object.assign({dest:"juge"},s.DZ||{}); }
 let saveT=null;
 function scheduleSave(){ clearTimeout(saveT); saveT=setTimeout(saveNow,400); }
 async function saveNow(){ if(META.prot && !KEY) return; await kvSet("state", await wrap(snapshot())); }
@@ -1204,7 +1412,7 @@ function quiHTML(){ if(!ME.quiOk){ setTimeout(()=>quiTree((ME.quiSit==="non"||ME
   <div id="qd-list"></div>
   <div class="card" style="margin-top:12px"><h2>Vous n'êtes pas d'accord ?</h2><p>Proposez d'en parler, par écrit et calmement. La médiation familiale peut vous aider. En dernier recours, le juge aux affaires familiales peut autoriser un parent à décider seul.</p>
     <div class="actions"><button class="btn ghost" onclick="goTab('demarches');dOpen('desaccord')">Voir les démarches</button></div></div>
-  <details class="card"><summary style="cursor:pointer;font-weight:700">📚 Tous les textes cités</summary><p class="meta">Vérifiés sur Légifrance le 24/11/2026, dans leur version en vigueur.</p><ul style="padding-left:18px;font-size:13.5px"><li><a href="https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000054527338" target="_blank" rel="noopener">Art. 60 C. civ. – changement de prénom</a></li><li><a href="https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000006421039" target="_blank" rel="noopener">Art. 61-3 C. civ. – nom, accord de l'enfant de plus de 13 ans</a></li><li><a href="https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000045289223" target="_blank" rel="noopener">Art. 311-24-2 C. civ. – nom d'usage</a></li><li><a href="https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000049164413" target="_blank" rel="noopener">Art. 371-1 C. civ. – définition de l'autorité parentale</a></li><li><a href="https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000039778192" target="_blank" rel="noopener">Art. 371-2 C. civ. – contribution à l'entretien</a></li><li><a href="https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000027432028" target="_blank" rel="noopener">Art. 371-4 C. civ. – liens avec les grands-parents</a></li><li><a href="https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000032634037" target="_blank" rel="noopener">Art. 371-6 C. civ. – autorisation de sortie du territoire</a></li><li><a href="https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000043895534" target="_blank" rel="noopener">Art. 372 C. civ. – exercice en commun</a></li><li><a href="https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000049164419" target="_blank" rel="noopener">Art. 372-1 C. civ. – droit à l'image</a></li><li><a href="https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000006426536" target="_blank" rel="noopener">Art. 372-2 C. civ. – accord présumé pour les actes usuels</a></li><li><a href="https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000045136678" target="_blank" rel="noopener">Art. 373-1 C. civ. – décès d'un parent</a></li><li><a href="https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000049294125" target="_blank" rel="noopener">Art. 373-2 C. civ. – séparation, déménagement</a></li><li><a href="https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000022469781" target="_blank" rel="noopener">Art. 373-2-1 C. civ. – exercice par un seul parent</a></li><li><a href="https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000049164431" target="_blank" rel="noopener">Art. 373-2-6 C. civ. – sortie du territoire, publications</a></li><li><a href="https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000045136610" target="_blank" rel="noopener">Art. 375-7 C. civ. – enfant confié par le juge des enfants</a></li><li><a href="https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000049294106" target="_blank" rel="noopener">Art. 378 C. civ. – retrait de l'autorité parentale</a></li><li><a href="https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000032206532" target="_blank" rel="noopener">Art. 381-1 C. civ. – délaissement</a></li><li><a href="https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000031322882" target="_blank" rel="noopener">Art. 382-1 C. civ. – biens de l'enfant</a></li><li><a href="https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000033460871" target="_blank" rel="noopener">Art. 229-1 C. civ. – divorce par consentement mutuel</a></li><li><a href="https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000033460869" target="_blank" rel="noopener">Art. 229-2 C. civ. – cas où le juge reste nécessaire</a></li><li><a href="https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000054373093" target="_blank" rel="noopener">Art. 1635 bis Q CGI – contribution de 50 € pour saisir le juge</a></li><li><a href="https://www.legifrance.gouv.fr/loda/article_lc/LEGIARTI000054616333" target="_blank" rel="noopener">Art. 10 loi n° 71-1130 – honoraires et convention d'honoraires de l'avocat</a></li><li><a href="https://www.legifrance.gouv.fr/loda/article_lc/LEGIARTI000033460749" target="_blank" rel="noopener">Art. 10 loi n° 91-647 – champ de l'aide juridictionnelle</a></li><li><a href="https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000041684669" target="_blank" rel="noopener">Art. A. 444-173-1 C. com. – dépôt de la convention de divorce chez le notaire</a></li><li><a href="https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000006426549" target="_blank" rel="noopener">Art. 373 C. civ. – parent hors d'état de manifester sa volonté</a></li><li><a href="https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000044629469" target="_blank" rel="noopener">Art. 373-2-2 C. civ. – pension, intermédiation financière</a></li><li><a href="https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000006426763" target="_blank" rel="noopener">Art. 373-2-7 C. civ. – homologation de la convention</a></li><li><a href="https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000042193469" target="_blank" rel="noopener">Art. 373-2-10 C. civ. – médiation, sauf violences ou emprise</a></li><li><a href="https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000006427150" target="_blank" rel="noopener">Art. 388-1 C. civ. – audition de l'enfant</a></li><li><a href="https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000049715075" target="_blank" rel="noopener">Art. 515-9 C. civ. – ordonnance de protection</a></li><li><a href="https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000039778131" target="_blank" rel="noopener">Art. 515-10 C. civ. – demande, même sans plainte</a></li><li><a href="https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000049715065" target="_blank" rel="noopener">Art. 515-11 C. civ. – mesures et délai</a></li><li><a href="https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000049708580" target="_blank" rel="noopener">Art. 515-13-1 C. civ. – ordonnance provisoire de protection immédiate</a></li><li><a href="https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000054137430" target="_blank" rel="noopener">Art. L. 1111-4 CSP – consentement, urgence</a></li><li><a href="https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000044629425" target="_blank" rel="noopener">Art. L. 582-2 CSS – force exécutoire donnée par la CAF</a></li><li><a href="https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000039644533" target="_blank" rel="noopener">Art. 1070 CPC – tribunal compétent</a></li><li><a href="https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000051928863" target="_blank" rel="noopener">Art. 1071 CPC – mission du juge aux affaires familiales</a></li><li><a href="https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000051930567" target="_blank" rel="noopener">Art. 1533-3 CPC – amende civile</a></li><li><a href="https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000031927576" target="_blank" rel="noopener">Art. L. 1111-5 CSP – secret médical du mineur</a></li><li><a href="https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000006908207" target="_blank" rel="noopener">Art. R. 1112-35 CSP – opération, urgence</a></li><li><a href="https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000018150775" target="_blank" rel="noopener">Art. R. 1311-11 CSP – tatouage et perçage</a></li><li><a href="https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000048701919" target="_blank" rel="noopener">Art. L. 3111-2 CSP – vaccins obligatoires</a></li><li><a href="https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000048701924" target="_blank" rel="noopener">Art. L. 5134-1 CSP – contraception</a></li></ul><p class="meta">Autres sources : cours « La personne vulnérable » (DU droit de l'enfant et de la famille, Université Toulouse Capitole) ; guide DGCS (ministère des Solidarités) sur l'exercice de l'autorité parentale des enfants placés, mars 2026, indicatif ; service-public.gouv.fr (cartes d'identité et passeports des mineurs) ; justice.fr (plafonds 2026 de l'aide juridictionnelle, simulateur de pension) ; caf.fr (barème national de la médiation familiale, titre exécutoire de la CAF).</p></details>
+  <details class="card"><summary style="cursor:pointer;font-weight:700">📚 Tous les textes cités</summary><p class="meta">Vérifiés sur Légifrance le 24/11/2026, dans leur version en vigueur.</p><ul style="padding-left:18px;font-size:13.5px"><li><a href="https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000054527338" target="_blank" rel="noopener">Art. 60 C. civ. – changement de prénom</a></li><li><a href="https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000006421039" target="_blank" rel="noopener">Art. 61-3 C. civ. – nom, accord de l'enfant de plus de 13 ans</a></li><li><a href="https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000045289223" target="_blank" rel="noopener">Art. 311-24-2 C. civ. – nom d'usage</a></li><li><a href="https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000049164413" target="_blank" rel="noopener">Art. 371-1 C. civ. – définition de l'autorité parentale</a></li><li><a href="https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000039778192" target="_blank" rel="noopener">Art. 371-2 C. civ. – contribution à l'entretien</a></li><li><a href="https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000027432028" target="_blank" rel="noopener">Art. 371-4 C. civ. – liens avec les grands-parents</a></li><li><a href="https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000032634037" target="_blank" rel="noopener">Art. 371-6 C. civ. – autorisation de sortie du territoire</a></li><li><a href="https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000043895534" target="_blank" rel="noopener">Art. 372 C. civ. – exercice en commun</a></li><li><a href="https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000049164419" target="_blank" rel="noopener">Art. 372-1 C. civ. – droit à l'image</a></li><li><a href="https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000006426536" target="_blank" rel="noopener">Art. 372-2 C. civ. – accord présumé pour les actes usuels</a></li><li><a href="https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000045136678" target="_blank" rel="noopener">Art. 373-1 C. civ. – décès d'un parent</a></li><li><a href="https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000049294125" target="_blank" rel="noopener">Art. 373-2 C. civ. – séparation, déménagement</a></li><li><a href="https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000022469781" target="_blank" rel="noopener">Art. 373-2-1 C. civ. – exercice par un seul parent</a></li><li><a href="https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000049164431" target="_blank" rel="noopener">Art. 373-2-6 C. civ. – sortie du territoire, publications</a></li><li><a href="https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000045136610" target="_blank" rel="noopener">Art. 375-7 C. civ. – enfant confié par le juge des enfants</a></li><li><a href="https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000049294106" target="_blank" rel="noopener">Art. 378 C. civ. – retrait de l'autorité parentale</a></li><li><a href="https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000032206532" target="_blank" rel="noopener">Art. 381-1 C. civ. – délaissement</a></li><li><a href="https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000031322882" target="_blank" rel="noopener">Art. 382-1 C. civ. – biens de l'enfant</a></li><li><a href="https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000033460871" target="_blank" rel="noopener">Art. 229-1 C. civ. – divorce par consentement mutuel</a></li><li><a href="https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000033460869" target="_blank" rel="noopener">Art. 229-2 C. civ. – cas où le juge reste nécessaire</a></li><li><a href="https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000054373093" target="_blank" rel="noopener">Art. 1635 bis Q CGI – contribution de 50 € pour saisir le juge</a></li><li><a href="https://www.legifrance.gouv.fr/loda/article_lc/LEGIARTI000054616333" target="_blank" rel="noopener">Art. 10 loi n° 71-1130 – honoraires et convention d'honoraires de l'avocat</a></li><li><a href="https://www.legifrance.gouv.fr/loda/article_lc/LEGIARTI000033460749" target="_blank" rel="noopener">Art. 10 loi n° 91-647 – champ de l'aide juridictionnelle</a></li><li><a href="https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000041684669" target="_blank" rel="noopener">Art. A. 444-173-1 C. com. – dépôt de la convention de divorce chez le notaire</a></li><li><a href="https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000006426549" target="_blank" rel="noopener">Art. 373 C. civ. – parent hors d'état de manifester sa volonté</a></li><li><a href="https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000044629469" target="_blank" rel="noopener">Art. 373-2-2 C. civ. – pension, intermédiation financière</a></li><li><a href="https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000006426763" target="_blank" rel="noopener">Art. 373-2-7 C. civ. – homologation de la convention</a></li><li><a href="https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000042193469" target="_blank" rel="noopener">Art. 373-2-10 C. civ. – médiation, sauf violences ou emprise</a></li><li><a href="https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000006427150" target="_blank" rel="noopener">Art. 388-1 C. civ. – audition de l'enfant</a></li><li><a href="https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000049715075" target="_blank" rel="noopener">Art. 515-9 C. civ. – ordonnance de protection</a></li><li><a href="https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000039778131" target="_blank" rel="noopener">Art. 515-10 C. civ. – demande, même sans plainte</a></li><li><a href="https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000049715065" target="_blank" rel="noopener">Art. 515-11 C. civ. – mesures et délai</a></li><li><a href="https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000049708580" target="_blank" rel="noopener">Art. 515-13-1 C. civ. – ordonnance provisoire de protection immédiate</a></li><li><a href="https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000054137430" target="_blank" rel="noopener">Art. L. 1111-4 CSP – consentement, urgence</a></li><li><a href="https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000044629425" target="_blank" rel="noopener">Art. L. 582-2 CSS – force exécutoire donnée par la CAF</a></li><li><a href="https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000039644533" target="_blank" rel="noopener">Art. 1070 CPC – tribunal compétent</a></li><li><a href="https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000051928863" target="_blank" rel="noopener">Art. 1071 CPC – mission du juge aux affaires familiales</a></li><li><a href="https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000051930567" target="_blank" rel="noopener">Art. 1533-3 CPC – amende civile</a></li><li><a href="https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000031927576" target="_blank" rel="noopener">Art. L. 1111-5 CSP – secret médical du mineur</a></li><li><a href="https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000006908207" target="_blank" rel="noopener">Art. R. 1112-35 CSP – opération, urgence</a></li><li><a href="https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000018150775" target="_blank" rel="noopener">Art. R. 1311-11 CSP – tatouage et perçage</a></li><li><a href="https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000048701919" target="_blank" rel="noopener">Art. L. 3111-2 CSP – vaccins obligatoires</a></li><li><a href="https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000048701924" target="_blank" rel="noopener">Art. L. 5134-1 CSP – contraception</a></li><li><a href="https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000006419288" target="_blank" rel="noopener">Art. 9 C. civ. – respect de la vie privée</a></li><li><a href="https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000006410102" target="_blank" rel="noopener">Art. 9 CPC – chacun prouve ce qu'il avance</a></li><li><a href="https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000006410108" target="_blank" rel="noopener">Art. 15 CPC – contradiction</a></li><li><a href="https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000021450408" target="_blank" rel="noopener">Art. 132 CPC – communication des pièces à l'autre partie</a></li><li><a href="https://www.legifrance.gouv.fr/loda/article_lc/LEGIARTI000024806405" target="_blank" rel="noopener">Art. 21-3 loi n° 95-125 – confidentialité de la médiation</a></li><li><a href="https://www.legifrance.gouv.fr/loda/article_lc/LEGIARTI000023780802" target="_blank" rel="noopener">Art. 66-5 loi n° 71-1130 – secret professionnel de l'avocat</a></li></ul><p class="meta">Autres sources : cours « La personne vulnérable » (DU droit de l'enfant et de la famille, Université Toulouse Capitole) ; guide DGCS (ministère des Solidarités) sur l'exercice de l'autorité parentale des enfants placés, mars 2026, indicatif ; service-public.gouv.fr (cartes d'identité et passeports des mineurs) ; justice.fr (plafonds 2026 de l'aide juridictionnelle, simulateur de pension) ; caf.fr (barème national de la médiation familiale, titre exécutoire de la CAF).</p></details>
   <p class="verif">Il n'existe pas de liste officielle des actes « usuels » : tout dépend de la situation et de l'âge de l'enfant. Ces repères viennent du Code civil (vérifié sur Légifrance), d'un cours universitaire de droit de la famille et du guide du ministère sur l'autorité parentale (DGCS, mars 2026), écrit pour les enfants placés et indicatif. Ils ne remplacent pas l'avis d'un professionnel du droit. Si un juge a confié l'autorité parentale à un seul parent, ces règles ne s'appliquent pas de la même façon.</p>`; }
 const QD_COL=["#c92a2a","#c2410c","#1971c2","#237032","#c2255c","#7048e8","#0b7285","#4263eb","#8a6500"];
 const QV_SHORT={"✅":"Un parent seul","🤝":"Les deux parents","🧑":"L'enfant","⚠️":"Règle particulière"};
