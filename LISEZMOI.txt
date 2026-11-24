@@ -10,9 +10,9 @@ Tous les fichiers sont à la racine du dépôt GitHub (pas de sous-dossier).
 
 METTRE À JOUR
 - « Add file » > « Upload files », déposer les fichiers modifiés (ils remplacent ceux du même nom), puis « Commit changes ».
-- À chaque mise à jour de l'appli, augmenter le numéro « edt-v13 » dans sw.js (edt-v14, edt-v15…).
+- À chaque mise à jour de l'appli, augmenter le numéro « edt-v14 » dans sw.js (edt-v15, edt-v16…).
 - Annuaire : chaque trimestre, ouvrir outil-extraction-annuaire.html, envoyer le fichier obtenu à Claude, qui prépare les nouveaux annuaire.json et communes.json.
 
 IMPORTANT
 - Ne plus changer d'adresse une fois l'appli diffusée : les données des parents sont liées à l'adresse du site.
-- Éditeur : 2A FORMATION (EI d'Alexandre BIGOT), mentions complétées le 05/11/2026.
+- Éditeur : 2A FORMATION (EI d'Alexandre BIGOT), mentions complétées le 24/11/2026 (téléphone éditeur et hébergeur).
