@@ -4,13 +4,14 @@ Tous les fichiers sont à la racine du dépôt GitHub (pas de sous-dossier).
 - index.html : page de présentation (entredeuxtoits.fr)
 - app.html : l'appli (entredeuxtoits.fr/app.html)
 - manifest.webmanifest, sw.js : installation et fonctionnement hors connexion
+- count.js : compteur de visites GoatCounter (licence ISC), hébergé ici pour ne charger aucun code d'un autre site
 - annuaire.json, communes.json : annuaire Service Public (8 830 contacts) et 34 969 communes, extraits le 05/11/2026
 - icone.svg, icon-*.png, apple-touch-icon.png, favicon-32.png : icônes
 - ecran-*.png, qr-entredeuxtoits.* : images de la page de présentation
 
 METTRE À JOUR
 - « Add file » > « Upload files », déposer les fichiers modifiés (ils remplacent ceux du même nom), puis « Commit changes ».
-- À chaque mise à jour de l'appli, augmenter le numéro « edt-v14 » dans sw.js (edt-v15, edt-v16…).
+- À chaque mise à jour de l'appli, augmenter le numéro « edt-v15 » dans sw.js (edt-v16, edt-v17…).
 - Annuaire : chaque trimestre, ouvrir outil-extraction-annuaire.html, envoyer le fichier obtenu à Claude, qui prépare les nouveaux annuaire.json et communes.json.
 
 IMPORTANT

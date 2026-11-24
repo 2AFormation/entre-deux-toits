@@ -316,6 +316,7 @@ mark{background:var(--mark);color:inherit;border-radius:3px;padding:0 2px}
     <section id="v-accueil"><div id="a-content"></div></section>
     <section id="v-demarches" class="hide">
       <div id="d-home">
+        <div id="d-com"></div>
         <h2 style="font-size:18px;margin:6px 0 4px">Où en êtes-vous ?</h2>
         <p class="meta" style="margin:0 0 12px">Choisissez la situation la plus proche. Vous pourrez changer à tout moment.</p>
         <div class="paths" id="paths"></div>
@@ -650,6 +651,7 @@ function pathCard(k,p){ return `<button class="path" style="--c:${p.c}" onclick=
 function dHome(){
   document.getElementById("paths").innerHTML = Object.entries(PATHS).map(([k,p])=>pathCard(k,p)).join("");
   document.getElementById("fiches").innerHTML = `<button class="path" style="--c:#c2410c" onclick="goTab('outils');oOpen('qui')"><span class="i">⚖️</span><span><b>Qui décide : un parent ou les deux ?</b><small>Médecin, école, papiers, photos…</small></span></button>` + Object.entries(FICHES).map(([k,p])=>pathCard(k,p)).join("");
+  const cb=document.getElementById("d-com"); if(cb) cb.innerHTML=comBox();
   document.getElementById("d-home").classList.remove("hide"); document.getElementById("d-path").classList.add("hide");
 }
 function dOpen(k){
@@ -953,6 +955,9 @@ const ZC="75 77 78 91 92 93 94 95 09 12 31 32 46 65 81 82 11 30 34 48 66".split(
 const ZA="25 39 70 90 24 33 40 47 64 03 15 43 63 21 58 71 89 07 26 38 73 74 19 23 87 01 42 69 16 17 79 86 20".split(" ");
 const zoneOf=cp=>{ const d=cp.slice(0,2); return ZC.includes(d)?"C":ZA.includes(d)?"A":"B"; };
 const horsZone=cp=>/^(20|97|98)/.test(cp); /* Corse et outre-mer : calendrier propre (art. 5 des arrêtés) */
+const estCOM=()=>/^98[678]/.test(ME.cp||""); /* Nouvelle-Calédonie, Polynésie, Wallis-et-Futuna : droit et caisses propres */
+const COM_TXT="Les règles présentées ici sont celles qui s'appliquent en métropole et dans les départements d'outre-mer. En Nouvelle-Calédonie, en Polynésie française et à Wallis-et-Futuna, une partie du droit de la famille, les tribunaux et les caisses (il n'y a pas de CAF) peuvent relever de règles propres. Faites vérifier votre situation par un point d'accès au droit : 09 70 82 31 90 (gratuit).";
+const comBox=()=>estCOM()?`<div class="alert"><b>Vous êtes en Nouvelle-Calédonie, en Polynésie ou à Wallis-et-Futuna ?</b><br>${COM_TXT}</div>`:"";
 const TIPS=["Un message, un sujet : c'est la façon la plus sûre d'obtenir une réponse.","Avant d'envoyer un message difficile, laissez-le reposer une heure.","Vous n'êtes pas obligé·e de répondre aux reproches. Répondez à la question pratique.","Les règles peuvent être différentes dans chaque maison. Ce qui compte, c'est que chacun s'y tienne.","Évitez de parler du conflit pendant le passage de relais : l'enfant est là.","Notez les dépenses au fil de l'eau : les comptes restent simples."];
 function goTab(v){ document.querySelector(`#nav button[data-v="${v}"]`).click(); }
 function enfants(){ return ME.enf.trim() || "Les enfants"; }
@@ -993,6 +998,7 @@ function aRender(){
     <div class="card" style="border-left:6px solid ${w0===1?"#3b5bdb":"#c2410c"}"><div class="big"><span class="i">🏠</span><span><b>Aujourd'hui, ${esc(enfants())} ${/ et |,/.test(enfants())||enfants()==="Les enfants"?"sont":"est"} chez ${esc(nm(w0))}</b>
       ${next?`<span class="meta">Changement ${fd(next.d)} (dans ${next.i} jour${next.i>1?"s":""}), chez ${esc(nm(next.p))}</span>`:""}</span></div>
       <div class="actions"><button class="btn ghost" onclick="goTab('outils');oOpen('garde')">Voir le calendrier</button></div></div>
+    ${comBox()}
     ${vtxt}
     ${route}
     <div class="tiles">
@@ -1181,7 +1187,7 @@ function quiHTML(){ if(!ME.quiOk){ setTimeout(()=>quiTree((ME.quiSit==="non"||ME
     <input class="qd-search" id="qd-q" type="search" placeholder="🔎 Chercher : passeport, médecin, coiffeur…" oninput="quiList()" aria-label="Chercher une situation">
     <div class="qd-tabs" id="qd-tabs">${["Tout"].concat(QD.map(g=>g[0]+" "+g[1])).map((l,k)=>`<button class="qd-tab ${k===0?"on":""}" ${k?`style="--gc:${QD_COL[k-1]}"`:""} onclick="quiTab(${k-1},this)">${l}</button>`).join("")}</div>
   </div>
-  <p style="margin:0 0 6px;color:var(--ink)"><b>Devinez d'abord, puis touchez la situation</b> pour voir la réponse.</p>
+  <p style="margin:0 0 6px;color:var(--ink)"><b>Touchez une situation</b> pour voir la réponse.</p>
   <div class="qd-legend">${Object.values(QV).map(v=>`<span>${v[0]} ${QV_SHORT[v[0]]}</span>`).join("")}</div>
   <div class="qd-prog" id="qd-prog"></div>
   <div id="qd-list"></div>
@@ -1349,7 +1355,7 @@ function legal(){ const d=document.createElement("div"); d.className="lock"; d.s
   <h3 class="sub">Ce que voient l'hébergeur et l'outil de mesure</h3><p>Comme pour tout site, votre navigateur transmet votre adresse IP quand il charge l'appli. L'hébergeur GitHub peut la conserver dans ses journaux pour la sécurité du service. GoatCounter ne l'utilise que quelques heures, en mémoire, pour ne pas compter deux fois la même visite, puis l'oublie. Une fois l'appli installée, elle fonctionne sans connexion.</p>
   <h3 class="sub">Vos droits</h3><p>Pour toute question sur vos données : 2aa.formation@gmail.com. Vous pouvez aussi adresser une réclamation à la CNIL (cnil.fr).</p>
   <h3 class="sub">Durée et suppression</h3><p>Vos données sont conservées sur votre téléphone tant que vous ne les effacez pas (Outils › Coffre-fort › Tout effacer), ou que vous ne désinstallez pas l'appli.</p>
-  <h3 class="sub">Information, pas conseil</h3><p>Les informations sont générales et vérifiées à la date indiquée. Elles ne remplacent pas l'avis d'un professionnel du droit. En cas de danger : 17, 112, SMS 114, et 3919.</p>
+  <h3 class="sub">Information, pas conseil</h3><p>Les informations sont générales et vérifiées à la date indiquée. Elles ne remplacent pas l'avis d'un professionnel du droit. ${COM_TXT} En cas de danger : 17, 112, SMS 114, et 3919.</p>
   <h3 class="sub">Données publiques</h3><p>Annuaire de l'administration (Service Public, DILA) et découpage administratif (geo.api.gouv.fr), réutilisés sous Licence Ouverte / Open Licence (Etalab).</p>
   <div class="actions">${TTS}<button class="btn main">Fermer</button></div></div>`;
   let done=()=>{}; const close=()=>{ d.remove(); done(); }; d.querySelector(".btn.main").onclick=close; document.body.appendChild(d); done=dlg(d,close); }
@@ -1370,6 +1376,6 @@ async function startApp(){ aRender(); oHome(); dHome(); renderThemes(); modele(0
 })();
 
 </script>
-<script data-goatcounter="https://entredeuxtoits.goatcounter.com/count" data-goatcounter-settings='{"no_onload":true,"no_events":true}' async src="https://gc.zgo.at/count.js"></script>
+<script data-goatcounter="https://entredeuxtoits.goatcounter.com/count" data-goatcounter-settings='{"no_onload":true,"no_events":true}' async src="count.js"></script>
 </body>
 </html>
