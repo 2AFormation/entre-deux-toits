@@ -10,7 +10,12 @@
 <meta name="theme-color" content="#FFF6EC">
 <meta property="og:title" content="Entre Deux Toits">
 <meta property="og:description" content="Séparés, toujours parents. L'appli gratuite pour s'organiser entre deux maisons.">
-<meta property="og:image" content="icon-512.png">
+<meta property="og:image" content="https://entredeuxtoits.fr/icon-512.png">
+<meta property="og:url" content="https://entredeuxtoits.fr/">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="fr_FR">
+<link rel="canonical" href="https://entredeuxtoits.fr/">
+<link rel="manifest" href="manifest.webmanifest">
 <style>
 :root{--bg:#FFF6EC;--card:#ffffff;--ink:#1d2433;--soft:#5d6779;--line:#eadfd2;--blue:#3B5BDB;--orange:#E8590C;--yellow:#F2B705;--blue-soft:#e8edff;--orange-soft:#ffe8dc;--ok:#2b8a3e}
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#14171f;--card:#1c2130;--ink:#eef0f5;--soft:#a7afbe;--line:#2c3344;--blue-soft:#252e4d;--orange-soft:#3a2418}}
@@ -63,7 +68,7 @@ h2{font-size:clamp(26px,4vw,36px);margin:0 0 8px;letter-spacing:-.01em}
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .sos{background:#3a1717;color:#ffd6d6}}
 .sos b{font-size:20px}
 .num{display:flex;gap:10px;flex-wrap:wrap}
-.num span{background:#c92a2a;color:#fff;border-radius:12px;padding:8px 14px;font-weight:700}
+.num a{background:#c92a2a;color:#fff;border-radius:12px;padding:8px 14px;font-weight:700;text-decoration:none}
 .vid{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center}
 .vid video{display:block;width:min(320px,80vw);aspect-ratio:9/16;border-radius:28px;background:#1d2433;box-shadow:0 24px 50px rgba(29,36,51,.25);justify-self:center}
 @media (max-width:900px){.vid{grid-template-columns:1fr}.vid .txt{text-align:center}}
@@ -171,7 +176,7 @@ footer p{margin:6px 0}
 <section>
   <div class="wrap">
     <div class="sos"><div style="flex:1;min-width:240px"><b>Vous êtes en danger, ou vous avez peur ?</b><br>La médiation et les accords amiables ne sont pas faits pour les situations de violence. L'appli propose un parcours protégé, avec un bouton de sortie rapide.</div>
-      <div class="num"><span>17 · Police</span><span>112 · Urgences</span><span>SMS 114</span><span>3919 · Écoute 24 h/24</span></div></div>
+      <div class="num"><a href="tel:17">17 · Police</a><a href="tel:112">112 · Urgences</a><a href="sms:114">SMS 114</a><a href="tel:3919">3919 · Écoute 24 h/24</a></div></div>
   </div>
 </section>
 
@@ -180,7 +185,7 @@ footer p{margin:6px 0}
     <div class="sig"><a href="https://2aformation.com" aria-label="2A Formation"><img src="logo-2a-formation.png" alt="Logo 2A Formation" width="76" height="70"></a><p><b>Une initiative 2A Formation</b><br>Organisme de formation du travail social · <a href="https://2aformation.com">2aformation.com</a></p></div>
     <p><b>Entre Deux Toits</b> · application gratuite d'information pour les parents séparés. Les informations sont générales : elles ne remplacent pas l'avis d'un professionnel du droit.</p>
     <p>Éditeur : 2A FORMATION, entreprise individuelle d'Alexandre BIGOT · 2885 route de Saint-Papoul, 11400 Castelnaudary · SIRET 897 695 235 00019 · Directeur de la publication : Alexandre BIGOT · Contact : <a href="mailto:2aa.formation@gmail.com">2aa.formation@gmail.com</a></p><p>Hébergement : GitHub Pages, GitHub Inc., 88 Colin P. Kelly Jr. Street, San Francisco, CA 94107, États-Unis.</p>
-    <p>Aucun cookie, aucune donnée personnelle collectée. Mesure d'audience anonyme avec GoatCounter (sans cookie, adresse IP non conservée, données effacées au bout de 25 mois), uniquement pour compter les visites et les installations. Données publiques réutilisées sous Licence Ouverte : Annuaire de l'administration (Service Public, DILA) et découpage administratif (geo.api.gouv.fr).</p>
+    <p>Aucun cookie, aucun compte : nous ne collectons aucune donnée personnelle. Mesure d'audience anonyme avec GoatCounter (sans cookie, adresse IP non conservée, données effacées au bout de 25 mois), uniquement pour compter les visites et les installations. Comme pour tout site, l'hébergeur GitHub peut conserver l'adresse IP des visiteurs dans ses journaux, pour la sécurité du service. Questions sur vos données : 2aa.formation@gmail.com ; réclamation possible auprès de la CNIL. Données publiques réutilisées sous Licence Ouverte : Annuaire de l'administration (Service Public, DILA) et découpage administratif (geo.api.gouv.fr).</p>
   </div>
 </footer>
 <script data-goatcounter="https://entredeuxtoits.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>

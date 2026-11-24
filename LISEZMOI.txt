@@ -1,4 +1,4 @@
-ENTRE DEUX TOITS – site (version du 05/11/2026)
+ENTRE DEUX TOITS – site (version du 24/11/2026)
 Tous les fichiers sont à la racine du dépôt GitHub (pas de sous-dossier).
 
 - index.html : page de présentation (entredeuxtoits.fr)
@@ -10,7 +10,7 @@ Tous les fichiers sont à la racine du dépôt GitHub (pas de sous-dossier).
 
 METTRE À JOUR
 - « Add file » > « Upload files », déposer les fichiers modifiés (ils remplacent ceux du même nom), puis « Commit changes ».
-- À chaque mise à jour de l'appli, augmenter le numéro « edt-v3 » dans sw.js (edt-v4, edt-v5…).
+- À chaque mise à jour de l'appli, augmenter le numéro « edt-v13 » dans sw.js (edt-v14, edt-v15…).
 - Annuaire : chaque trimestre, ouvrir outil-extraction-annuaire.html, envoyer le fichier obtenu à Claude, qui prépare les nouveaux annuaire.json et communes.json.
 
 IMPORTANT
