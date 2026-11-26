@@ -325,6 +325,7 @@ mark{background:var(--mark);color:inherit;border-radius:3px;padding:0 2px}
         <h2 style="font-size:18px;margin:6px 0 4px">Où en êtes-vous ?</h2>
         <p class="meta" style="margin:0 0 12px">Choisissez la situation la plus proche. Vous pourrez changer à tout moment.</p>
         <div class="paths" id="paths"></div>
+        <div id="d-caf"></div>
         <h3 class="sub">Fiches utiles</h3>
         <div class="paths" id="fiches"></div>
       </div>
@@ -604,7 +605,9 @@ const L = {
   simul:["Simulateur de pension (justice.fr)","https://www.justice.fr/simulateurs/pension-alimentaire"],
   titre:["Demander un titre exécutoire à la CAF","https://www.pension-alimentaire.caf.fr/usagers/demande-titre-executoire"],
   timbre:["Acheter le timbre de 50 €","https://timbres.impots.gouv.fr/"],
-  viol:["arretonslesviolences.gouv.fr","https://arretonslesviolences.gouv.fr"]
+  viol:["arretonslesviolences.gouv.fr","https://arretonslesviolences.gouv.fr"],
+  cafseances:["Les séances (caf.fr)","https://caf.fr/allocataires/aides-et-demarches/thematique-libre/la-seance-d-information"],
+  cafparcours:["Parcours séparation (caf.fr)","https://caf.fr/allocataires/parcours-separation"]
 };
 const lk = k => `<a class="lnk" href="${L[k][1]}" target="_blank" rel="noopener">↗ ${L[k][0]}</a>`;
 const PIECES = `<ul><li>une copie de votre pièce d'identité ;</li><li>les actes de naissance intégraux de moins de 3 mois (parents et enfants) ;</li><li>les décisions de justice déjà rendues, s'il y en a ;</li><li>si une pension est demandée : avis d'imposition, 3 derniers bulletins de salaire, justificatifs de prestations et de charges fixes, justificatif de domicile.</li></ul>`;
@@ -656,17 +659,34 @@ const FICHES = {
     ["Estimer un montant",`<p>Le ministère de la Justice propose un simulateur et un barème indicatifs : revenus du parent qui verse la pension, nombre d'enfants, temps passé chez chaque parent. Le juge n'est pas tenu de les suivre.</p>${lk("simul")}`],
     ["Officialiser votre accord sans juge (parents non mariés)",`<p>Si vous n'avez jamais été mariés ensemble, qu'aucun jugement n'a fixé la pension et que vous êtes d'accord sur son montant, vous pouvez demander ensemble à la CAF ou à la MSA un titre exécutoire. C'est gratuit.</p><p>Les deux parents remplissent et signent le formulaire, puis l'envoient avec les justificatifs à la CAF du parent qui reçoit la pension. Le montant doit atteindre un minimum : vérifiez-le d'abord avec le simulateur.</p><p class="meta">Art. L. 582-2 CSS</p>${lk("titre")}`],
     ["Le versement par la CAF ou la MSA",`<p>Quand la pension est fixée par un jugement, une convention homologuée, une convention de divorce, un acte notarié, un titre délivré par la CAF ou un accord rendu exécutoire par le greffe, l'intermédiation financière est en principe automatique : l'organisme collecte la pension chaque mois et la reverse. C'est gratuit.</p><p>Si elle n'a pas été mise en place (refus, décision ancienne), l'un ou l'autre parent peut la demander à tout moment à la CAF ou à la MSA, à condition que la pension soit fixée par l'un de ces documents.</p><p>Les deux parents peuvent la refuser ensemble ; ce refus doit figurer dans le jugement ou la convention. Il n'est pas possible si le parent qui paie a fait l'objet d'une plainte ou d'une condamnation pour violences ou menaces sur l'autre parent ou sur l'enfant, ou si une décision de justice en fait état.</p><p class="meta">Art. 373-2-2 C. civ.</p>${lk("aripa")}`],
-    ["En cas d'impayé",`<p>Signalez-le à la CAF ou à la MSA. Selon votre situation, l'allocation de soutien familial (ASF) peut être versée en attendant.</p>`]
+    ["En cas d'impayé",`<p>Signalez-le à la CAF ou à la MSA, ou appelez le <b>3238</b> (service public des pensions alimentaires, du lundi au vendredi de 9 h à 16 h 30, prix d'un appel local). Selon votre situation, l'allocation de soutien familial (ASF) peut être versée en attendant.</p><a class="lnk" href="tel:3238">📞 Appeler le 3238</a>`]
   ]},
   convention:{i:"✍️",c:"var(--ok)",t:"Préparer notre convention",s:"Un modèle guidé à compléter ensemble",builder:true}
 };
 
 let dDone = {};
+/* Encadré « La CAF vous accompagne » (mise à jour 17, vérifié sur caf.fr et pension-alimentaire.caf.fr le 25/11/2026) – masqué en Nouvelle-Calédonie, Polynésie, Wallis-et-Futuna (pas de CAF) */
+function cafBox(){ if(estCOM()) return "";
+  return `<div class="card" data-tts style="border-left:6px solid var(--ok);margin-top:14px">${TTS}<h2>🤝 La CAF vous accompagne</h2>
+  <p>Allocataire ou non, vous pouvez vous adresser à la CAF quand vous vous séparez.</p>
+  <h3 class="sub">Les séances « Parents après la séparation »</h3>
+  <p>Gratuites, anonymes et sans engagement. Elles se font en groupe avec d'autres parents, sans les enfants, et sont animées par des professionnels (juriste, médiateur familial, travailleur social). On y parle des réactions de l'enfant selon son âge, de la communication entre parents, des effets juridiques de la séparation et de la médiation. Venir à deux est conseillé, mais pas obligatoire.</p>
+  <p>Pour les dates et les lieux, demandez à votre CAF : sur caf.fr avec votre code postal, ou au <b>3230</b>.</p>
+  ${lk("cafseances")}<button class="lnk" style="border:0;cursor:pointer" onclick="goTab('outils');oOpen('contacts')">📍 Ma CAF la plus proche</button>
+  <h3 class="sub">Le parcours en ligne « Séparation »</h3>
+  <p>Sur caf.fr, vous répondez à quelques questions et la CAF vous indique les aides et services qui vous concernent. Vous pouvez aussi demander un rendez-vous avec un conseiller ou un travailleur social (motif « Je me sépare »).</p>
+  <p>Si vous êtes allocataire, déclarez votre séparation dans votre espace Mon Compte : vos droits sont recalculés.</p>
+  ${lk("cafparcours")}
+  <h3 class="sub">Le 3238 pour la pension alimentaire</h3>
+  <p>C'est le numéro du service public des pensions alimentaires (Aripa), géré par la CAF et la MSA. Il répond du lundi au vendredi de 9 h à 16 h 30, au prix d'un appel local. Ayez sous la main votre numéro d'allocataire ou de sécurité sociale. Depuis l'étranger : +33 9 69 32 08 08.</p>
+  <a class="lnk" href="tel:3238">📞 Appeler le 3238</a>${lk("aripa")}
+  <p class="meta" style="margin:8px 0 0">Vérifié sur caf.fr et pension-alimentaire.caf.fr le 25/11/2026.</p></div>`; }
 function pathCard(k,p){ return `<button class="path" style="--c:${p.c}" onclick="dOpen('${k}')"><span class="i">${p.i}</span><span><b>${p.t}</b><small>${p.s}</small></span></button>`; }
 function dHome(){
   document.getElementById("paths").innerHTML = Object.entries(PATHS).map(([k,p])=>pathCard(k,p)).join("");
   document.getElementById("fiches").innerHTML = `<button class="path" style="--c:#c2410c" onclick="goTab('outils');oOpen('qui')"><span class="i">⚖️</span><span><b>Qui décide : un parent ou les deux ?</b><small>Médecin, école, papiers, photos…</small></span></button>` + Object.entries(FICHES).map(([k,p])=>pathCard(k,p)).join("");
   const cb=document.getElementById("d-com"); if(cb) cb.innerHTML=comBox();
+  const cf=document.getElementById("d-caf"); if(cf) cf.innerHTML=cafBox();
   document.getElementById("d-home").classList.remove("hide"); document.getElementById("d-path").classList.add("hide");
 }
 function dOpen(k){
@@ -1629,7 +1649,7 @@ function restoreFile(inp){ const f=inp.files[0]; inp.value=""; if(!f) return; co
 /* ================= ANNUAIRE (intégré) ================= */
 const CATS=[["⚖️","Conseils juridiques gratuits","Juristes et avocats, sur rendez-vous, sans frais.",["point_justice","mjd","cdad"]],
   ["🏛️","Tribunal judiciaire","Où envoyer votre demande au juge aux affaires familiales.",["tgi"]],
-  ["💶","CAF et MSA","Pension alimentaire, médiation familiale, prestations.",["caf","msa"]],
+  ["💶","CAF et MSA","Pension alimentaire, médiation familiale, prestations. Séances « Parents après la séparation » : demandez les dates à votre CAF.",["caf","msa"]],
   ["🛟","Aide aux victimes et droits des femmes","Écoute, accompagnement, aide aux démarches.",["bav","cidf"]],
   ["👩‍⚖️","Ordre des avocats","Pour trouver un avocat, ou une consultation.",["ordre_avocats"]],
   ["🧾","France services","Aide pour remplir les formulaires et les démarches en ligne.",["france_services"]],
